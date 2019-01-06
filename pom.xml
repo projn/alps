@@ -11,6 +11,7 @@
 
     <modules>
         <module>alps-common</module>
+        <module>alps-bean</module>
         <module>alps-dao</module>
         <module>alps-test</module>
 
