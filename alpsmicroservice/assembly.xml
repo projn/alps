@@ -1,0 +1,28 @@
+<assembly>
+    <id>assembly</id>
+    <formats>
+        <format>dir</format>
+    </formats>
+    <baseDirectory>${project.build.directory}</baseDirectory>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!--<dependencySets>-->
+        <!--<dependencySet>-->
+            <!--<useProjectArtifact>true</useProjectArtifact>-->
+            <!--<outputDirectory>lib</outputDirectory>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependencySet>-->
+    <!--</dependencySets>-->
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/${profiles.active}</directory>
+            <outputDirectory>/context</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}/</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>${project.artifactId}-${project.version}.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

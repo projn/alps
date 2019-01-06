@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules_config>
+    <api_file_path>/Users/sunyuecheng/Documents/workspace/projn/alps/AlpsGenerator/src/main/resources/demo/api_3_demo.yaml</api_file_path>
+    <api_version>3</api_version>>
+    <jdbc_config>
+        <driver_class>org.mariadb.jdbc.Driver</driver_class>
+        <connection_url>jdbc:mariadb://127.0.0.1:3306/heimdallserviceplatform?useUnicode=true</connection_url>
+        <user_name>root</user_name>
+        <password>123456</password>
+    </jdbc_config>
+
+    <parent_group_id>com.homepetscare</parent_group_id>
+    <parent_artifact_id>heimdall</parent_artifact_id>
+
+    <output_dir>/Users/sunyuecheng/Documents/workspace/projn/alps/target</output_dir>
+    <recover_exist>true</recover_exist>
+
+    <module_config>
+        <artifact_id>heimdall-module-medical</artifact_id>
+        <base_package>com.homepetscare.heimdall.module.medical</base_package>
+        <bean_config>
+            <tag>medical</tag>
+        </bean_config>
+        <dao_config>
+            <table_config>
+                <schema_name>heimdallserviceplatform</schema_name>
+                <table_name>t_customer_info</table_name>
+                <domain_name>CustomerInfo</domain_name>
+                <mapper_name>ICustomerInfoDao</mapper_name>
+            </table_config>
+            <table_config>
+                <schema_name>heimdallserviceplatform</schema_name>
+                <table_name>t_pet_info</table_name>
+                <domain_name>PetInfo</domain_name>
+                <mapper_name>IPetInfoDao</mapper_name>
+            </table_config>
+            <table_config>
+                <schema_name>heimdallserviceplatform</schema_name>
+                <table_name>t_pet_medical_case_info</table_name>
+                <domain_name>PetMedicalCaseInfo</domain_name>
+                <mapper_name>IPetMedicalCaseInfoDao</mapper_name>
+            </table_config>
+        </dao_config>
+    </module_config>
+</modules_config>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "suppressions_1_1.dtd">
+<suppressions>
+    <suppress checks="." files="resource[\\/]"/>
+    <suppress checks="MagicNumber" files="Md5Utils\.java"/>
+    <suppress checks="MagicNumber" files="CommonUtils\.java"/>
+    <suppress checks="MagicNumber" files="RsaUtils\.java"/>
+    <suppress checks="HideUtilityClassConstructor" files="AlpsMicroServiceApplication\.java"/>
+    <suppress checks="HideUtilityClassConstructor" files="AlpsGeneratorApplication\.java"/>
+    <suppress checks="FinalClass" files="RunTimeProperties\.java"/>
+    <suppress checks="MethodLength" files="Method\.java"/>
+    <suppress checks="MethodLength" files="Interface\.java"/>
+    <suppress checks="MethodLength" files="InnerEnum\.java"/>
+    <suppress checks="MethodLength" files="InnerClass\.java"/>
+    <suppress checks="MethodLength" files="GeneratorTools\.java"/>
+
+</suppressions>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>alps</artifactId>
+        <groupId>com.projn</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.projn.alps</groupId>
+    <artifactId>alpsgenerator</artifactId>
+    <version>${alps.alpsgenerator.version}</version>
+    <packaging>jar</packaging>
+    <name>AlpsGenerator</name>
+    <description></description>
+
+    <properties>
+        <cobertura.skip>true</cobertura.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${jdbc.driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>${mybatis-generator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${dom4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.projn.alps</groupId>
+            <artifactId>alps-common</artifactId>
+            <version>${alps.common.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.xml</include>
+                </includes>
+                <excludes></excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<mainClass>com.projn.alps.alpsgeneratoreneratorApplicationClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                    <!--<descriptorRefs>-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.projn.alps.alpsgenerator.AlpsGeneratorApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="alpsmicroservice-install-dir">../install/alpsmicroservice-install</property>
+                                <property name="maven-plugin-config-dir">${project.basedir}/src/main/resources/template/maven-plugin-config</property>
+                                <property name="template-dir">${project.basedir}/src/main/resources/template</property>
+                                <property name="demo-dir">${project.basedir}/src/main/resources/demo</property>
+                                <property name="des-dir">../target/${project.artifactId}</property>
+
+                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/module" />
+
+                                <copy todir="${des-dir}/lib">
+                                    <fileset dir="${project.build.directory}/lib">
+                                        <include name="*.jar" />
+                                    </fileset>
+                                </copy>
+
+                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
+                                      todir="${des-dir}">
+                                </copy>
+
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/bootstrap">
+                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/bootstrap">
+                                        <include name="logback-config.xml" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/config">
+                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/config">
+                                        <include name="*.properties" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/i18n">
+                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/i18n">
+                                        <include name="*.properties" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/keystore">
+                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/keystore">
+                                        <include name="*.*" />
+                                    </fileset>
+                                </copy>
+
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroservice/context/application.properties"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context" />
+
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/install.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/config.properties" todir="${des-dir}/template/install/alpsmicroservice-install" />
+
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice">
+                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice">
+                                        <include name="*.jar" />
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${des-dir}/template/maven-plugin-config">
+                                    <fileset dir="${maven-plugin-config-dir}/">
+                                        <include name="*.*" />
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${des-dir}/template">
+                                    <fileset dir="${template-dir}/">
+                                        <include name="*.*" />
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${des-dir}/demo">
+                                    <fileset dir="${demo-dir}/">
+                                        <include name="*.*" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+    <base_package>com.projn.alps.module.cgs.cbc</base_package>
+    <properties>
+        <property>
+            <name>CgsModuleProperties</name>
+            <enable>true</enable>
+            <properties>
+                <property name="thirdInterfaceAlarmProgramPath">/opt/software/alarm/alarm.py</property>
+            </properties>
+        </property>
+    </properties>
+    <services>
+        <service>
+            <uri>/v1/*/cgs/charging_quotas</uri>
+            <name>CgsQuotaInfoService</name>
+            <type>http</type> //http/ws/msg
+            <method>POST</method> //post get put delete/post/normal order broadcast
+            <init_method>init</init_method>
+            <auth_filter_name>default</auth_filter_name> //null//
+            <user_role_name>te_admin,op_restricted,op_suspended,cgs_adm,readonly</user_role_name>
+            <param_bean_class_name></param_bean_class_name>
+            <enable>true</enable>
+            <properties>
+            </properties>
+        </service>
+    </services>
+    <jobs>
+        <job>
+            <name>CleanTimeOutCgsCbcInfoJob</name>
+            <enable>true</enable>
+            <class_name>com.projn.alps.module.cgs.cbc.job.CleanTimeOutPolicyInfoJob</class_name>
+            <cron_expression>0 0 0/1 * * ? </cron_expression>
+        </job>
+    </jobs>
+</model>

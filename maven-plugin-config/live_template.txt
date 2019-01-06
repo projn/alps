@@ -1,0 +1,77 @@
+Self Announce
+////////////////////////
+
+/b bean announce
+////////////////
+
+/**
+ *$des$
+ */
+////////////////
+/*-----des----*/
+groovyScript("def returnContent = \"${_1}\"; def result=''; def partContents=returnContent.split('-').toList(); for(i = 0; i < partContents.size(); i++) { result += ' '+ partContents[i].toLowerCase();}; return result;", lowercaseAndDash(clipboard());()));
+////////////////////////
+
+/c class announce
+////////////////
+/**
+ *$des$
+ * @author : sunyuecheng
+ */
+////////////////
+/*-----des----*/
+groovyScript("def returnContent = \"${_1}\"; def result=''; def partContents=returnContent.split('-').toList(); for(i = 0; i < partContents.size(); i++) { result += ' '+ partContents[i].toLowerCase();}; return result;", lowercaseAndDash(className()));
+////////////////////////
+
+/d define announce
+////////////////
+
+/**
+ *$define$
+ */
+////////////////
+/*---define---*/
+groovyScript("def returnContent = \"${_1}\"; def result=''; def partContents=returnContent.split('_').toList(); for(i = 0; i < partContents.size(); i++) { result += ' '+ partContents[i].toLowerCase();}; return result;", clipboard());
+////////////////////////
+
+/i interface method announce
+////////////////
+/**
+ $des$
+ */
+////////////////
+/*-----des----*/
+groovyScript("String interfaceStr = \"${_1}\";String result=\"\";interfaceStr=interfaceStr.replaceAll(\"@Param\\\\([^)]*\\\\)\", \"\");int returnTypeEndIndex = interfaceStr.indexOf(\" \");String returnType = interfaceStr.substring(0, returnTypeEndIndex);int methodNameEndIndex = interfaceStr.indexOf(\"(\");String methodName = interfaceStr.substring(returnTypeEndIndex+1, methodNameEndIndex);String[] methodDescList = methodName.split(\"(?<!^)(?=[A-Z])\");String methodDescStr=\" * \";for(int i = 0; i < methodDescList.length; i++) {    methodDescStr += methodDescList[i].toLowerCase() + \" \";};methodDescStr+=\"\\n\";result+=methodDescStr;int paramsEndIndex=interfaceStr.indexOf(\")\");String params = interfaceStr.substring(methodNameEndIndex+1, paramsEndIndex);String[] paramList = params.split(\",\");for(int i = 0; i < paramList.length; i++) {    String[] subParamList = paramList[i].split(\"\\\\s+\");    String subParam=\"\";    for(int j = subParamList.length-1 ;j>=0;j--) {        if(subParamList[j]!=\"\") {            subParam=subParamList[j];            break;        }    };    result += \"      * @param \" + subParam + \" : \" + \"\\n\"; };result +=\"      * @return \" + returnType + \" : \";", clipboard());
+////////////////////////
+
+/j json field announce
+////////////////
+@JSONField(name = "$name$")
+////////////////
+/*----name----*/
+clipboard()
+////////////////////////
+
+/m method announce
+////////////////
+/**
+*$des$
+$params$
+$return$
+*/ 
+////////////////
+/*----des----*/
+groovyScript("def returnContent = \"${_1}\"; def result=''; def partContents=returnContent.split('-').toList(); for(i = 0; i < partContents.size(); i++) { result += ' '+ partContents[i].toLowerCase();}; return result;", lowercaseAndDash(methodName()));
+/*----params----*/
+groovyScript("if(\"${_1}\".length() == 2) {return '';} else {def result=''; def params=\"${_1}\".replaceAll('[\\\\[|\\\\]|\\\\s]', '').split(',').toList();for(i = 0; i < params.size(); i++) {if(i<(params.size()-1)){result+=' * @param ' + params[i] + ' : ' + '\\n'}else{result+=' * @param ' + params[i] + ' : '}}; return result;}", methodParameters());
+/*----return----*/
+groovyScript("def returnType = \"${_1}\"; def result = ' * @return ' + returnType + ' : '; return result;", methodReturnType());
+////////////////////////
+
+/u up case
+////////////////
+$define$
+////////////////
+/*---define---*/
+capitalizeAndUnderscore(clipboard())
+////////////////////////
