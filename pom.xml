@@ -15,8 +15,8 @@
         <module>alps-dao</module>
         <module>alps-test</module>
 
-        <module>AlpsMicroService</module>
-        <module>AlpsGenerator</module>
+        <module>alpsmicroservice</module>
+        <module>alpsgenerator</module>
     </modules>
 
     <properties>
@@ -35,6 +35,7 @@
         <maven.dependency.version>3.1.1</maven.dependency.version>
         <maven.antrun.version>1.8</maven.antrun.version>
         <maven.resources.version>3.1.0</maven.resources.version>
+        <maven.clean.version>3.1.0</maven.clean.version>
 
         <java.version>1.8</java.version>
 
@@ -122,6 +123,11 @@
                             -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
                         </argLine>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven.clean.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

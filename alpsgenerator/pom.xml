@@ -12,7 +12,7 @@
     <artifactId>alpsgenerator</artifactId>
     <version>${alps.alpsgenerator.version}</version>
     <packaging>jar</packaging>
-    <name>AlpsGenerator</name>
+    <name>alpsgenerator</name>
     <description></description>
 
     <properties>

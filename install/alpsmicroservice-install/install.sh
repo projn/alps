@@ -236,10 +236,6 @@ function install()
     dst=${SOFTWARE_ROCKETMQ_SERVER_ADDRESS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/rocketmq.properties
 
-    src=SOFTWARE_INSTALL_PATH
-    dst=${SOFTWARE_INSTALL_PATH}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/xml/module_info.xml
-
     cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME} /etc/init.d/${SOFTWARE_SERVICE_NAME}
 
     src=SOFTWARE_INSTALL_PATH
@@ -263,7 +259,6 @@ function install()
 
     service ${SOFTWARE_SERVICE_NAME} start
 
-    rm -rf ${CURRENT_WORK_DIR}/${SOFTWARE_PACKAGE_NAME}
     return 0
 }
 

@@ -32,7 +32,7 @@ case "$1" in
 		fi
     ;;
 	stop)
-		echo -n "Shutting down service..."
+		echo "Shutting down service..."
 		process_id=`ps -ef|grep -i "${SERVICE_PROCESS_NAME}" |grep -v "grep"|awk '{print $2}'`
 		if [ -z "${process_id}" ];then
 	        echo "There is no service running!"

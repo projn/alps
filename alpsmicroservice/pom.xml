@@ -12,7 +12,7 @@
 	<artifactId>alpsmicroservice</artifactId>
 	<version>${alps.alpsmicroservice.version}</version>
 	<packaging>jar</packaging>
-	<name>AlpsMicroService</name>
+	<name>alpsmicroservice</name>
 	<description></description>
 
 	<dependencies>
@@ -103,6 +103,21 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>../install/alpsmicroservice-install/${project.artifactId}</directory>
+							<includes>
+								<include>${project.artifactId}-${project.version}.jar</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

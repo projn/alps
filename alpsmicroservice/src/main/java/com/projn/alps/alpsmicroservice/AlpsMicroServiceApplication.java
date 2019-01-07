@@ -22,6 +22,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAspectJAutoProxy
 public class AlpsMicroServiceApplication {
 
+	private static final int RUN_PARAM_SIZE = 2;
+	private static final String RUN_PARAM_SPRING_CONTEXT_HEADER="--spring.config.location";
+
     /**
 	 * main
 	 *
@@ -29,11 +32,11 @@ public class AlpsMicroServiceApplication {
      * @throws Exception :
 	 */
 	public static void main(String[] args) throws Exception {
-	    if(args.length!=1) {
+	    if(args.length!=RUN_PARAM_SIZE || !args[0].startsWith(RUN_PARAM_SPRING_CONTEXT_HEADER)) {
             throw new Exception("Invaild run param.");
         }
 		SpringApplication springApplication = new SpringApplication(AlpsMicroServiceApplication.class);
-		springApplication.addListeners(new SystemInitializeContextListener(args[0]));
+		springApplication.addListeners(new SystemInitializeContextListener(args[1]));
 		springApplication.run(args);
 	}
 }
