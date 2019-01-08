@@ -396,6 +396,7 @@ public final class JavaBeanGenerator {
      * write generated java file
      *
      * @param gjf :
+     * @param recoverExist :
      * @throws Exception :
      */
     public static void writeGeneratedJavaFile(AbstractGeneratedJavaFile gjf, boolean recoverExist)

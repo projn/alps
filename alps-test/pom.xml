@@ -109,7 +109,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>../target/alpsgenerator/template/test</outputDirectory>
+                            <outputDirectory>../target/alpsgenerator/template/test/module</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>

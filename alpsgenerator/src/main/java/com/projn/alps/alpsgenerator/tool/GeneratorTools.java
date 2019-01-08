@@ -156,8 +156,11 @@ public class GeneratorTools {
 
     private static final String TEMPLATE_INSTALL_DIR_NAME = "template/install";
     private static final String INSTALL_DIR_NAME = "install";
-    private static final String TEMPLATE_TEST_DIR_NAME = "template/test";
-    private static final String TEST_DIR_NAME = "test";
+    private static final String TEMPLATE_TEST_DIR_MODULE_NAME = "template/test/module";
+    private static final String TEST_DIR_MODULE_NAME = "test/module";
+    private static final String TEMPLATE_TEST_DIR_SERVICE_NAME
+            = "template/install/alpsmicroservice-install/alpsmicroservice/context";
+    private static final String TEST_DIR_SERVICE_NAME = "test/alpsmicroservice/context";
     private static final String TEMPLATE_MAVEN_PLUGIN_CONFIG_DIR_NAME = "template/maven-plugin-config";
     private static final String MAVEN_PLUGIN_CONFIG_DIR_NAME = "maven-plugin-config";
     private static final String TEMPLATE_POM_NAME = "template/pom_template.xml";
@@ -379,9 +382,15 @@ public class GeneratorTools {
             String targetInstallPath = outputDir + File.separator + INSTALL_DIR_NAME;
             FileUtils.copyDirectory(templateInstallPath, targetInstallPath);
 
-            String templateTestPath = System.getProperty("user.dir") + File.separator + TEMPLATE_TEST_DIR_NAME;
-            String targetTestPath = outputDir + File.separator + TEST_DIR_NAME;
-            FileUtils.copyDirectory(templateTestPath, targetTestPath);
+            String templateTestModulePath = System.getProperty("user.dir")
+                    + File.separator + TEMPLATE_TEST_DIR_MODULE_NAME;
+            String targetTestModulePath = outputDir + File.separator + TEST_DIR_MODULE_NAME;
+            FileUtils.copyDirectory(templateTestModulePath, targetTestModulePath);
+
+            String templateTestServicePath = System.getProperty("user.dir")
+                    + File.separator + TEMPLATE_TEST_DIR_SERVICE_NAME;
+            String targetTestServicePath = outputDir + File.separator + TEST_DIR_SERVICE_NAME;
+            FileUtils.copyDirectory(templateTestServicePath, targetTestServicePath);
 
             String templateMavenPluginConfigPath = System.getProperty("user.dir") + File.separator
                     + TEMPLATE_MAVEN_PLUGIN_CONFIG_DIR_NAME;
