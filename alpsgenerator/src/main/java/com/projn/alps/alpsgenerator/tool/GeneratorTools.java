@@ -954,7 +954,7 @@ public class GeneratorTools {
         if (responseBodyMap != null) {
             if (apiVersion == OPEN_API_VERSION_2) {
                 Map<String, Object> httpStatusMap =
-                        (Map<String, Object>) responseBodyMap.get(Integer.valueOf(YML_ELEMENT_HTTP_STATUS_OK));
+                        (Map<String, Object>) responseBodyMap.get(YML_ELEMENT_HTTP_STATUS_OK);
                 if (httpStatusMap != null) {
                     Map<String, String> schemaMap = (Map<String, String>) httpStatusMap.get(YML_ELEMENT_SCHEMA);
                     if (schemaMap != null) {
