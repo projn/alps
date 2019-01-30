@@ -3,7 +3,7 @@ package com.projn.alps.alpsmicroservice.indicator;
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
 import com.projn.alps.alpsmicroservice.property.RocketMqProperties;
-import com.projn.alps.struct.RocketMqGroupConsumeInfo;
+import com.projn.alps.alpsmicroservice.struct.RocketMqGroupConsumeInfo;
 import org.apache.rocketmq.common.MQVersion;
 import org.apache.rocketmq.common.MixAll;
 import org.apache.rocketmq.common.admin.ConsumeStats;
@@ -49,16 +49,16 @@ public class RocketMqHealthIndicator implements HealthIndicator {
             rocketMqGroupConsumeInfoList = execute(rocketMqProperties.getQueueServerAddress());
         } catch (Exception e) {
             LOGGER.error("Get rocketmq group comsume info error, error info({}).", formatExceptionInfo(e));
-            return Health.down().withDetail(MicroServiceDefine.MSG_DEAL_STATUS_KEY, null).build();
+            return Health.down().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY, null).build();
         }
 
         for (RocketMqGroupConsumeInfo rocketMqGroupConsumeInfo : rocketMqGroupConsumeInfoList) {
             if (rocketMqGroupConsumeInfo.getDiffTotal() > rocketMqGroupConsumeInfo.getDiffTotal()) {
-                return Health.down().withDetail(MicroServiceDefine.MSG_DEAL_STATUS_KEY,
+                return Health.down().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY,
                         JSON.toJSONString(rocketMqGroupConsumeInfoList)).build();
             }
         }
-        return Health.up().withDetail(MicroServiceDefine.MSG_DEAL_STATUS_KEY,
+        return Health.up().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY,
                 JSON.toJSONString(rocketMqGroupConsumeInfoList)).build();
     }
 

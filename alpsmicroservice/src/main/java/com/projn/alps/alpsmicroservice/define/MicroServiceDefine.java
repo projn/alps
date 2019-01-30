@@ -92,12 +92,14 @@ public final class MicroServiceDefine {
      */
     public static final String MSG_DEAL_STATUS_KEY = "msgDealStatus";
 
-
     /**
      * msg deal status key
      */
     public static final String ROCKET_MQ_CONSUME_STATUS_KEY = "rocketmqStatus";
 
+    /**
+     * rocket mq consume max diff size
+     */
     public static final long ROCKET_MQ_CONSUME_MAX_DIFF_SIZE = 2000;
 
 

@@ -1,4 +1,4 @@
-package com.projn.alps.alpsmicroservice.manager;
+package com.projn.alps.tool;
 
 import org.apache.commons.lang.StringUtils;
 import org.quartz.*;
@@ -19,8 +19,8 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component
-public class QuartzManager {
-    private static final Logger LOGGER = LoggerFactory.getLogger(QuartzManager.class);
+public class QuartzJobTools {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuartzJobTools.class);
 
     @Autowired
     private Scheduler scheduler;

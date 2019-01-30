@@ -1,4 +1,4 @@
-package com.projn.alps.struct;
+package com.projn.alps.alpsmicroservice.struct;
 
 
 /**

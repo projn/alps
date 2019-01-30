@@ -690,10 +690,12 @@ public class GeneratorTools {
 
                 Element propertiesElement = serviceElement.addElement(XML_ELEMENT_PROPERTIES);
 
-                if (SERVICE_TYPE_HTTP.equalsIgnoreCase(type) && paramMapList != null) {
+                if (SERVICE_TYPE_HTTP.equalsIgnoreCase(type)) {
                     buildControllerClass = true;
                     Set<String> urlPathParamNameSet = new TreeSet<>();
-                    parseModuleMsgApiRequestPathParamInfo(paramMapList, urlPathParamNameSet);
+                    if (paramMapList != null) {
+                        parseModuleMsgApiRequestPathParamInfo(paramMapList, urlPathParamNameSet);
+                    }
                     parseModuleMsgApiControllerMethodInfo(controllerClass, urlPath, urlMethod, operationId,
                             consumeContentType, urlPathParamNameSet);
                 }

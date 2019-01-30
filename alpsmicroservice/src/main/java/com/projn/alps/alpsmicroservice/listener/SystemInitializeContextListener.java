@@ -13,7 +13,6 @@ import com.projn.alps.alpsmicroservice.filter.impl.JwtAuthenticationFilterImpl;
 import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.alpsmicroservice.job.RemoveInvaildWsSessionInfoJob;
 import com.projn.alps.alpsmicroservice.job.SendAgentMsgJob;
-import com.projn.alps.alpsmicroservice.manager.QuartzManager;
 import com.projn.alps.alpsmicroservice.mq.MsgConsumerListener;
 import com.projn.alps.alpsmicroservice.mq.OrderMsgConsumerListener;
 import com.projn.alps.msg.request.HttpBatchSendMsgRequestMsgInfo;
@@ -25,6 +24,7 @@ import com.projn.alps.alpsmicroservice.struct.ModuleJobInfo;
 import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
+import com.projn.alps.tool.QuartzJobTools;
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -251,16 +251,16 @@ public final class SystemInitializeContextListener implements ApplicationListene
             method.invoke(obj);
         }
 
-        QuartzManager quartzManager =
-                (QuartzManager) applicationContext.getBean(QuartzManager.class);
-        if (quartzManager == null) {
+        QuartzJobTools quartzJobTools =
+                (QuartzJobTools) applicationContext.getBean(QuartzJobTools.class);
+        if (quartzJobTools == null) {
             throw new Exception("Get context bean info error.");
         }
 
         for (ModuleJobInfo moduleJobInfo : moduleJobInfoList) {
             Class jobClass = applicationContext.getClassLoader().loadClass(moduleJobInfo.getJobClassName());
 
-            if (!quartzManager.addJob(jobClass, moduleJobInfo.getJobName(), moduleJobInfo.getJobGroupName(),
+            if (!quartzJobTools.addJob(jobClass, moduleJobInfo.getJobName(), moduleJobInfo.getJobGroupName(),
                     moduleJobInfo.getTriggerName(), moduleJobInfo.getTriggerGroupName(),
                     moduleJobInfo.getCronExpression(), moduleJobInfo.getJobPropertiesMap())) {
                 throw new Exception("Add job error, job name(" + moduleJobInfo.getJobName() + ").");
