@@ -131,8 +131,6 @@ function install()
     chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/context/
     chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/module/
 
-    chown -R ${SOFTWARE_USER_NAME}:${SOFTWARE_GROUP_NAME} ${SOFTWARE_LOG_PATH}
-
     echo  "Start to config service ..."
 
     src=SOFTWARE_LOG_PATH

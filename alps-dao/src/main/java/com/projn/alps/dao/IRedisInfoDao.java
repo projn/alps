@@ -40,6 +40,15 @@ public interface IRedisInfoDao {
     String getStrInfo(String key);
 
     /**
+     * scan str info
+     *
+     * @param pattern :
+     * @param count   :
+     * @return List<String> :
+     */
+    List<String> scanStrInfo(String pattern, long count);
+
+    /**
      * alter str byte info
      *
      * @param key    :

@@ -110,6 +110,47 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
     @Override
     /**
+     * scan str info
+     * @param pattern :
+     * @param count :
+     * @return List<String> :
+     */
+    public List<String> scanStrInfo(String pattern, long count) {
+        if (StringUtils.isEmpty(pattern) || count <= 0) {
+            LOGGER.error("Invaild param.");
+            return null;
+        }
+
+        List<String> valueList = null;
+        try {
+            valueList = (List<String>) redisTemplate.execute(new RedisCallback<List<String>>() {
+                @Override
+                public List<String> doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                    List<String> subValueList = new ArrayList<>();
+                    try {
+                        ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
+                        Cursor<byte[]> cursor = redisConnection.scan(scanOptions);
+                        while (cursor.hasNext()) {
+                            subValueList.add(new String(cursor.next(), DEFAULT_ENCODING));
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Scan str info error, error info(" + e.getMessage() + ").");
+                        return null;
+                    }
+                    return subValueList;
+                }
+            });
+            return valueList;
+        } catch (Exception e) {
+            LOGGER.error("Scan str info error, error info(" + e.getMessage() + ").");
+        }
+
+        return null;
+
+    }
+
+    @Override
+    /**
      * alter str byte info
      * @param key :
      * @param value :
