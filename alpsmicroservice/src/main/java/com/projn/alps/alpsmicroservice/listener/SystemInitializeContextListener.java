@@ -144,12 +144,13 @@ public final class SystemInitializeContextListener implements ApplicationListene
     }
 
     private void loadModuleInfo(String modulesDir) throws Exception {
+        moduleInfoList = new ArrayList<>();
+
         File modulesDirFile = new File(modulesDir);
         if (!modulesDirFile.isDirectory()||!modulesDirFile.exists()) {
-            throw new Exception("Invaild modules dir.");
+            LOGGER.info("Invaild modules dir, dir({}).", modulesDir);
+            return;
         }
-
-        moduleInfoList = new ArrayList<>();
 
         File[] moduleDirFileList = modulesDirFile.listFiles();
         if(moduleDirFileList == null || moduleDirFileList.length==0) {

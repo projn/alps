@@ -1,6 +1,8 @@
 package com.projn.alps.alpsmicroservice.property;
 
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -58,6 +60,9 @@ public class RunTimeProperties implements InitializingBean {
 
     @Value("${system.api.access.role.actuator}" )
     private String apiAccessRoleActuator=null;
+
+    @Value("${logging.config}")
+    private String logConfigPath=null;
 
 
     private RunTimeProperties() {
@@ -168,8 +173,18 @@ public class RunTimeProperties implements InitializingBean {
         this.apiAccessRoleActuator = apiAccessRoleActuator;
     }
 
+    public String getLogConfigPath() {
+        return logConfigPath;
+    }
+
+    public void setLogConfigPath(String logConfigPath) {
+        this.logConfigPath = logConfigPath;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        if(!StringUtils.isEmpty(logConfigPath)) {
+            Configurator.initialize(null, logConfigPath);
+        }
     }
 }
