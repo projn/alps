@@ -156,6 +156,10 @@ function install_single()
     dst=${SOFTWARE_LOG_PATH}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap/log4j2-config.xml
 
+    src=SOFTWARE_SERVER_NAME
+    dst=${SOFTWARE_SERVER_NAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/application.properties
+
     src=SOFTWARE_INSTALL_PATH
     dst=${SOFTWARE_INSTALL_PATH}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/application.properties
@@ -322,6 +326,10 @@ function install_cloud()
     dst=${SOFTWARE_LOG_PATH}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap/log4j2-config.xml
 
+    src=SOFTWARE_SERVER_NAME
+    dst=${SOFTWARE_SERVER_NAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
+
     src=SOFTWARE_CONSUL_SERVER_ADDRESS
     dst=${SOFTWARE_CONSUL_SERVER_ADDRESS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
@@ -374,6 +382,10 @@ function create_cloud_git_config()
 
     src=SOFTWARE_INSTALL_PATH
     dst=${SOFTWARE_INSTALL_PATH}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
+
+    src=SOFTWARE_SERVER_NAME
+    dst=${SOFTWARE_SERVER_NAME}
     sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
 
     src=SOFTWARE_SERVER_IP
