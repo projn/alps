@@ -18,6 +18,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.apache.rocketmq.tools.admin.DefaultMQAdminExt;
 import org.apache.rocketmq.tools.command.SubCommandException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component("rocketmq")
+@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqHealthIndicator implements HealthIndicator {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqHealthIndicator.class);
 
@@ -49,12 +51,13 @@ public class RocketMqHealthIndicator implements HealthIndicator {
             rocketMqGroupConsumeInfoList = execute(rocketMqProperties.getQueueServerAddress());
         } catch (Exception e) {
             LOGGER.error("Get rocketmq group comsume info error, error info({}).", formatExceptionInfo(e));
-            return Health.down().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY, null).build();
+            return Health.up().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY,
+                    JSON.toJSONString(rocketMqGroupConsumeInfoList)).build();
         }
 
         for (RocketMqGroupConsumeInfo rocketMqGroupConsumeInfo : rocketMqGroupConsumeInfoList) {
             if (rocketMqGroupConsumeInfo.getDiffTotal() > rocketMqGroupConsumeInfo.getDiffTotal()) {
-                return Health.down().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY,
+                return Health.up().withDetail(MicroServiceDefine.ROCKET_MQ_CONSUME_STATUS_KEY,
                         JSON.toJSONString(rocketMqGroupConsumeInfoList)).build();
             }
         }
@@ -62,7 +65,7 @@ public class RocketMqHealthIndicator implements HealthIndicator {
                 JSON.toJSONString(rocketMqGroupConsumeInfoList)).build();
     }
 
-    private List<RocketMqGroupConsumeInfo> execute(String namesrvAddr) throws SubCommandException {
+    private List<RocketMqGroupConsumeInfo> execute(String namesrvAddr) throws Exception {
         System.setProperty(MixAll.NAMESRV_ADDR_PROPERTY, namesrvAddr);
 
         List<RocketMqGroupConsumeInfo> groupConsumeInfoList = new ArrayList<>();

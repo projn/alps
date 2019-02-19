@@ -4,10 +4,10 @@ import com.projn.alps.alpsmicroservice.listener.SystemInitializeContextListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * alps micro service application
@@ -15,11 +15,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  * @author : sunyuecheng
  */
 @Configuration
-@EnableWebMvc
 @ComponentScan("com")
 @ServletComponentScan
 @SpringBootApplication
 @EnableAspectJAutoProxy
+@EnableDiscoveryClient
 public class AlpsMicroServiceApplication {
 
 	private static final int RUN_PARAM_SIZE = 2;

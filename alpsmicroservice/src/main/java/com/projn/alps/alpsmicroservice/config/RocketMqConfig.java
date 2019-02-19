@@ -5,6 +5,7 @@ import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties({RocketMqProperties.class, RunTimeProperties.class})
+@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqConfig {
 
     @Autowired
@@ -32,7 +34,7 @@ public class RocketMqConfig {
      */
     @Bean
     public DefaultMQProducer defaultMQProducer() throws MQClientException {
-        DefaultMQProducer producer = new DefaultMQProducer(runTimeProperties.getMasterRole());
+        DefaultMQProducer producer = new DefaultMQProducer(runTimeProperties.getAppName());
         producer.setNamesrvAddr(rocketMqProperties.getQueueServerAddress());
         producer.setVipChannelEnabled(false);
         producer.start();

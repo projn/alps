@@ -1,6 +1,7 @@
 package com.projn.alps.alpsmicroservice.property;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,8 @@ import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.ROCKET_M
  */
 @Component
 @ConfigurationProperties
-@PropertySource(value = "file:${config.dir}/config/rocketmq.properties")
+@PropertySource(value = "file:${config.dir}/config/rocketmq.properties", ignoreResourceNotFound = true)
+@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqProperties {
 
     @Value("${rocketmq.queueServerAddress}")

@@ -12,6 +12,7 @@ import org.apache.rocketmq.common.message.MessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component
+@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class OrderMsgProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderMsgProducer.class);

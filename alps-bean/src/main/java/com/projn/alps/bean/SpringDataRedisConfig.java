@@ -35,8 +35,8 @@ import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MIN_
  * @author : sunyuecheng
  */
 @Configuration
-@PropertySource("file:${config.dir}/config/redis.properties")
-@ConditionalOnProperty(name = "redis.mode", havingValue = "single")
+@PropertySource(value = "file:${config.dir}/config/redis.properties", ignoreResourceNotFound = true)
+@ConditionalOnProperty(name = "bean.switch.redis.single", havingValue = "true", matchIfMissing=true)
 public class SpringDataRedisConfig {
 
     @Value("${redis.pool.maxTotal}")

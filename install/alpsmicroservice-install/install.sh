@@ -20,10 +20,12 @@ function usage()
     echo ""
     echo "install alps micro service."
     echo ""
-    echo "  --help          : help"
+    echo "  --help                  : help"
     echo ""
-    echo "  --install       : install."
-    echo "  --uninstall     : uninstall."
+    echo "  --install-single        : install single."
+    echo "  --install-cloud         : install cloud."
+    echo "  --create-cloud-git-repo : create cloud git repo."
+    echo "  --uninstall             : uninstall."
 }
 
 function check_install()
@@ -37,7 +39,21 @@ function check_install()
       return 1
     fi
 
-    service_file_path=${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}
+    config_package_path=${CURRENT_WORK_DIR}/config
+    check_dir ${config_package_path}
+    if [ $? != 0 ]; then
+    	echo "Config package ${config_package_path} do not exist."
+      return 1
+    fi
+
+    service_file_path=${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-single
+    check_file ${service_file_path}
+    if [ $? != 0 ]; then
+    	echo "Service file ${service_file_path} do not exist."
+      return 1
+    fi
+
+    service_file_path=${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-cloud
     check_file ${service_file_path}
     if [ $? != 0 ]; then
     	echo "Service file ${service_file_path} do not exist."
@@ -86,7 +102,7 @@ function check_dir()
     fi
 }
 
-function install()
+function install_single()
 {
     echo "Begin install..."
     check_install
@@ -125,6 +141,9 @@ function install()
     package_dir=${CURRENT_WORK_DIR}/${SOFTWARE_INSTALL_PACKAGE_NAME}
     cp -rf ${package_dir}/* ${SOFTWARE_INSTALL_PATH}/
 
+    config_dir=${CURRENT_WORK_DIR}/config/single
+    cp -rf ${config_dir}/* ${SOFTWARE_INSTALL_PATH}/context/
+
     chown -R ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
     find ${SOFTWARE_INSTALL_PATH} -type d -exec chmod 700 {} \;
     chmod u=rwx,g=rwx,o=r  ${SOFTWARE_INSTALL_PATH}/*.jar
@@ -135,7 +154,7 @@ function install()
 
     src=SOFTWARE_LOG_PATH
     dst=${SOFTWARE_LOG_PATH}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap/logback-config.xml
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap/log4j2-config.xml
 
     src=SOFTWARE_INSTALL_PATH
     dst=${SOFTWARE_INSTALL_PATH}
@@ -148,18 +167,6 @@ function install()
     src=SOFTWARE_SERVER_PORT
     dst=${SOFTWARE_SERVER_PORT}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/application.properties
-
-    src=SOFTWARE_LOG_PATH
-    dst=${SOFTWARE_LOG_PATH}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/application.properties
-
-    src=SOFTWARE_INSTALL_PATH
-    dst=${SOFTWARE_INSTALL_PATH}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/context.properties
-
-    src=SOFTWARE_INSTALL_PATH
-    dst=${SOFTWARE_INSTALL_PATH}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/context.properties
 
     src=SOFTWARE_MYSQL_URL
     dst=${SOFTWARE_MYSQL_URL}
@@ -235,7 +242,7 @@ function install()
     dst=${SOFTWARE_ROCKETMQ_SERVER_ADDRESS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/rocketmq.properties
 
-    cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME} /etc/init.d/${SOFTWARE_SERVICE_NAME}
+    cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-single /etc/init.d/${SOFTWARE_SERVICE_NAME}
 
     src=SOFTWARE_INSTALL_PATH
     dst=${SOFTWARE_INSTALL_PATH}
@@ -257,6 +264,201 @@ function install()
     echo "install success."
 
     service ${SOFTWARE_SERVICE_NAME} start
+
+    return 0
+}
+
+function install_cloud()
+{
+    echo "Begin install..."
+    check_install
+    if [ $? != 0 ]; then
+        echo "Check install failed,check it please."
+        return 1
+    fi
+
+    check_user_group ${SOFTWARE_USER_GROUP}
+    if [ $? != 0 ]; then
+    	groupadd ${SOFTWARE_USER_GROUP}
+
+    	echo "Add user group ${SOFTWARE_USER_GROUP} success."
+    fi
+
+    check_user ${SOFTWARE_USER_NAME}
+    if [ $? != 0 ]; then
+    	useradd -g ${SOFTWARE_USER_GROUP} -m ${SOFTWARE_USER_NAME}
+        usermod -L ${SOFTWARE_USER_NAME}
+
+        echo "Add user ${SOFTWARE_USER_NAME} success."
+    fi
+
+    mkdir -p ${SOFTWARE_INSTALL_PATH}
+    chmod u=rwx,g=r,o=r ${SOFTWARE_INSTALL_PATH}
+    chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
+
+    mkdir -p ${SOFTWARE_DATA_PATH}
+    chmod u=rwx,g=r,o=r ${SOFTWARE_DATA_PATH}
+    chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_DATA_PATH}
+
+    mkdir -p ${SOFTWARE_LOG_PATH}
+    chmod u=rwx,g=r,o=r ${SOFTWARE_LOG_PATH}
+    chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_LOG_PATH}
+
+    package_dir=${CURRENT_WORK_DIR}/${SOFTWARE_INSTALL_PACKAGE_NAME}
+    cp -rf ${package_dir}/* ${SOFTWARE_INSTALL_PATH}/
+
+    config_file=${CURRENT_WORK_DIR}/config/cloud/bootstrap.properties
+    cp -rf ${config_file} ${SOFTWARE_INSTALL_PATH}/context/
+
+    chown -R ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
+    find ${SOFTWARE_INSTALL_PATH} -type d -exec chmod 700 {} \;
+    chmod u=rwx,g=rwx,o=r  ${SOFTWARE_INSTALL_PATH}/*.jar
+    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/context/
+    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/module/
+
+    echo  "Start to config service ..."
+
+    src=SOFTWARE_LOG_PATH
+    dst=${SOFTWARE_LOG_PATH}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap/log4j2-config.xml
+
+    src=SOFTWARE_CONSUL_SERVER_ADDRESS
+    dst=${SOFTWARE_CONSUL_SERVER_ADDRESS}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
+
+    src=SOFTWARE_CONSUL_PORT
+    dst=${SOFTWARE_CONSUL_PORT}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
+
+    cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-cloud /etc/init.d/${SOFTWARE_SERVICE_NAME}
+
+    src=SOFTWARE_INSTALL_PATH
+    dst=${SOFTWARE_INSTALL_PATH}
+    sed -i "s#$src#$dst#g" /etc/init.d/${SOFTWARE_SERVICE_NAME}
+
+    src=SOFTWARE_USER_NAME
+    dst=${SOFTWARE_USER_NAME}
+    sed -i "s#$src#$dst#g" /etc/init.d/${SOFTWARE_SERVICE_NAME}
+
+    src=SOFTWARE_JAR_NAME
+    dst=${SOFTWARE_JAR_NAME}
+    sed -i "s#$src#$dst#g" /etc/init.d/${SOFTWARE_SERVICE_NAME}
+
+	chmod 755 /etc/init.d/${SOFTWARE_SERVICE_NAME}
+	chkconfig --add ${SOFTWARE_SERVICE_NAME}
+
+    echo "config service success."
+
+    echo "install success."
+
+    service ${SOFTWARE_SERVICE_NAME} start
+
+    return 0
+}
+
+function create_cloud_git_config()
+{
+    echo "Begin create..."
+    check_install
+    if [ $? != 0 ]; then
+        echo "Check install failed,check it please."
+        return 1
+    fi
+
+    mkdir -p ${CURRENT_WORK_DIR}/git-repo
+
+    config_dir=${CURRENT_WORK_DIR}/config/cloud/git
+    cp -rf ${config_dir}/* ${CURRENT_WORK_DIR}/git-repo/
+
+    echo  "Start to config ..."
+
+    src=SOFTWARE_INSTALL_PATH
+    dst=${SOFTWARE_INSTALL_PATH}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
+
+    src=SOFTWARE_SERVER_IP
+    dst=${SOFTWARE_SERVER_IP}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
+
+    src=SOFTWARE_SERVER_PORT
+    dst=${SOFTWARE_SERVER_PORT}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
+
+    src=SOFTWARE_MYSQL_URL
+    dst=${SOFTWARE_MYSQL_URL}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/druid.properties
+
+    src=SOFTWARE_MYSQL_USERNAME
+    dst=${SOFTWARE_MYSQL_USERNAME}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/druid.properties
+
+    src=SOFTWARE_MYSQL_PASSWORD
+    dst=${SOFTWARE_MYSQL_PASSWORD}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/druid.properties
+
+    src=SOFTWARE_REDIS_HOSTNAME
+    dst=${SOFTWARE_REDIS_HOSTNAME}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis.properties
+
+    src=SOFTWARE_REDIS_PORT
+    dst=${SOFTWARE_REDIS_PORT}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis.properties
+
+    src=SOFTWARE_REDIS_PASSWORD
+    dst=${SOFTWARE_REDIS_PASSWORD}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_PASSWORD
+    dst=${SOFTWARE_REDIS_CLUSTER_PASSWORD}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_1
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_1}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_1
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_1}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_2
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_2}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_2
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_2}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_3
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_3}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_3
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_3}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_4
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_4}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_4
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_4}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_5
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_5}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_5
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_5}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_REDIS_CLUSTER_HOSTNAME_6
+    dst=${SOFTWARE_REDIS_CLUSTER_HOSTNAME_6}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+    src=SOFTWARE_REDIS_CLUSTER_PORT_6
+    dst=${SOFTWARE_REDIS_CLUSTER_PORT_6}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/redis-cluster.properties
+
+    src=SOFTWARE_ROCKETMQ_SERVER_ADDRESS
+    dst=${SOFTWARE_ROCKETMQ_SERVER_ADDRESS}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/rocketmq.properties
+
+    echo "config success."
 
     return 0
 }
@@ -289,8 +491,12 @@ fi
 
 opt=$1
 
-if [ "${opt}" == "--install" ]; then
-    install
+if [ "${opt}" == "--install-single" ]; then
+    install_single
+elif [ "${opt}" == "--install-cloud" ]; then
+    install_cloud
+elif [ "${opt}" == "--create-cloud-git-repo" ]; then
+    create_cloud_git_config
 elif [ "${opt}" == "--uninstall" ]; then
     uninstall
 elif [ "${opt}" == "--help" ]; then

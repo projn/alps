@@ -106,8 +106,10 @@ public final class SystemInitializeContextListener implements ApplicationListene
             runTimeProperties =
                     (RunTimeProperties) contextRefreshedEvent.getApplicationContext().getBean("runTimeProperties");
 
-            rocketMqProperties =
-                    (RocketMqProperties) contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
+            if(runTimeProperties.isBeanSwitchRocketMq()) {
+                rocketMqProperties =
+                        (RocketMqProperties) contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
+            }
 
             ServiceData.setMasterInfo(
                     new MasterInfo(runTimeProperties.getAppName(), runTimeProperties.getServerAddress(),
@@ -133,13 +135,15 @@ public final class SystemInitializeContextListener implements ApplicationListene
             return;
         }
 
-        Map<String, MqConsumerInfo> mqConsumerInfoMap = null;
-        try {
-            mqConsumerInfoMap = initializeRocketMq(requestServiceInfoMap);
-            ServiceData.setMqConsumerInfoMap(mqConsumerInfoMap);
-        } catch (Exception e) {
-            LOGGER.error("Initialize rocket mq error,error info({}).", formatExceptionInfo(e));
-            return;
+        if(runTimeProperties.isBeanSwitchRocketMq()) {
+            Map<String, MqConsumerInfo> mqConsumerInfoMap = null;
+            try {
+                mqConsumerInfoMap = initializeRocketMq(requestServiceInfoMap);
+                ServiceData.setMqConsumerInfoMap(mqConsumerInfoMap);
+            } catch (Exception e) {
+                LOGGER.error("Initialize rocket mq error,error info({}).", formatExceptionInfo(e));
+                return;
+            }
         }
     }
 
@@ -583,11 +587,18 @@ public final class SystemInitializeContextListener implements ApplicationListene
             return false;
         }
 
+        List<String> userRoleNameList = null;
+        if(!StringUtils.isEmpty(runTimeProperties.getApiAccessRoleSendMsg())) {
+            String [] userRoleNames = runTimeProperties.getApiAccessRoleSendMsg().split(",");
+            userRoleNameList = Arrays.asList(userRoleNames);
+        }
+
         RequestServiceInfo sendMsgServiceInfo = new RequestServiceInfo();
         sendMsgServiceInfo.setServiceName(HTTP_API_SERVICE_SEND_MSG);
         sendMsgServiceInfo.setMethod(HttpDefine.HTTP_METHOD_POST);
         sendMsgServiceInfo.setType(SERVICE_TYPE_HTTP);
         sendMsgServiceInfo.setParamClass(HttpSendMsgRequestMsgInfo.class);
+        sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
         sendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
 
         Map<String, RequestServiceInfo> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
@@ -599,6 +610,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
         batchSendMsgServiceInfo.setMethod(HttpDefine.HTTP_METHOD_POST);
         batchSendMsgServiceInfo.setType(SERVICE_TYPE_HTTP);
         batchSendMsgServiceInfo.setParamClass(HttpBatchSendMsgRequestMsgInfo.class);
+        sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
         batchSendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
 
         subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);

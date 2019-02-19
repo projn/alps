@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * @author : sunyuecheng
  */
 @Configuration
-@PropertySource("file:${config.dir}/config/threadpool.properties")
+@PropertySource(value = "file:${config.dir}/config/threadpool.properties", ignoreResourceNotFound = true)
 public class TaskExecutorConfig {
 
     @Value("${threadpool.corePoolSize}")

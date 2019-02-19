@@ -3,13 +3,14 @@ package com.projn.alps.alpsmicroservice.config;
 import com.projn.alps.alpsmicroservice.filter.ActuatorRequestAuthFilter;
 import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.DispatcherType;
-import java.util.*;
+import java.util.EnumSet;
 
 /**
  * web filter config
@@ -18,6 +19,7 @@ import java.util.*;
  */
 @Configuration
 @EnableConfigurationProperties(RunTimeProperties.class)
+@ConditionalOnProperty(name = "bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
 public class WebFilterConfig {
 
     @Autowired

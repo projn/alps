@@ -1,9 +1,11 @@
-
 .DS_Store
 .idea/*
+.mvn/*
+mvnw
+mvnw.cmd
 *.iml
 alpsgenerator/src/main/resources/demo/api_2_demo.yaml
 alpsgenerator/src/main/resources/demo/api_3_demo.yaml
-alpsmicroservice/src/main/resources/dev
+alpsmicroservice/src/main/resources/
 target
 install/alpsmicroservice-install/alpsmicroservice/alpsmicroservice-0.0.1.jar

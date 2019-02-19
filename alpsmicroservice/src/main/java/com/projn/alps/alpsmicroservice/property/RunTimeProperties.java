@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Component;
  * @author : sunyuecheng
  */
 @Component
+@RefreshScope
 @ConfigurationProperties
-@PropertySource(value ={"file:${config.dir}/config/context.properties",
-        "file:${config.dir}/application.properties"}, ignoreResourceNotFound = false)
+@PropertySource(value ={"file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
 public class RunTimeProperties implements InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunTimeProperties.class);
 
@@ -34,14 +35,14 @@ public class RunTimeProperties implements InitializingBean {
     @Value("#{systemProperties['os.name']}")
     private String osName=null;
 
-    @Value("${system.masterRole}")
-    private String masterRole = null;
-
     @Value("${management.context-path}")
     private String actuatorContextPath = null;
 
     @Value("${websocket.context-path}")
     private String websocketContextPath = null;
+
+    @Value("${logging.config}")
+    private String logConfigPath=null;
 
     @Value("${system.i18n.dir}")
     private String i18nDir=null;
@@ -61,11 +62,10 @@ public class RunTimeProperties implements InitializingBean {
     @Value("${system.api.access.role.actuator}" )
     private String apiAccessRoleActuator=null;
 
-    @Value("${logging.config}")
-    private String logConfigPath=null;
+    @Value("${bean.switch.rocketmq:false}")
+    private boolean beanSwitchRocketMq=false;
 
-
-    private RunTimeProperties() {
+    public RunTimeProperties() {
 
     }
 
@@ -99,14 +99,6 @@ public class RunTimeProperties implements InitializingBean {
 
     public void setOsName(String osName) {
         this.osName = osName;
-    }
-
-    public String getMasterRole() {
-        return masterRole;
-    }
-
-    public void setMasterRole(String masterRole) {
-        this.masterRole = masterRole;
     }
 
     public String getActuatorContextPath() {
@@ -165,6 +157,14 @@ public class RunTimeProperties implements InitializingBean {
         this.apiAccessRoleSendMsg = apiAccessRoleSendMsg;
     }
 
+    public String getLogConfigPath() {
+        return logConfigPath;
+    }
+
+    public void setLogConfigPath(String logConfigPath) {
+        this.logConfigPath = logConfigPath;
+    }
+
     public String getApiAccessRoleActuator() {
         return apiAccessRoleActuator;
     }
@@ -173,12 +173,12 @@ public class RunTimeProperties implements InitializingBean {
         this.apiAccessRoleActuator = apiAccessRoleActuator;
     }
 
-    public String getLogConfigPath() {
-        return logConfigPath;
+    public boolean isBeanSwitchRocketMq() {
+        return beanSwitchRocketMq;
     }
 
-    public void setLogConfigPath(String logConfigPath) {
-        this.logConfigPath = logConfigPath;
+    public void setBeanSwitchRocketMq(boolean beanSwitchRocketMq) {
+        this.beanSwitchRocketMq = beanSwitchRocketMq;
     }
 
     @Override

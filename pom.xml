@@ -17,6 +17,7 @@
 
         <module>alpsmicroservice</module>
         <module>alpsgenerator</module>
+        <module>alpsconfigserver</module>
     </modules>
 
     <properties>
@@ -39,23 +40,24 @@
 
         <java.version>1.8</java.version>
 
-        <spring-cloud.version>Edgware.SR3</spring-cloud.version>
-        <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
-        <spring.version>4.3.20.RELEASE</spring.version>
+        <spring-cloud.version>Edgware.SR5</spring-cloud.version>
+        <spring-boot.version>1.5.19.RELEASE</spring-boot.version>
+        <spring-cloud-consul.version>1.3.5.RELEASE</spring-cloud-consul.version>
+        <spring.version>4.3.22.RELEASE</spring.version>
         <jedis.version>2.9.0</jedis.version>
         <fastjson.version>1.2.40</fastjson.version>
         <rocketmq-client.version>4.2.0</rocketmq-client.version>
         <bouncycastle.version>1.60</bouncycastle.version>
         <commons-codec.version>1.11</commons-codec.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <spring-data-redis.version>1.8.11.RELEASE</spring-data-redis.version>
+        <spring-data-redis.version>1.8.18.RELEASE</spring-data-redis.version>
         <mybatis.version>3.4.6</mybatis.version>
         <mybatis-spring.version>1.3.2</mybatis-spring.version>
         <jjwt.version>0.9.0</jjwt.version>
         <druid.version>1.1.9</druid.version>
         <jdbc.driver.version>2.3.0</jdbc.driver.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
-        <spring-security.version>4.2.5.RELEASE</spring-security.version>
+        <spring-security.version>4.2.11.RELEASE</spring-security.version>
         <aspectj.version>1.8.13</aspectj.version>
         <quartz.version>2.3.0</quartz.version>
         <dom4j.version>2.1.1</dom4j.version>
@@ -76,6 +78,7 @@
         <alps.test.version>1.0</alps.test.version>
         <alps.alpsgenerator.version>0.0.1</alps.alpsgenerator.version>
         <alps.alpsmicroservice.version>0.0.1</alps.alpsmicroservice.version>
+        <alps.alpsconfigserver.version>0.0.1</alps.alpsconfigserver.version>
     </properties>
 
     <profiles>
@@ -96,18 +99,18 @@
         </profile>
     </profiles>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://192.168.37.133:8082/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>Nexus Snapshot Repository</name>
-            <url>http://192.168.37.133:8082/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>nexus-releases</id>-->
+            <!--<name>Nexus Release Repository</name>-->
+            <!--<url>http://192.168.37.133:8082/repository/maven-releases/</url>-->
+        <!--</repository>-->
+        <!--<snapshotRepository>-->
+            <!--<id>nexus-snapshots</id>-->
+            <!--<name>Nexus Snapshot Repository</name>-->
+            <!--<url>http://192.168.37.133:8082/repository/maven-snapshots/</url>-->
+        <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
 
     <build>
         <pluginManagement>

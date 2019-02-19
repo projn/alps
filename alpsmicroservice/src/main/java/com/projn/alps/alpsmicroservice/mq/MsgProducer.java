@@ -10,6 +10,7 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import static com.projn.alps.define.CommonDefine.DEFAULT_ENCODING;
@@ -21,6 +22,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component
+@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class MsgProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgProducer.class);
