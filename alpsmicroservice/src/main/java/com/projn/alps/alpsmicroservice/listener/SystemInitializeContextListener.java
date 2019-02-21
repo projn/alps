@@ -107,8 +107,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     (RunTimeProperties) contextRefreshedEvent.getApplicationContext().getBean("runTimeProperties");
 
             if(runTimeProperties.isBeanSwitchRocketMq()) {
-                rocketMqProperties =
-                        (RocketMqProperties) contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
+                rocketMqProperties = (RocketMqProperties)
+                        contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
             }
 
             ServiceData.setMasterInfo(
@@ -598,7 +598,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
         List<String> userRoleNameList = null;
         if(!StringUtils.isEmpty(runTimeProperties.getApiAccessRoleSendMsg())) {
-            String [] userRoleNames = runTimeProperties.getApiAccessRoleSendMsg().split(",");
+            String[] userRoleNames = runTimeProperties.getApiAccessRoleSendMsg().split(",");
             userRoleNameList = Arrays.asList(userRoleNames);
         }
 

@@ -14,26 +14,27 @@ import org.springframework.stereotype.Component;
 
 /**
  * run time properties
+ *
  * @author : sunyuecheng
  */
 @Component
 @RefreshScope
 @ConfigurationProperties
-@PropertySource(value ={"file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
+@PropertySource(value = {"file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
 public class RunTimeProperties implements InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunTimeProperties.class);
 
     @Value("${spring.application.name}")
-    private String appName=null;
+    private String appName = null;
 
     @Value("${server.address}")
-    private String serverAddress=null;
+    private String serverAddress = null;
 
     @Value("${server.port}")
-    private int serverPort=0;
+    private int serverPort = 0;
 
     @Value("#{systemProperties['os.name']}")
-    private String osName=null;
+    private String osName = null;
 
     @Value("${management.server.servlet.context-path}")
     private String actuatorContextPath = null;
@@ -42,32 +43,35 @@ public class RunTimeProperties implements InitializingBean {
     private String websocketContextPath = null;
 
     @Value("${logging.config}")
-    private String logConfigPath=null;
+    private String logConfigPath = null;
 
     @Value("${system.i18n.dir}")
-    private String i18nDir=null;
+    private String i18nDir = null;
 
-    @Value("${system.waitResponseSeconds}" )
-    private long waitResponseSeconds=1;
+    @Value("${system.waitResponseSeconds}")
+    private long waitResponseSeconds = 1;
 
     @Value("${system.wsSessionTimeOutMinutes}")
     private int wsSessionTimeOutMinutes = MicroServiceDefine.DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES;
 
-    @Value("${system.tokenSecretKey}" )
-    private String tokenSecretKey=null;
+    @Value("${system.tokenSecretKey}")
+    private String tokenSecretKey = null;
 
-    @Value("${system.api.access.role.sendMsg}" )
-    private String apiAccessRoleSendMsg=null;
+    @Value("${system.api.access.role.sendMsg}")
+    private String apiAccessRoleSendMsg = null;
 
-    @Value("${system.api.access.role.actuator}" )
-    private String apiAccessRoleActuator=null;
+    @Value("${system.api.access.role.actuator}")
+    private String apiAccessRoleActuator = null;
 
     @Value("${system.bean.switch.rocketmq:false}")
-    private boolean beanSwitchRocketMq=false;
+    private boolean beanSwitchRocketMq = false;
 
     @Value("${system.bean.switch.websocket:false}")
-    private boolean beanSwitchWebsocket=false;
+    private boolean beanSwitchWebsocket = false;
 
+    /**
+     * run time properties
+     */
     public RunTimeProperties() {
 
     }
@@ -194,7 +198,7 @@ public class RunTimeProperties implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if(!StringUtils.isEmpty(logConfigPath)) {
+        if (!StringUtils.isEmpty(logConfigPath)) {
             Configurator.initialize(null, logConfigPath);
         }
     }
