@@ -5,6 +5,7 @@ import com.projn.alps.exception.HttpException;
 import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import com.projn.alps.tool.HttpControllerTools;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import static com.projn.alps.define.CommonDefine.*;
  * @author : sunyuecheng
  */
 @Controller
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
 @EnableConfigurationProperties(RunTimeProperties.class)
 public class HttpController {
     @Autowired
@@ -50,7 +52,7 @@ public class HttpController {
         Map<String, String> pathParamMap = new HashMap<>(COLLECTION_INIT_SIZE);
         pathParamMap.put("serviceName", serviceName);
 
-        String url= "/api/{service_name";
+        String url= "/api/{service_name}";
 
         return httpControllerTools.deal(url, request,response,pathParamMap, (Object)requestJson);
     }

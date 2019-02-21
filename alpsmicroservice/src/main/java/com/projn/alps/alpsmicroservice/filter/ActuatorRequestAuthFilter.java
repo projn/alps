@@ -28,7 +28,7 @@ import static com.projn.alps.exception.code.CommonErrorCode.RESULT_INVAILD_USER_
  * @author : sunyuecheng
  */
 @Component
-@ConditionalOnProperty(name = "bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
 public class ActuatorRequestAuthFilter extends OncePerRequestFilter {
 
     @Autowired

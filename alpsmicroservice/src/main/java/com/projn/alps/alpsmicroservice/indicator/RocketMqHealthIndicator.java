@@ -32,7 +32,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component("rocketmq")
-@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqHealthIndicator implements HealthIndicator {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqHealthIndicator.class);
 

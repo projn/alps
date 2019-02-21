@@ -19,7 +19,7 @@ import java.util.EnumSet;
  */
 @Configuration
 @EnableConfigurationProperties(RunTimeProperties.class)
-@ConditionalOnProperty(name = "bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
 public class WebFilterConfig {
 
     @Autowired

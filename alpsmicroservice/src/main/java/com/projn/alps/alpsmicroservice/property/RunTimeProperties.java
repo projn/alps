@@ -35,7 +35,7 @@ public class RunTimeProperties implements InitializingBean {
     @Value("#{systemProperties['os.name']}")
     private String osName=null;
 
-    @Value("${management.context-path}")
+    @Value("${management.server.servlet.context-path}")
     private String actuatorContextPath = null;
 
     @Value("${websocket.context-path}")
@@ -62,8 +62,11 @@ public class RunTimeProperties implements InitializingBean {
     @Value("${system.api.access.role.actuator}" )
     private String apiAccessRoleActuator=null;
 
-    @Value("${bean.switch.rocketmq:false}")
+    @Value("${system.bean.switch.rocketmq:false}")
     private boolean beanSwitchRocketMq=false;
+
+    @Value("${system.bean.switch.websocket:false}")
+    private boolean beanSwitchWebsocket=false;
 
     public RunTimeProperties() {
 
@@ -179,6 +182,14 @@ public class RunTimeProperties implements InitializingBean {
 
     public void setBeanSwitchRocketMq(boolean beanSwitchRocketMq) {
         this.beanSwitchRocketMq = beanSwitchRocketMq;
+    }
+
+    public boolean isBeanSwitchWebsocket() {
+        return beanSwitchWebsocket;
+    }
+
+    public void setBeanSwitchWebsocket(boolean beanSwitchWebsocket) {
+        this.beanSwitchWebsocket = beanSwitchWebsocket;
     }
 
     @Override

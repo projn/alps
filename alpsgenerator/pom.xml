@@ -149,8 +149,23 @@
                                         <include name="logback-config.xml" />
                                     </fileset>
                                 </copy>
-                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/config">
-                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/config">
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud">
+                                    <fileset dir="${alpsmicroservice-install-dir}/config/cloud">
+                                        <include name="*.properties" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud/git">
+                                    <fileset dir="${alpsmicroservice-install-dir}/config/cloud/git">
+                                        <include name="*.properties" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/single">
+                                    <fileset dir="${alpsmicroservice-install-dir}/config/single">
+                                        <include name="*.properties" />
+                                    </fileset>
+                                </copy>
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/single/config">
+                                    <fileset dir="${alpsmicroservice-install-dir}/config/single/config">
                                         <include name="*.properties" />
                                     </fileset>
                                 </copy>
@@ -165,10 +180,8 @@
                                     </fileset>
                                 </copy>
 
-                                <copy file="${alpsmicroservice-install-dir}/alpsmicroservice/context/application.properties"
-                                      todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context" />
-
-                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-cloud" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-single" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/install.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/config.properties" todir="${des-dir}/template/install/alpsmicroservice-install" />
 

@@ -330,6 +330,14 @@ function install_cloud()
     dst=${SOFTWARE_SERVER_NAME}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
+    src=SOFTWARE_SERVER_IP
+    dst=${SOFTWARE_SERVER_IP}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
+
+    src=SOFTWARE_SERVER_PORT
+    dst=${SOFTWARE_SERVER_PORT}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
+
     src=SOFTWARE_CONSUL_SERVER_ADDRESS
     dst=${SOFTWARE_CONSUL_SERVER_ADDRESS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties

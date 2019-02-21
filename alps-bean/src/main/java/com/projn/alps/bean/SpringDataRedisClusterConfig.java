@@ -40,7 +40,7 @@ import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MIN_
  */
 @Configuration
 @PropertySource(value = "file:${config.dir}/config/redis-cluster.properties", ignoreResourceNotFound = true)
-@ConditionalOnProperty(name = "bean.switch.redis.cluster", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.redis.cluster", havingValue = "true", matchIfMissing=true)
 public class SpringDataRedisClusterConfig {
 
     @Value("${redis.pool.maxTotal}")

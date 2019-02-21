@@ -1,5 +1,6 @@
 package com.projn.alps.alpsmicroservice.handler;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -14,6 +15,7 @@ import java.util.Map;
  *
  * @author : sunyuecheng
  */
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
 public class HttpSessionHandler extends HttpSessionHandshakeInterceptor {
 
     /**

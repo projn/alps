@@ -16,7 +16,7 @@ import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.ROCKET_M
 @Component
 @ConfigurationProperties
 @PropertySource(value = "file:${config.dir}/config/rocketmq.properties", ignoreResourceNotFound = true)
-@ConditionalOnProperty(name = "bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqProperties {
 
     @Value("${rocketmq.queueServerAddress}")

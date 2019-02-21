@@ -391,8 +391,10 @@ public final class SystemInitializeContextListener implements ApplicationListene
             }
         }
 
-        if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
-            throw new Exception("Register http api service info error.");
+        if(runTimeProperties.isBeanSwitchRocketMq()) {
+            if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
+                throw new Exception("Register http api service info error.");
+            }
         }
     }
 
@@ -436,7 +438,10 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 moduleJobInfoList.add(new ModuleJobInfo(jobClassName, jobName, cronExpression, jobPropertiesMap));
             }
         }
-        registerHttpApiJob(moduleJobInfoList);
+
+        if(runTimeProperties.isBeanSwitchWebsocket()) {
+            registerHttpApiJob(moduleJobInfoList);
+        }
     }
 
 
@@ -542,40 +547,44 @@ public final class SystemInitializeContextListener implements ApplicationListene
             httpServiceMonitorAop.setHttpServiceMonitorAopList(httpServiceMonitorAopList);
         }
 
-        List<IWsServiceMonitorAop> wsServiceMonitorAopList = new ArrayList<>();
-        Map<String, IWsServiceMonitorAop> wsServiceMonitorAopMap =
-                applicationContext.getBeansOfType(IWsServiceMonitorAop.class);
-        for (Map.Entry<String, IWsServiceMonitorAop> entry : wsServiceMonitorAopMap.entrySet()) {
-            IWsServiceMonitorAop wsServiceMonitorAop = entry.getValue();
-            String interfaceName = IWsServiceMonitorAop.class.getName();
-            String className = entry.getKey();
-            if (!interfaceName.contains(className)) {
-                wsServiceMonitorAopList.add(wsServiceMonitorAop);
+        if(runTimeProperties.isBeanSwitchWebsocket()) {
+            List<IWsServiceMonitorAop> wsServiceMonitorAopList = new ArrayList<>();
+            Map<String, IWsServiceMonitorAop> wsServiceMonitorAopMap =
+                    applicationContext.getBeansOfType(IWsServiceMonitorAop.class);
+            for (Map.Entry<String, IWsServiceMonitorAop> entry : wsServiceMonitorAopMap.entrySet()) {
+                IWsServiceMonitorAop wsServiceMonitorAop = entry.getValue();
+                String interfaceName = IWsServiceMonitorAop.class.getName();
+                String className = entry.getKey();
+                if (!interfaceName.contains(className)) {
+                    wsServiceMonitorAopList.add(wsServiceMonitorAop);
+                }
+            }
+
+            WsServiceMonitorAop wsServiceMonitorAop =
+                    (WsServiceMonitorAop) applicationContext.getBean(WsServiceMonitorAop.class);
+            if (wsServiceMonitorAop != null) {
+                wsServiceMonitorAop.setWsServiceMonitorAopList(wsServiceMonitorAopList);
             }
         }
 
-        WsServiceMonitorAop wsServiceMonitorAop =
-                (WsServiceMonitorAop) applicationContext.getBean(WsServiceMonitorAop.class);
-        if (wsServiceMonitorAop != null) {
-            wsServiceMonitorAop.setWsServiceMonitorAopList(wsServiceMonitorAopList);
-        }
-
-        List<IMsgServiceMonitorAop> msgServiceMonitorAopList = new ArrayList<>();
-        Map<String, IMsgServiceMonitorAop> msgServiceMonitorAopMap =
-                applicationContext.getBeansOfType(IMsgServiceMonitorAop.class);
-        for (Map.Entry<String, IMsgServiceMonitorAop> entry : msgServiceMonitorAopMap.entrySet()) {
-            IMsgServiceMonitorAop msgServiceMonitorAop = entry.getValue();
-            String interfaceName = IMsgServiceMonitorAop.class.getName();
-            String className = entry.getKey();
-            if (!interfaceName.contains(className)) {
-                msgServiceMonitorAopList.add(msgServiceMonitorAop);
+        if(runTimeProperties.isBeanSwitchRocketMq()) {
+            List<IMsgServiceMonitorAop> msgServiceMonitorAopList = new ArrayList<>();
+            Map<String, IMsgServiceMonitorAop> msgServiceMonitorAopMap =
+                    applicationContext.getBeansOfType(IMsgServiceMonitorAop.class);
+            for (Map.Entry<String, IMsgServiceMonitorAop> entry : msgServiceMonitorAopMap.entrySet()) {
+                IMsgServiceMonitorAop msgServiceMonitorAop = entry.getValue();
+                String interfaceName = IMsgServiceMonitorAop.class.getName();
+                String className = entry.getKey();
+                if (!interfaceName.contains(className)) {
+                    msgServiceMonitorAopList.add(msgServiceMonitorAop);
+                }
             }
-        }
 
-        MsgServiceMonitorAop msgServiceMonitorAop =
-                (MsgServiceMonitorAop) applicationContext.getBean(MsgServiceMonitorAop.class);
-        if (msgServiceMonitorAop != null) {
-            msgServiceMonitorAop.setMsgServiceMonitorAopList(msgServiceMonitorAopList);
+            MsgServiceMonitorAop msgServiceMonitorAop =
+                    (MsgServiceMonitorAop) applicationContext.getBean(MsgServiceMonitorAop.class);
+            if (msgServiceMonitorAop != null) {
+                msgServiceMonitorAop.setMsgServiceMonitorAopList(msgServiceMonitorAopList);
+            }
         }
     }
 

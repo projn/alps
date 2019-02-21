@@ -8,5 +8,6 @@ alpsgenerator/src/main/resources/demo/api_2_demo.yaml
 alpsgenerator/src/main/resources/demo/api_3_demo.yaml
 alpsmicroservice/src/main/resources/
 alpsconfigserver/src/main/resources/
+alpsdemo
 target
 install/alpsmicroservice-install/alpsmicroservice/alpsmicroservice-0.0.1.jar

@@ -4,6 +4,7 @@ import com.projn.alps.aop.IMsgServiceMonitorAop;
 import com.projn.alps.struct.MsgRequestInfo;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Aspect
 @Component
+@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class MsgServiceMonitorAop {
 
     private List<IMsgServiceMonitorAop> msgServiceMonitorAopList = null;

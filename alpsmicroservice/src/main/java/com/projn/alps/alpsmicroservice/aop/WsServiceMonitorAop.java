@@ -5,6 +5,7 @@ import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.struct.WsResponseInfo;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Aspect
 @Component
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
 public class WsServiceMonitorAop {
 
     private List<IWsServiceMonitorAop> wsServiceMonitorAopList = null;

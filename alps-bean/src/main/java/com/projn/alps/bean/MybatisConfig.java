@@ -11,7 +11,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ImportResource("classpath:bootstrap/spring-mybatis.xml")
 //@PropertySource(value = {"file:${config.dir}/config/mybatis.properties"})
-@ConditionalOnProperty(name = "bean.switch.mybatis", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.mybatis", havingValue = "true", matchIfMissing=true)
 public class MybatisConfig {
 
 //    @Value("${mybatis.configLocation}")

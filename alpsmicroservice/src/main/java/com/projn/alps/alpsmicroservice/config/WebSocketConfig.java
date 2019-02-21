@@ -21,7 +21,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 @EnableConfigurationProperties(RunTimeProperties.class)
-@ConditionalOnProperty(name = "bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
 public class WebSocketConfig implements WebSocketConfigurer {
 
 
