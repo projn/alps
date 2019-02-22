@@ -3,12 +3,12 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
+        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn install -Dmaven.test.skip=true'
       }
     }
-    stage('report') {
+    stage('check') {
       steps {
-        readFile(file: 'target/site/checkstyle-aggregate.html', encoding: 'utf-8')
+        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
       }
     }
   }
