@@ -1,9 +1,9 @@
 pipeline {
-  agent any
+  agent none
   stages {
     stage('build') {
       steps {
-        sh 'mvn checkstyle:checkstyle'
+        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
       }
     }
     stage('report') {
