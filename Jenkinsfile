@@ -8,7 +8,7 @@ pipeline {
     }
     stage('check') {
       steps {
-        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
+        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
       }
     }
   }
