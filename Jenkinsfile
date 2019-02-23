@@ -25,11 +25,6 @@ pipeline {
         }
       }
     }
-    stage('report') {
-      steps {
-        recordIssues(enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8')
-      }
-    }
     stage('package') {
       steps {
         sh 'source ./VERSION'
