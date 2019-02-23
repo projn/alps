@@ -27,7 +27,8 @@ pipeline {
     }
     stage('package') {
       steps {
-        sh 'source ./VERSION;tar -czf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./intsall/alpsgenerator'
+        sh '''source ./VERSION; \\
+tar -czf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
       }
     }
   }
