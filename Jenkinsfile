@@ -39,7 +39,6 @@ tar -czf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator''
     stage('report') {
       steps {
         junit '**/target/*-reports/TEST-*.xml'
-        recordIssues(enabledForFailure: true, tools: [java(), javaDoc()], sourceCodeEncoding: 'UTF-8')
         recordIssues(enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle.xml'), sourceCodeEncoding: 'UTF-8')
         recordIssues(enabledForFailure: true, tool: cpd(pattern: 'target/cpd.xml'), sourceCodeEncoding: 'UTF-8')
         recordIssues(enabledForFailure: true, tool: pmdParser(pattern: 'target/pmd.xml'), sourceCodeEncoding: 'UTF-8')
