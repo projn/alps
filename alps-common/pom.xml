@@ -168,6 +168,12 @@
         </dependency>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.projn.alps</groupId>
             <artifactId>alps-dao</artifactId>
             <version>${alps.dao.version}</version>
