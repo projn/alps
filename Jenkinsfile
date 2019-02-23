@@ -27,11 +27,8 @@ pipeline {
     }
     stage('package') {
       steps {
-        sh 'source ./VERSION ; tar -xzf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./intsall/alpsgenerator'
+        sh 'source ./VERSION;tar -xzf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./intsall/alpsgenerator'
       }
     }
-  }
-  environment {
-    ALPS_GENERATOR_VERSION = '0.0.1'
   }
 }
