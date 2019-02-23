@@ -11,5 +11,5 @@ alpsconfigserver/src/main/resources/
 alpsdemo
 target
 install/alpsmicroservice-install/alpsmicroservice/*.jar
-install/alpsdev-init/*.jar
 install/alpsconfigserver-install/alpsconfigserver/*.jar
+install/alpsdev-init/*.jar
