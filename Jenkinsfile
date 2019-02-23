@@ -18,9 +18,9 @@ pipeline {
             sh 'mvn findbugs:findbugs'
           }
         }
-        stage('ppm') {
+        stage('pdm') {
           steps {
-            sh 'mvn ppm:pdm'
+            sh 'mvn pdm:pdm'
           }
         }
       }
