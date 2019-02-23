@@ -127,6 +127,7 @@
                         <configuration>
                             <target>
                                 <property name="alpsmicroservice-install-dir">../install/alpsmicroservice-install</property>
+                                <property name="alpsdev-init-dir">../install/alpsdev-init</property>
                                 <property name="maven-plugin-config-dir">${project.basedir}/src/main/resources/template/maven-plugin-config</property>
                                 <property name="template-dir">${project.basedir}/src/main/resources/template</property>
                                 <property name="demo-dir">${project.basedir}/src/main/resources/demo</property>
@@ -190,6 +191,14 @@
                                         <include name="*.jar" />
                                     </fileset>
                                 </copy>
+
+                                <copy todir="${des-dir}/alpsdev-init">
+                                    <fileset dir="${alpsdev-init-dir}/">
+                                        <include name="*.*" />
+                                    </fileset>
+                                </copy>
+                                <copy file="../VERSION" todir="${des-dir}/alpsdev-init" />
+
 
                                 <copy todir="${des-dir}/template/maven-plugin-config">
                                     <fileset dir="${maven-plugin-config-dir}/">
