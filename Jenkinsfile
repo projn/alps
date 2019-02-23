@@ -27,7 +27,7 @@ pipeline {
     }
     stage('report') {
       steps {
-        scanForIssues()
+        publishCoverage()
       }
     }
   }
