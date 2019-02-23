@@ -3,10 +3,10 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn install -Dmaven.test.skip=true'
+        sh 'mvn install -Dmaven.test.skip=true'
       }
     }
-    stage('check') {
+    stage('code check') {
       steps {
         sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
       }
