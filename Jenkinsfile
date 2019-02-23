@@ -7,8 +7,22 @@ pipeline {
       }
     }
     stage('code check') {
-      steps {
-        sh '/opt/software/maven/apache-maven-3.6.0/bin/mvn checkstyle:checkstyle'
+      parallel {
+        stage('check style') {
+          steps {
+            sh 'mvn checkstyle:checkstyle'
+          }
+        }
+        stage('find bugs') {
+          steps {
+            sh 'mvn findbugs:findbugs'
+          }
+        }
+        stage('pmd') {
+          steps {
+            sh 'mvn pmd:pmd'
+          }
+        }
       }
     }
     stage('report') {
