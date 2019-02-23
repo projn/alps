@@ -27,7 +27,7 @@ pipeline {
     }
     stage('report') {
       steps {
-        publishCoverage()
+        recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8'
       }
     }
   }
