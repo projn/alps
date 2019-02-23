@@ -10,7 +10,7 @@ pipeline {
       parallel {
         stage('check style') {
           steps {
-            sh 'mvn checkstyle:checkstyle'
+            sh 'mvn checkstyle:checkstyle-aggregate'
           }
         }
         stage('find bugs') {
@@ -27,7 +27,7 @@ pipeline {
     }
     stage('report') {
       steps {
-        recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8'
+        recordIssues(enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8')
       }
     }
   }
