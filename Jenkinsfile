@@ -30,5 +30,11 @@ pipeline {
         recordIssues(enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8')
       }
     }
+    stage('package') {
+      steps {
+        sh '''source ./VERSION
+tar -xzf alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./intsall/alpsgenerator '''
+      }
+    }
   }
 }
