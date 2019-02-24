@@ -49,7 +49,7 @@ tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsge
       }
     }
 
-    stages('report') {
+    stage('report') {
       parallel {
         stage('test report') {
           steps {
