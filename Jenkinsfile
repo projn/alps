@@ -5,13 +5,13 @@ pipeline {
     timeout(time: 1, unit: 'HOURS')
   }
 
-  stage('build') {
-    steps {
-      sh 'mvn install'
-    }
-  }
-
   stages {
+    stage('build') {
+      steps {
+        sh 'mvn install'
+      }
+    }
+
     stage('code check') {
       parallel {
         stage('check style') {
