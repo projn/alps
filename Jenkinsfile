@@ -41,10 +41,6 @@ pipeline {
       }
     }
 
-    stage('package') {
-
-    }
-
     stage('report') {
       parallel {
         stage('test report') {
