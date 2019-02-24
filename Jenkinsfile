@@ -45,14 +45,47 @@ tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsge
     }
 
     stage('report') {
+      parallel {
+        stage('test report') {
+          steps {
+            junit testResults: '**/target/*-reports/TEST-*.xml'
+          }
+        }
+        stage('maven report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: mavenConsole()
+            recordIssues enabledForFailure: true, tools: [java(), javaDoc()], sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('checkstyle report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('pmd report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: cpd(pattern: 'target/cpd.xml'), sourceCodeEncoding: 'UTF-8'
+            recordIssues enabledForFailure: true, tool: pmdParser(pattern: 'target/pmd.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('findbugs report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: findBugs(pattern: 'target/findbugsXml.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+      }
+    }
+
+    stage('release') {
       steps {
-        junit testResults: '**/target/*-reports/TEST-*.xml'
-        recordIssues enabledForFailure: true, tool: mavenConsole()
-        recordIssues enabledForFailure: true, tools: [java(), javaDoc()], sourceCodeEncoding: 'UTF-8'
-        recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle.xml'), sourceCodeEncoding: 'UTF-8'
-        recordIssues enabledForFailure: true, tool: cpd(pattern: 'target/cpd.xml'), sourceCodeEncoding: 'UTF-8'
-        recordIssues enabledForFailure: true, tool: pmdParser(pattern: 'target/pmd.xml'), sourceCodeEncoding: 'UTF-8'
-        recordIssues enabledForFailure: true, tool: findBugs(pattern: 'target/findbugsXml.xml'), sourceCodeEncoding: 'UTF-8'
+        sh '''mkdir -p ./target/; \\
+cd ./target;
+git clone https://github.com/projn/popigai.git; \\
+rm -rf popigai/instal/alpsconfigserver-install; \\
+cp -r ../install/alpsconfigserver-install; \\
+git add popigai/instal/alpsconfigserver-install; \\
+git commit; \\
+git push'''
       }
     }
   }
