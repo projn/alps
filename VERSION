@@ -1,3 +1,18 @@
+# prepare for jenkins pipeline.
+#
+# step 1 : install git
+# yum install git
+#
+# step 2 : set user`s github profile for git pushing without password
+# cd ~
+# vim .git-credentials
+# https://{username}:{password}@github.com
+# git config --global credential.helper store
+#
+# step 3 : create release dir
+# mkdir -p ~/release/configserver
+# mkdir -p ~/release/generator
+
 ALPS_MODULE_VERSION=1.0
 ALPS_CONFIG_SERVER_VERSION=0.0.1
 ALPS_GENERATOR_VERSION=0.0.1

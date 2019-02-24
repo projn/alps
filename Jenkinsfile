@@ -1,19 +1,4 @@
 pipeline {
-# prepare for this pipeline.
-#
-# step 1 : install git
-# yum install git
-#
-# step 2 : set user`s github profile for git pushing without password
-# cd ~
-# vim .git-credentials
-# https://{username}:{password}@github.com
-# git config --global credential.helper store
-#
-# step 3 : create release dir
-# mkdir -p ~/release/configserver
-# mkdir -p ~/release/generator
-
   agent any
   options {
     timeout(time: 1, unit: 'HOURS')
