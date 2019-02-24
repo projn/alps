@@ -5,6 +5,12 @@ pipeline {
     timeout(time: 1, unit: 'HOURS')
   }
 
+  stage('build') {
+    steps {
+      sh 'mvn install'
+    }
+  }
+
   stages {
     stage('code check') {
       parallel {
@@ -36,12 +42,6 @@ pipeline {
       }
     }
 
-    stage('build') {
-      steps {
-        sh 'mvn install'
-      }
-    }
-
     stage('package') {
       steps {
         sh '''source ./VERSION; \\
@@ -49,7 +49,7 @@ tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsge
       }
     }
 
-    stage('report') {
+    stages('report') {
       parallel {
         stage('test report') {
           steps {
