@@ -1,3 +1,19 @@
+# prepare for this pipeline.
+#
+# step 1 : install git
+# yum install git
+#
+# step 2 : set user`s github profile for git pushing without password
+# cd ~
+# vim .git-credentials
+# https://{username}:{password}@github.com
+# git config --global credential.helper store
+#
+# step 3 : create release dir
+# mkdir -p ~/release/configserver
+# mkdir -p ~/release/generator
+#
+
 pipeline {
   agent any
 
@@ -43,10 +59,7 @@ pipeline {
     }
 
     stage('package') {
-      steps {
-        sh '''source ./VERSION; \\
-tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
-      }
+
     }
 
     stage('report') {
@@ -82,14 +95,27 @@ tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsge
     }
 
     stage('release') {
-      steps {
-        sh '''cd ./target;
+      parallel {
+        stage('config server ') {
+          steps {
+            sh '''cd ./target;
 git clone https://github.com/projn/popigai.git; \\
 rm -rf popigai/instal/alpsconfigserver-install; \\
 cp -r ../install/alpsconfigserver-install; \\
 git add popigai/instal/alpsconfigserver-install; \\
 git commit -m "Jenkins auto commit alps config server intsall package"; \\
-git push'''
+git push; \\
+source ./VERSION; \\
+cp ./alpsconfigserver/target/*.jar ~/release/configserver'''
+          }
+        }
+
+        stage('generator') {
+          steps {
+            sh '''source ./VERSION; \\
+tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
+          }
+        }
       }
     }
   }
