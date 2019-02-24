@@ -1,3 +1,4 @@
+pipeline {
 # prepare for this pipeline.
 #
 # step 1 : install git
@@ -12,11 +13,8 @@
 # step 3 : create release dir
 # mkdir -p ~/release/configserver
 # mkdir -p ~/release/generator
-#
 
-pipeline {
   agent any
-
   options {
     timeout(time: 1, unit: 'HOURS')
   }
