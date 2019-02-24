@@ -1,5 +1,10 @@
 pipeline {
   agent any
+
+  options {
+    timeout(time: 1, unit: 'HOURS')
+  }
+
   stages {
     stage('code check') {
       parallel {
@@ -78,13 +83,12 @@ tar -czf ./target/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsge
 
     stage('release') {
       steps {
-        sh '''mkdir -p ./target/; \\
-cd ./target;
+        sh '''cd ./target;
 git clone https://github.com/projn/popigai.git; \\
 rm -rf popigai/instal/alpsconfigserver-install; \\
 cp -r ../install/alpsconfigserver-install; \\
 git add popigai/instal/alpsconfigserver-install; \\
-git commit; \\
+git commit -m "Jenkins auto commit alps config server intsall package"; \\
 git push'''
       }
     }
