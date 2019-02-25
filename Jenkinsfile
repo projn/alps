@@ -79,7 +79,7 @@ pipeline {
           steps {
             sh '''cd ./target;
 git clone https://github.com/projn/popigai.git; \\
-rm -rf popigai/instal/alpsconfigserver-install; \\
+rm -rf popigai/install/alpsconfigserver-install; \\
 cp -r ../install/alpsconfigserver-install popigai/install/; \\
 git add popigai/instal/alpsconfigserver-install; \\
 git commit -m "Jenkins auto commit alps config server intsall package"; \\
