@@ -82,7 +82,7 @@ rm -rf ./target'''
 
     stage('release') {
       parallel {
-        stage('config server ') {
+        stage('commit') {
           steps {
             sh '''cd ./target; \\
 git clone https://github.com/projn/popigai.git; \\
@@ -92,14 +92,14 @@ cd popigai/
 git add install/alpsconfigserver-install; \\
 git commit -m "Jenkins auto commit alps config server intsall package"; \\
 git push; \\
-cp ./alpsconfigserver/target/*.jar ~/release/configserver'''
           }
         }
 
-        stage('generator') {
+        stage('copy file') {
           steps {
             sh '''source ./VERSION; \\
-tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
+tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator; \\
+cp ./alpsconfigserver/target/*.jar ~/release/configserver'''
           }
         }
       }
