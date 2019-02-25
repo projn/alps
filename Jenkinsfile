@@ -81,7 +81,7 @@ pipeline {
 git clone https://github.com/projn/popigai.git; \\
 rm -rf popigai/install/alpsconfigserver-install; \\
 cp -r ../install/alpsconfigserver-install popigai/install/; \\
-git add popigai/instal/alpsconfigserver-install; \\
+git add popigai/install/alpsconfigserver-install; \\
 git commit -m "Jenkins auto commit alps config server intsall package"; \\
 git push; \\
 source ./VERSION; \\
