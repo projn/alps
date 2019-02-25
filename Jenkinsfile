@@ -7,7 +7,14 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh 'mvn clean install'
+        sh '''mvn clean; \\
+rm -rf ./target'''
+      }
+    }
+
+    stage('build') {
+      steps {
+        sh 'mvn install'
       }
     }
 
@@ -77,7 +84,7 @@ pipeline {
       parallel {
         stage('config server ') {
           steps {
-            sh '''cd ./target;
+            sh '''cd ./target; \\
 git clone https://github.com/projn/popigai.git; \\
 rm -rf popigai/install/alpsconfigserver-install; \\
 cp -r ../install/alpsconfigserver-install popigai/install/; \\
