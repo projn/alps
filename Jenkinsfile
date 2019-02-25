@@ -98,8 +98,8 @@ git push; \\
         stage('copy file') {
           steps {
             sh '''source ./VERSION; \\
-tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator; \\
-cp ./alpsconfigserver/target/*.jar ~/release/configserver'''
+cp ./alpsconfigserver/target/*.jar ~/release/configserver; \\
+tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
           }
         }
       }
