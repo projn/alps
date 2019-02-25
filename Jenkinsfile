@@ -92,7 +92,6 @@ cd popigai/
 git add install/alpsconfigserver-install; \\
 git commit -m "Jenkins auto commit alps config server intsall package"; \\
 git push; \\
-source ./VERSION; \\
 cp ./alpsconfigserver/target/*.jar ~/release/configserver'''
           }
         }
