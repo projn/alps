@@ -1,6 +1,7 @@
 package com.projn.alps.alpsgenerator;
 
 import com.projn.alps.alpsgenerator.tool.GeneratorTools;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -20,15 +21,9 @@ public class AlpsGeneratorApplication {
      * @param args :
      */
     public static void main(String[] args) {
-//        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
-//        JoranConfigurator configurator = new JoranConfigurator();
-//        configurator.setContext(loggerContext);
-//        loggerContext.reset();
-//        try {
-//            configurator.doConfigure("D:\\alps\\AlpsModuleGenerator\\src\\main\\resources\\logback-config.xml");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+        Configurator.initialize(null, "classpath:log4j2-config.xml");
+
         String generatorConfigPath = null;
         if(args == null || args.length!=1 || StringUtils.isEmpty(args[0])) {
             generatorConfigPath = System.getProperty("user.dir") + File.separator + "generator_config.xml";
