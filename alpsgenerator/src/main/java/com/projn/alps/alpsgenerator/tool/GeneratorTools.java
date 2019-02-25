@@ -129,6 +129,14 @@ public class GeneratorTools {
     private static final String MODULE_SERVICE_PACKAGE_TAIL = ".service.impl.";
     private static final String MODULE_CONTROLLER_PACKAGE_TAIL = ".controller.";
     private static final String MODULE_CONTROLLER_NAME_TAIL = "ModuleController";
+    private static final String MODULE_CONTROLLER_MATHOD_DOC_FROMAT="/**\n" +
+            "     * service bean :\n" +
+            "     * @see %s\n" +
+            "     * request bean :\n" +
+            "     * @see %s\n" +
+            "     * response bean :\n" +
+            "     * @see %s\n" +
+            "     */";
 
     private static final String JAVA_CLASS_COMPONENT_ANNOUNCE_FORMAT = "@Component(\"%s\")";
     private static final String JAVA_CLASS_CONTROLLER_ANNOUNCE = "@Controller";
@@ -666,6 +674,7 @@ public class GeneratorTools {
                 }
                 allClassList.add(requestInfoClass);
 
+                String responseClaseName = null;
                 Map<Object, Object> responseBodyMap = (Map<Object, Object>) urlDetailMap.get(YML_ELEMENT_RESPONSES);
                 if (responseBodyMap != null) {
                     MsgBodyInfo msgBodyInfo = parseModuleMsgApiResponseBodyMapInfo(responseBodyMap);
@@ -674,6 +683,7 @@ public class GeneratorTools {
                         responseInfoBeanName = JavaBeanGenerator.getCamelCaseString(type, true)
                                 + responseInfoBeanName;
 
+                        responseClaseName = basePackage + MODULE_MSG_RESPONSE_PACKAGE_TAIL + responseInfoBeanName;
                         List<TopLevelClass> responseInfoClassList = parseModuleMsgApiResponseMsgBodyInfo(
                                 urlPath, urlMethod, artifactId, basePackage,
                                 responseInfoBeanName, 0, msgBodyInfo.getMsgBodyMap());
@@ -688,15 +698,17 @@ public class GeneratorTools {
                         serviceName, serviceImplName, serviceDesc);
                 allClassList.add(serviceClass);
 
-                Element propertiesElement = serviceElement.addElement(XML_ELEMENT_PROPERTIES);
-
                 if (SERVICE_TYPE_HTTP.equalsIgnoreCase(type)) {
                     buildControllerClass = true;
                     Set<String> urlPathParamNameSet = new TreeSet<>();
                     if (paramMapList != null) {
                         parseModuleMsgApiRequestPathParamInfo(paramMapList, urlPathParamNameSet);
                     }
-                    parseModuleMsgApiControllerMethodInfo(controllerClass, urlPath, urlMethod, operationId,
+                    parseModuleMsgApiControllerMethodInfo(controllerClass,
+                            serviceClass.getType().getFullyQualifiedName(),
+                            requestInfoClass.getType().getFullyQualifiedName(),
+                            responseClaseName,
+                            urlPath, urlMethod, operationId,
                             consumeContentType, urlPathParamNameSet);
                 }
 
@@ -1584,10 +1596,12 @@ public class GeneratorTools {
         return serviceClass;
     }
 
-    private void parseModuleMsgApiControllerMethodInfo(TopLevelClass controllerClass, String urlPath,
-                                                       String urlMethod, String operationId,
-                                                       String consumeContentType,
-                                                       Set<String> urlPathParamNameSet) {
+    private void parseModuleMsgApiControllerMethodInfo(TopLevelClass controllerClass,
+                                                       String serviceClassName,
+                                                       String requestClassName,
+                                                       String responseClassName,
+                                                       String urlPath, String urlMethod, String operationId,
+                                                       String consumeContentType, Set<String> urlPathParamNameSet) {
 
         String methodName = JavaBeanGenerator.getCamelCaseString(operationId, false);
         String urlMethodListStr = urlMethod.toUpperCase();
@@ -1605,6 +1619,8 @@ public class GeneratorTools {
 
         method.addAnnotation(JAVA_CLASS_CROSS_ORIGIN_ANNOUNCE);
         method.addAnnotation(String.format(JAVA_METHOD_REQUEST_MAPPING_ANNOUNCE, urlPath, urlMethodListStr));
+        method.addJavaDocLine(String.format(MODULE_CONTROLLER_MATHOD_DOC_FROMAT,
+                serviceClassName, requestClassName, responseClassName));
         controllerClass.addImportedType(JAVA_IMPORT_TYPE_CROSS_ORIGIN);
 
         int index = 0;
