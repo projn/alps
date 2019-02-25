@@ -175,11 +175,7 @@
                                         <include name="*.properties" />
                                     </fileset>
                                 </copy>
-                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/keystore">
-                                    <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/keystore">
-                                        <include name="*.*" />
-                                    </fileset>
-                                </copy>
+                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/keystore" />
 
                                 <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-cloud" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-single" todir="${des-dir}/template/install/alpsmicroservice-install" />
