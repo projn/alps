@@ -8,7 +8,7 @@ pipeline {
     stage('clean') {
       steps {
         sh '''mvn clean; \\
-rm -rf ./target'''
+        rm -rf ./target'''
       }
     }
 
@@ -85,21 +85,21 @@ rm -rf ./target'''
         stage('commit') {
           steps {
             sh '''cd ./target; \\
-git clone https://github.com/projn/popigai.git; \\
-rm -rf popigai/install/alpsconfigserver-install; \\
-cp -r ../install/alpsconfigserver-install popigai/install/; \\
-cd popigai/
-git add install/alpsconfigserver-install; \\
-git commit -m "Jenkins auto commit alps config server intsall package"; \\
-git push'''
+            git clone -b cloud https://github.com/projn/popigai.git; \\
+            rm -rf popigai/install/alpsconfigserver-install; \\
+            cp -r ../install/alpsconfigserver-install popigai/install/; \\
+            cd popigai/
+            git add install/alpsconfigserver-install; \\
+            git commit -m "Jenkins auto commit alps config server intsall package"; \\
+            git push'''
           }
         }
 
         stage('copy file') {
           steps {
             sh '''source ./VERSION; \\
-cp ./alpsconfigserver/target/*.jar ~/release/configserver; \\
-tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
+            cp ./alpsconfigserver/target/*.jar ~/release/configserver; \\
+            tar -czf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator'''
           }
         }
       }

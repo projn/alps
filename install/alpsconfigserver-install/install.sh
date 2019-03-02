@@ -134,56 +134,56 @@ function install()
 
     echo  "Start to config service ..."
 
-    src=SOFTWARE_SERVER_IP
-    dst=${SOFTWARE_SERVER_IP}
+    src=CONFIG_SERVER_IP
+    dst=${CONFIG_SERVER_IP}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_SERVER_PORT
-    dst=${SOFTWARE_SERVER_PORT}
+    src=CONFIG_SERVER_PORT
+    dst=${CONFIG_SERVER_PORT}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_GIT_REMOTE_REPO_URL
-    dst=${SOFTWARE_GIT_REMOTE_REPO_URL}
+    src=CONFIG_GIT_REMOTE_REPO_URL
+    dst=${CONFIG_GIT_REMOTE_REPO_URL}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_GIT_REMOTE_REPO_USERNAME
-    dst=${SOFTWARE_GIT_REMOTE_REPO_USERNAME}
+    src=CONFIG_GIT_REMOTE_REPO_USERNAME
+    dst=${CONFIG_GIT_REMOTE_REPO_USERNAME}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_GIT_REMOTE_REPO_PASSWORD
-    dst=${SOFTWARE_GIT_REMOTE_REPO_PASSWORD}
+    src=CONFIG_GIT_REMOTE_REPO_PASSWORD
+    dst=${CONFIG_GIT_REMOTE_REPO_PASSWORD}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_GIT_LOCAL_REPO_LABEL
-    dst=${SOFTWARE_GIT_LOCAL_REPO_LABEL}
+    src=CONFIG_GIT_LOCAL_REPO_LABEL
+    dst=${CONFIG_GIT_LOCAL_REPO_LABEL}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_GIT_LOCAL_REPO_DIR
-    dst=${SOFTWARE_GIT_LOCAL_REPO_DIR}
+    src=CONFIG_GIT_LOCAL_REPO_DIR
+    dst=${CONFIG_GIT_LOCAL_REPO_DIR}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_ACL_KEY_PATH
-    dst=${SOFTWARE_ACL_KEY_PATH}
+    src=CONFIG_ACL_KEY_PATH
+    dst=${CONFIG_ACL_KEY_PATH}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_ACL_KEY_PASSWORD
-    dst=${SOFTWARE_ACL_KEY_PASSWORD}
+    src=CONFIG_ACL_KEY_PASSWORD
+    dst=${CONFIG_ACL_KEY_PASSWORD}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_ACL_KEY_ALIAS
-    dst=${SOFTWARE_ACL_KEY_ALIAS}
+    src=CONFIG_ACL_KEY_ALIAS
+    dst=${CONFIG_ACL_KEY_ALIAS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_ACL_KEY_SECRET
-    dst=${SOFTWARE_ACL_KEY_SECRET}
+    src=CONFIG_ACL_KEY_SECRET
+    dst=${CONFIG_ACL_KEY_SECRET}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_CONSUL_SERVER_ADDRESS
-    dst=${SOFTWARE_CONSUL_SERVER_ADDRESS}
+    src=CONFIG_CONSUL_SERVER_ADDRESS
+    dst=${CONFIG_CONSUL_SERVER_ADDRESS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
-    src=SOFTWARE_CONSUL_PORT
-    dst=${SOFTWARE_CONSUL_PORT}
+    src=CONFIG_CONSUL_PORT
+    dst=${CONFIG_CONSUL_PORT}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/bootstrap.properties
 
     cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME} /etc/init.d/${SOFTWARE_SERVICE_NAME}
