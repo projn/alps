@@ -225,7 +225,7 @@ function package()
         if [ $? == 0 ]; then
             cp -rf ${install_package_path} ./alpsconfigserver/
         else
-            return 1
+            exit 1
         fi
     fi
 }
