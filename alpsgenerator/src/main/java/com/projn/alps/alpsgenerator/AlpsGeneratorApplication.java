@@ -2,7 +2,7 @@ package com.projn.alps.alpsgenerator;
 
 import com.projn.alps.alpsgenerator.tool.GeneratorTools;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 

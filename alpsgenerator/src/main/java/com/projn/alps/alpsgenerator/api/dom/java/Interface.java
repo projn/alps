@@ -1,7 +1,7 @@
 package com.projn.alps.alpsgenerator.api.dom.java;
 
 import com.projn.alps.alpsgenerator.api.dom.OutputUtilities;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 

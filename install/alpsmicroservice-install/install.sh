@@ -127,15 +127,15 @@ function install_single()
     fi
 
     mkdir -p ${SOFTWARE_INSTALL_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_INSTALL_PATH}
+    chmod u=rwx,g=rx,o=r ${SOFTWARE_INSTALL_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
 
     mkdir -p ${SOFTWARE_DATA_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_DATA_PATH}
+    chmod u=rw,g=r,o=r ${SOFTWARE_DATA_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_DATA_PATH}
 
     mkdir -p ${SOFTWARE_LOG_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_LOG_PATH}
+    chmod u=rw,g=r,o=r ${SOFTWARE_LOG_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_LOG_PATH}
 
     package_dir=${CURRENT_WORK_DIR}/${SOFTWARE_INSTALL_PACKAGE_NAME}
@@ -145,10 +145,9 @@ function install_single()
     cp -rf ${config_dir}/* ${SOFTWARE_INSTALL_PATH}/context/
 
     chown -R ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
-    find ${SOFTWARE_INSTALL_PATH} -type d -exec chmod 700 {} \;
     chmod u=rwx,g=rwx,o=r  ${SOFTWARE_INSTALL_PATH}/*.jar
-    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/context/
-    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/module/
+    chmod -R u=rw,g=rw,o=r ${SOFTWARE_INSTALL_PATH}/context/
+    chmod -R u=rw,g=rw,o=r ${SOFTWARE_INSTALL_PATH}/module/
 
     echo  "Start to config service ..."
 
@@ -297,15 +296,15 @@ function install_cloud()
     fi
 
     mkdir -p ${SOFTWARE_INSTALL_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_INSTALL_PATH}
+    chmod u=rwx,g=rx,o=r ${SOFTWARE_INSTALL_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
 
     mkdir -p ${SOFTWARE_DATA_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_DATA_PATH}
+    chmod u=rw,g=r,o=r ${SOFTWARE_DATA_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_DATA_PATH}
 
     mkdir -p ${SOFTWARE_LOG_PATH}
-    chmod u=rwx,g=r,o=r ${SOFTWARE_LOG_PATH}
+    chmod u=rw,g=r,o=r ${SOFTWARE_LOG_PATH}
     chown ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_LOG_PATH}
 
     package_dir=${CURRENT_WORK_DIR}/${SOFTWARE_INSTALL_PACKAGE_NAME}
@@ -315,10 +314,9 @@ function install_cloud()
     cp -rf ${config_file} ${SOFTWARE_INSTALL_PATH}/context/
 
     chown -R ${SOFTWARE_USER_NAME}:${SOFTWARE_USER_GROUP} ${SOFTWARE_INSTALL_PATH}
-    find ${SOFTWARE_INSTALL_PATH} -type d -exec chmod 700 {} \;
     chmod u=rwx,g=rwx,o=r  ${SOFTWARE_INSTALL_PATH}/*.jar
-    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/context/
-    chmod -R u=rwx,g=rwx,o=r ${SOFTWARE_INSTALL_PATH}/module/
+    chmod -R u=rw,g=rw,o=r ${SOFTWARE_INSTALL_PATH}/context/
+    chmod -R u=rw,g=rw,o=r ${SOFTWARE_INSTALL_PATH}/module/
 
     echo  "Start to config service ..."
 

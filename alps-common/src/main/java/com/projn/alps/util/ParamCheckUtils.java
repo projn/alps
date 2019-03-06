@@ -5,7 +5,7 @@ import com.projn.alps.msg.filter.IParamFilter;
 import com.projn.alps.msg.filter.ParamCheckType;
 import com.projn.alps.msg.filter.ParamFilter;
 import com.projn.alps.msg.filter.ParamLimit;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.PropertyDescriptor;

@@ -157,7 +157,7 @@
 
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/bootstrap">
                                     <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/bootstrap">
-                                        <include name="logback-config.xml" />
+                                        <include name="log4j2-config.xml" />
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud">
@@ -191,6 +191,8 @@
                                 <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-single" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/install.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/config.properties" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/docker-entrypoint.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/Dockerfile" todir="${des-dir}/template/install/alpsmicroservice-install" />
 
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice">
                                     <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice">

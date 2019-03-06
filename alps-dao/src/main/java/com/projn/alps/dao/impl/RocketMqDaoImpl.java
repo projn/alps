@@ -1,8 +1,8 @@
-package com.projn.alps.alpsmicroservice.mq;
+package com.projn.alps.dao.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.projn.alps.struct.MsgRequestInfo;
-import org.apache.commons.lang.StringUtils;
+import com.projn.alps.dao.IRocketMqDao;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MessageQueueSelector;
 import org.apache.rocketmq.client.producer.SendResult;
@@ -12,30 +12,58 @@ import org.apache.rocketmq.common.message.MessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.projn.alps.define.CommonDefine.DEFAULT_ENCODING;
-import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
-
 /**
- * order msg producer
+ * msg producer
  *
  * @author : sunyuecheng
  */
-@Component
-@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
-public class OrderMsgProducer {
+@Repository("RocketMqDao")
+public class RocketMqDaoImpl implements IRocketMqDao{
+    private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqDaoImpl.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderMsgProducer.class);
+    private static final String DEFAULT_ENCODING = "UTF-8";
 
     @Autowired
     private DefaultMQProducer defaultMQProducer;
 
     /**
-     * add queue
+     * send msg
+     *
+     * @param topic          :
+     * @param tag            :
+     * @param msgRequestInfo :
+     * @return boolean :
+     */
+    @Override
+    synchronized public boolean sendMsg(String topic, String tag, Object msgRequestInfo) {
+        if (StringUtils.isEmpty(topic) || StringUtils.isEmpty(tag) || msgRequestInfo == null) {
+            LOGGER.error("Error param.");
+            return false;
+        }
+
+        boolean ret = true;
+        try {
+            String body = JSON.toJSONString(msgRequestInfo);
+
+            Message msg = new Message(topic, tag, body.getBytes(DEFAULT_ENCODING));
+            SendResult sendResult = defaultMQProducer.send(msg);
+            if (sendResult.getSendStatus() != SendStatus.SEND_OK) {
+                LOGGER.error("Send message error,error info({}).", sendResult.getSendStatus());
+                ret = false;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Send message error,error info({}),", e.getMessage());
+            ret = false;
+        }
+        return ret;
+    }
+
+    /**
+     * send order msg
      *
      * @param topic          :
      * @param tag            :
@@ -43,7 +71,8 @@ public class OrderMsgProducer {
      * @param msgRequestInfo :
      * @return boolean :
      */
-    synchronized public boolean addQueue(String topic, String tag, int orderId, MsgRequestInfo msgRequestInfo) {
+    @Override
+    synchronized public boolean sendOrderMsg(String topic, String tag, int orderId, Object msgRequestInfo) {
         if (StringUtils.isEmpty(topic) || StringUtils.isEmpty(tag) || msgRequestInfo == null) {
             LOGGER.error("Error param.");
             return false;
@@ -67,7 +96,7 @@ public class OrderMsgProducer {
                 ret = false;
             }
         } catch (Exception e) {
-            LOGGER.error("Send message error,error info({}),", formatExceptionInfo(e));
+            LOGGER.error("Send message error,error info({}),", e.getMessage());
             ret = false;
         }
         return ret;

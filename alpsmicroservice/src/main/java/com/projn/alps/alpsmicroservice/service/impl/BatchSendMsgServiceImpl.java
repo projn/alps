@@ -12,7 +12,7 @@ import com.projn.alps.service.IComponentsHttpService;
 import com.projn.alps.struct.HttpRequestInfo;
 import com.projn.alps.struct.HttpResponseInfo;
 import com.projn.alps.util.ParamCheckUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

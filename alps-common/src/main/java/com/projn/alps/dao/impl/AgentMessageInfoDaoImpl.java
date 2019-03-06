@@ -6,7 +6,7 @@ import com.projn.alps.domain.AgentMessageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * agent message info dao impl

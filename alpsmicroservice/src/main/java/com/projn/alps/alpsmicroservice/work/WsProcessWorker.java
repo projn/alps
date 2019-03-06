@@ -10,7 +10,7 @@ import com.projn.alps.struct.WsResponseInfo;
 import com.projn.alps.util.CounterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 

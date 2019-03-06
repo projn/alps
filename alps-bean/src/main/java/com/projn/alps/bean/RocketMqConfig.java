@@ -1,14 +1,12 @@
-package com.projn.alps.alpsmicroservice.config;
+package com.projn.alps.bean;
 
-import com.projn.alps.alpsmicroservice.property.RocketMqProperties;
-import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * rocket mq config
@@ -16,15 +14,16 @@ import org.springframework.context.annotation.Configuration;
  * @author : sunyuecheng
  */
 @Configuration
-@EnableConfigurationProperties({RocketMqProperties.class, RunTimeProperties.class})
+@PropertySource(value = {"file:${config.dir}/config/rocketmq.properties",
+        "file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
 public class RocketMqConfig {
 
-    @Autowired
-    private RocketMqProperties rocketMqProperties;
+    @Value("${spring.application.name}")
+    private String appName = null;
 
-    @Autowired
-    private RunTimeProperties runTimeProperties;
+    @Value("${rocketmq.queueServerAddress}")
+    private String queueServerAddress = null;
 
     /**
      * default mq producer
@@ -34,8 +33,8 @@ public class RocketMqConfig {
      */
     @Bean
     public DefaultMQProducer defaultMQProducer() throws MQClientException {
-        DefaultMQProducer producer = new DefaultMQProducer(runTimeProperties.getAppName());
-        producer.setNamesrvAddr(rocketMqProperties.getQueueServerAddress());
+        DefaultMQProducer producer = new DefaultMQProducer(appName);
+        producer.setNamesrvAddr(queueServerAddress);
         producer.setVipChannelEnabled(false);
         producer.start();
 

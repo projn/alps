@@ -11,7 +11,7 @@ import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

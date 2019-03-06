@@ -1,7 +1,7 @@
 package com.projn.alps.alpsmicroservice.property;
 
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,7 +8,7 @@ import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.msg.filter.ParamLocationType;
 import com.projn.alps.struct.HttpRequestInfo;
 import com.projn.alps.struct.WsRequestInfo;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.WebSocketSession;
 

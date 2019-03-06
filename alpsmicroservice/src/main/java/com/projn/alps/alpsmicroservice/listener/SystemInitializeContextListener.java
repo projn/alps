@@ -25,7 +25,7 @@ import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.tool.QuartzJobTools;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;

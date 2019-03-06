@@ -6,7 +6,7 @@ import com.projn.alps.domain.AgentMasterInfo;
 import com.projn.alps.domain.AgentMessageInfo;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.msg.response.HttpSendMsgResponseMsgInfo;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

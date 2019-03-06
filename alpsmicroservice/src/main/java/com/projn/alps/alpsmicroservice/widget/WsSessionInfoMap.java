@@ -1,7 +1,7 @@
 package com.projn.alps.alpsmicroservice.widget;
 
 import com.projn.alps.struct.WebSocketSessionInfo;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
