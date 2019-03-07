@@ -18,7 +18,7 @@ RUN mkdir -p ${SOFTWARE_INSTALL_PATH}
 RUN chmod u=rwx,g=rx,o=r ${SOFTWARE_INSTALL_PATH}
 
 RUN mkdir -p ${SOFTWARE_LOG_PATH}
-RUN chmod u=rw,g=r,o=r ${SOFTWARE_LOG_PATH}
+RUN chmod u=rwx,g=r,o=r ${SOFTWARE_LOG_PATH}
 
 WORKDIR ${SOFTWARE_INSTALL_PATH}
 
@@ -27,10 +27,7 @@ ADD ./config/cloud/bootstrap.properties ./context/
 COPY ./docker-entrypoint.sh ./
 COPY ./docker-healthcheck.sh ./
 
-RUN chmod u=rwx,g=rwx,o=r  ./*.jar
-RUN chmod u=rwx,g=rwx,o=r  ./*.sh
-RUN chmod -R u=rw,g=rw,o=r ./context/
-RUN chmod -R u=rw,g=rw,o=r ./module/
+RUN chmod -R u=rwx,g=rx,o=r ./
 
 RUN sed -i "s#SOFTWARE_LOG_PATH#${SOFTWARE_LOG_PATH}#g" ./context/bootstrap/log4j2-config.xml
 RUN sed -i "s#SOFTWARE_SERVER_NAME#${SOFTWARE_SERVER_NAME}#g" ./context/bootstrap.properties
