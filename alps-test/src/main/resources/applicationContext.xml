@@ -13,5 +13,5 @@
 
     <import resource="classpath:bootstrap/spring-*.xml"/>
 
-    <context:property-placeholder location="classpath:hss/config/*.properties"/>
+    <context:property-placeholder location="classpath:config/*.properties"/>
 </beans>
