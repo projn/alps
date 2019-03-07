@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.beans.PropertyDescriptor;
 import java.io.File;
@@ -63,6 +64,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
     private RunTimeProperties runTimeProperties;
 
     private RocketMqProperties rocketMqProperties;
+
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private List<ModuleInfo> moduleInfoList;
 
@@ -110,6 +113,9 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 rocketMqProperties = (RocketMqProperties)
                         contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
             }
+
+            threadPoolTaskExecutor =
+                    (ThreadPoolTaskExecutor) contextRefreshedEvent.getApplicationContext().getBean("threadPoolTaskExecutor");
 
             ServiceData.setMasterInfo(
                     new MasterInfo(runTimeProperties.getAppName(), runTimeProperties.getServerAddress(),
@@ -248,6 +254,16 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
             Element jobRootElement = moduleConfigDocument.getRootElement().element(XML_ELEMENT_JOBS);
             loadModuleJobInfo(jobRootElement, moduleJobInfoList);
+        }
+
+        if(runTimeProperties.isBeanSwitchRocketMq()) {
+            if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
+                throw new Exception("Register http api service info error.");
+            }
+        }
+
+        if(runTimeProperties.isBeanSwitchWebsocket()) {
+            registerHttpApiJob(moduleJobInfoList);
         }
 
         for (Map.Entry<String, String> serviceEntry : requestServiceInitMethodMap.entrySet()) {
@@ -390,12 +406,6 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 }
             }
         }
-
-        if(runTimeProperties.isBeanSwitchRocketMq()) {
-            if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
-                throw new Exception("Register http api service info error.");
-            }
-        }
     }
 
     private void loadModuleJobInfo(Element jobRootElement,
@@ -438,10 +448,6 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 moduleJobInfoList.add(new ModuleJobInfo(jobClassName, jobName, cronExpression, jobPropertiesMap));
             }
         }
-
-        if(runTimeProperties.isBeanSwitchWebsocket()) {
-            registerHttpApiJob(moduleJobInfoList);
-        }
     }
 
 
@@ -472,7 +478,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
                     mqConsumerInfo.setTopic(topic);
                     mqConsumerInfo.setMethod(method);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() + "||" + topicTags[1]);
+                    mqConsumerInfo.setTags(mqConsumerInfo.getTags()==null? topicTags[1]
+                            : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
                     DefaultMQPushConsumer consumer
                             = new DefaultMQPushConsumer(ServiceData.getMasterInfo().getRoleName());
@@ -482,24 +489,27 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     consumer.setMaxReconsumeTimes(rocketMqProperties.getMaxReconsumeTimes());
 
                     if (RequestServiceInfo.SERVICE_METHOD_MSG_NORMAL.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new MsgConsumerListener());
+                        mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
                         consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
                     } else if (RequestServiceInfo.SERVICE_METHOD_MSG_ORDER.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new OrderMsgConsumerListener());
+                        mqConsumerInfo.setMessageListener(new OrderMsgConsumerListener(consumer, threadPoolTaskExecutor));
                         consumer.registerMessageListener(
                                 (OrderMsgConsumerListener) mqConsumerInfo.getMessageListener());
                     } else if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new MsgConsumerListener());
+                        mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
                         consumer.setMessageModel(MessageModel.BROADCASTING);
                         consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
                     } else {
                         throw new Exception("Invaild module service method info error,uri("
                                 + uri + "), method(" + method + "), topic(" + topic + ").");
                     }
+                    mqConsumerInfo.setMqPushConsumer(consumer);
+                    mqConsumerInfoMap.put(topic, mqConsumerInfo);
 
                 } else {
                     MqConsumerInfo mqConsumerInfo = mqConsumerInfoMap.get(topic);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() + "||" + topicTags[1]);
+                    mqConsumerInfo.setTags(mqConsumerInfo.getTags()==null? topicTags[1]
+                            : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
                     if (mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
                         throw new Exception("Invaild module service method info error,uri("
@@ -512,12 +522,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
         for (Map.Entry<String, MqConsumerInfo> mqConsumerInfoEntry : mqConsumerInfoMap.entrySet()) {
             MqConsumerInfo mqConsumerInfo = mqConsumerInfoEntry.getValue();
             DefaultMQPushConsumer consumer = mqConsumerInfo.getMqPushConsumer();
-            if (RequestServiceInfo.SERVICE_METHOD_MSG_ORDER.equalsIgnoreCase(mqConsumerInfo.getMethod())) {
-                OrderMsgConsumerListener orderMsgConsumerListener
-                        = (OrderMsgConsumerListener) mqConsumerInfo.getMessageListener();
-                orderMsgConsumerListener.setDefaultMQPushConsumer(consumer);
-            }
             try {
+                consumer.setConsumerGroup(mqConsumerInfoEntry.getKey());
                 consumer.subscribe(mqConsumerInfo.getTopic(), mqConsumerInfo.getTags());
                 consumer.start();
             } catch (Exception e) {

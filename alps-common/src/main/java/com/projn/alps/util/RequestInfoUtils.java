@@ -7,6 +7,7 @@ import com.projn.alps.define.HttpDefine;
 import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.msg.filter.ParamLocationType;
 import com.projn.alps.struct.HttpRequestInfo;
+import com.projn.alps.struct.MsgRequestInfo;
 import com.projn.alps.struct.WsRequestInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -184,6 +185,57 @@ public final class RequestInfoUtils {
 
         WsRequestInfo wsRequestInfo = new WsRequestInfo(paramObj);
         return wsRequestInfo;
+    }
+
+    /**
+     * convert msg request info
+     *
+     * @param msgText :
+     * @param clazz    :
+     * @return MsgRequestInfo :
+     * @throws Exception :
+     */
+    public static MsgRequestInfo convertMsgRequestInfo(String msgText, final Class<?> clazz)
+            throws Exception {
+        if (clazz == null) {
+            throw new Exception("Invaild param.");
+        }
+
+        Field[] fields = clazz.getDeclaredFields();
+        Object paramObj = clazz.newInstance();
+
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            if (StringUtils.isEmpty(fieldName)) {
+                throw new Exception("Invaild field name,field name(" + fieldName + ").");
+            }
+            String methodName = fieldName;
+            if (field.isAnnotationPresent(JSONField.class)) {
+                JSONField jsonField = (JSONField) field.getAnnotation(JSONField.class);
+                String jsonFieldName = jsonField.name();
+                if (!StringUtils.isEmpty(jsonFieldName)) {
+                    fieldName = jsonFieldName;
+                }
+            }
+
+            if (!field.isAnnotationPresent(ParamLocation.class)
+                    || field.getAnnotation(ParamLocation.class) == null) {
+                throw new Exception("Invaild param location,field name(" + fieldName + ").");
+            }
+            ParamLocation paramLocation = (ParamLocation) field.getAnnotation(ParamLocation.class);
+            ParamLocationType paramLocationType = paramLocation.location();
+
+            PropertyDescriptor pd = new PropertyDescriptor(methodName, paramObj.getClass());
+            Method setMethod = pd.getWriteMethod();
+
+            if (paramLocationType.equals(ParamLocationType.BODY)) {
+                Object fieldValue = JSONObject.parseObject(msgText, field.getType());
+                setMethod.invoke(paramObj, fieldValue);
+            }
+        }
+
+        MsgRequestInfo msgRequestInfo = new MsgRequestInfo(0, paramObj, null);
+        return msgRequestInfo;
     }
 
 

@@ -140,6 +140,12 @@
 			<groupId>com.projn.alps</groupId>
 			<artifactId>alps-common</artifactId>
 			<version>${alps.common.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>HikariCP-java6</artifactId>
+					<groupId>com.zaxxer</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.projn.alps</groupId>

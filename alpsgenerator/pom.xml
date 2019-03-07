@@ -192,6 +192,7 @@
                                 <copy file="${alpsmicroservice-install-dir}/install.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/config.properties" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/docker-entrypoint.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/docker-healthcheck.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
                                 <copy file="${alpsmicroservice-install-dir}/Dockerfile" todir="${des-dir}/template/install/alpsmicroservice-install" />
 
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice">

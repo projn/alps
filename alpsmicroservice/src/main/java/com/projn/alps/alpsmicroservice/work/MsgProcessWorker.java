@@ -32,6 +32,7 @@ public class MsgProcessWorker implements Runnable {
      * @param bornTimestamp  :
      */
     public MsgProcessWorker(String serviceName, MsgRequestInfo msgRequestInfo, long bornTimestamp) {
+        this.serviceName = serviceName;
         this.bornTimestamp = bornTimestamp;
         this.msgRequestInfo = msgRequestInfo;
     }

@@ -39,7 +39,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     private static final int COLLECTION_INIT_SIZE = 16;
     private static final int BIT_LEN = 8;
 
-    @Autowired
+    @Autowired(required = false)
     protected RedisTemplate redisTemplate = null;
 
     @Override

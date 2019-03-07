@@ -1,10 +1,7 @@
 package com.projn.alps.util;
 
 import com.alibaba.fastjson.JSON;
-import com.projn.alps.msg.filter.IParamFilter;
-import com.projn.alps.msg.filter.ParamCheckType;
-import com.projn.alps.msg.filter.ParamFilter;
-import com.projn.alps.msg.filter.ParamLimit;
+import com.projn.alps.msg.filter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,6 +46,21 @@ public final class ParamCheckUtils {
             if (fieldName == null) {
                 continue;
             }
+
+            PropertyDescriptor pd = new PropertyDescriptor(fieldName, clazz);
+            Method getMethod = pd.getReadMethod();
+
+            Object fieldValue = getMethod.invoke(param, new Object[]{});
+            Class type = field.getType();
+
+            if(field.isAnnotationPresent(ParamLocation.class)) {
+                ParamLocation paramLocation = (ParamLocation) field.getAnnotation(ParamLocation.class);
+                if (paramLocation != null && paramLocation.location()==ParamLocationType.BODY) {
+                    checkParam(fieldValue);
+                }
+                continue;
+            }
+
             if (!field.isAnnotationPresent(ParamLimit.class)) {
                 continue;
             }
@@ -56,11 +68,6 @@ public final class ParamCheckUtils {
             if (paramLimit == null) {
                 continue;
             }
-            PropertyDescriptor pd = new PropertyDescriptor(fieldName, clazz);
-            Method getMethod = pd.getReadMethod();
-
-            Object fieldValue = getMethod.invoke(param, new Object[]{});
-            Class type = field.getType();
 
             if (!paramLimit.nullable()) {
                 if (fieldValue == null) {
@@ -284,7 +291,7 @@ public final class ParamCheckUtils {
             }
         }
         if (paramLimit.minLength() != -1) {
-            if (strVal.length() < paramLimit.maxLength()) {
+            if (strVal.length() < paramLimit.minLength()) {
                 throw new Exception("Field length is larger than " + paramLimit.minLength()
                         + ", field name(" + fieldName + "),type(" + type.getName()
                         + "), value(" + strVal + ").");

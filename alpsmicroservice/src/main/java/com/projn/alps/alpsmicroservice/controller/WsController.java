@@ -92,11 +92,11 @@ public class WsController extends TextWebSocketHandler {
             Map<String, RequestServiceInfo> requestServiceInfoMap
                     = ServiceData.getRequestServiceInfoMap().get(wsRequestMsgInfo.getMsgId().toString());
             if(requestServiceInfoMap==null || requestServiceInfoMap.isEmpty()
-                    || requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST) ==null) {
+                    || requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase()) ==null) {
                 throw new Exception("Invaild request service info, msg id("
                         +wsRequestMsgInfo.getMsgId()+"), method("+HttpDefine.HTTP_METHOD_POST+").");
             }
-            RequestServiceInfo requestServiceInfo = requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST);
+            RequestServiceInfo requestServiceInfo = requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase());
             if(!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
                 throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType()+").");
             }

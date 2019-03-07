@@ -7,6 +7,7 @@ import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.struct.MsgRequestInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.util.ParamCheckUtils;
+import com.projn.alps.util.RequestInfoUtils;
 import org.apache.rocketmq.client.consumer.listener.*;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
@@ -27,12 +28,14 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  *
  * @author : sunyuecheng
  */
-@Component
 public class MsgConsumerListener implements MessageListenerConcurrently {
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgConsumerListener.class);
 
-    @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    public MsgConsumerListener(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
+    }
 
     /**
      * consume message
@@ -57,43 +60,47 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                 continue;
             }
 
-            Map<String, RequestServiceInfo> requestServiceInfoMap
-                    = ServiceData.getRequestServiceInfoMap().get(String.valueOf(msgRequestInfo.getId()));
+            String uri = msg.getTopic() + "/" + msg.getTags();
+            Map<String, RequestServiceInfo> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
             if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
-                LOGGER.error("Invaild request service info, msg id (" + msgRequestInfo.getId() + ").");
+                LOGGER.error("Invaild request service info, msg id (" + msg.getTags() + ").");
                 continue;
             }
 
             for (Map.Entry<String, RequestServiceInfo> item : requestServiceInfoMap.entrySet()) {
                 RequestServiceInfo requestServiceInfo = item.getValue();
-                if(!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
-                    LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType()+").");
+                if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_MSG)) {
+                    LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
                     continue;
                 }
 
-                Object paramObj = null;
+                MsgRequestInfo targetMsgRequestInfo = null;
                 if (requestServiceInfo.getParamClass() != null) {
 
                     try {
-                        paramObj = JSONObject.parseObject(JSON.toJSONString(msgRequestInfo.getMsg()),
-                                requestServiceInfo.getParamClass());
+                        String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
+                        targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
+                                msgText, requestServiceInfo.getParamClass());
                     } catch (Exception e) {
                         LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
                         continue;
                     }
 
-                    if (paramObj != null) {
+                    if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
                         try {
-                            ParamCheckUtils.checkParam(paramObj);
+                            ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
                         } catch (Exception e) {
                             LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
                             continue;
                         }
                     }
+
+                    if(targetMsgRequestInfo != null) {
+                        targetMsgRequestInfo.setId(msgRequestInfo.getId());
+                        targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
+                    }
                 }
 
-                MsgRequestInfo targetMsgRequestInfo
-                        = new MsgRequestInfo(msgRequestInfo.getId(), paramObj, msgRequestInfo.getExtendInfoMap());
                 try {
                     if (threadPoolTaskExecutor.getActiveCount() < threadPoolTaskExecutor.getMaxPoolSize()) {
                         Future<?> future = threadPoolTaskExecutor.submit(
@@ -107,7 +114,8 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                     }
                 } catch (Exception e) {
                     LOGGER.error("Analyse request info error,msg info({}),error info({}).",
-                            JSON.toJSONString(msgRequestInfo.getMsg()), formatExceptionInfo(e));
+                            JSON.toJSONString(msg), formatExceptionInfo(e));
+
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
             }

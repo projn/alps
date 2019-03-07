@@ -1,6 +1,7 @@
 package com.projn.alps.work;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.define.HttpDefine;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.i18n.LocaleContext;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Map;
 
 import static com.projn.alps.exception.code.CommonErrorCode.*;
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
@@ -85,7 +88,7 @@ public class HttpProcessWorker implements Runnable {
             response.setStatus(e.getHttpStatus());
             httpErrorResponseMsgInfo = new HttpErrorResponseMsgInfo(e.getErrorCode(), e.getErrorDescription());
         } catch (Exception e) {
-            LOGGER.error("Deal request info error ,error info({}).",formatExceptionInfo(e));
+            LOGGER.error("Deal request info error ,error info({}).", formatExceptionInfo(e));
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             httpErrorResponseMsgInfo = new HttpErrorResponseMsgInfo(RESULT_SYSTEM_INTER_ERROR.getErrorCode(),
                     RESULT_SYSTEM_INTER_ERROR.getMessage());
@@ -94,10 +97,25 @@ public class HttpProcessWorker implements Runnable {
         if (httpResponseInfo == null) {
             deferredResult.setResult(httpErrorResponseMsgInfo);
         } else {
-            if (httpResponseInfo.getMsg() != null) {
-                deferredResult.setResult(httpResponseInfo.getMsg());
+            if (httpResponseInfo.getHeaderInfoMap() != null) {
+                for (Map.Entry<String, String> entry : httpResponseInfo.getHeaderInfoMap().entrySet()) {
+                    response.setHeader(entry.getKey(), entry.getValue());
+                }
+            }
+
+            if (httpResponseInfo.getMsg() == null) {
+                httpResponseInfo.setMsg(new HttpErrorResponseMsgInfo(RESULT_OK.getErrorCode(), null));
+            }
+            if(httpResponseInfo.getMsg().getClass() ==(byte[].class)) {
+                try {
+                    response.getOutputStream().write((byte[]) httpResponseInfo.getMsg());
+                    response.getOutputStream().flush();
+                } catch (Exception e) {
+                    LOGGER.error("Write response info error ,error info({}).", formatExceptionInfo(e));
+                }
+                deferredResult.setResult(null);
             } else {
-                deferredResult.setResult(new HttpErrorResponseMsgInfo(RESULT_OK.getErrorCode(), null));
+                deferredResult.setResult(httpResponseInfo.getMsg());
             }
         }
 

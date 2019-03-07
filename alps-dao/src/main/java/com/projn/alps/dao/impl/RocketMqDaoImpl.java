@@ -27,7 +27,7 @@ public class RocketMqDaoImpl implements IRocketMqDao{
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 
-    @Autowired
+    @Autowired(required = false)
     private DefaultMQProducer defaultMQProducer;
 
     /**
