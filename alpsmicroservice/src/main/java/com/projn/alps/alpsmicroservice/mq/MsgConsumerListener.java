@@ -8,13 +8,13 @@ import com.projn.alps.struct.MsgRequestInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
-import org.apache.rocketmq.client.consumer.listener.*;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +33,11 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
 
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+    /**
+     * msg consumer listener
+     *
+     * @param threadPoolTaskExecutor :
+     */
     public MsgConsumerListener(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
@@ -95,7 +100,7 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                         }
                     }
 
-                    if(targetMsgRequestInfo != null) {
+                    if (targetMsgRequestInfo != null) {
                         targetMsgRequestInfo.setId(msgRequestInfo.getId());
                         targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                     }

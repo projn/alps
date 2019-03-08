@@ -59,17 +59,17 @@ public final class CommonDefine {
     /**
      * one year second
      */
-    public static final long ONE_YEAR_SECOND = 365*24*3600L;
+    public static final long ONE_YEAR_SECOND = 365 * 24 * 3600L;
 
     /**
      * one week second
      */
-    public static final long ONE_WEEK_SECOND = 7*24*3600L;
+    public static final long ONE_WEEK_SECOND = 7 * 24 * 3600L;
 
     /**
      * one day second
      */
-    public static final long ONE_DAY_SECOND = 24*3600L;
+    public static final long ONE_DAY_SECOND = 24 * 3600L;
 
     /**
      * one hour second
@@ -124,7 +124,7 @@ public final class CommonDefine {
     /**
      * read buffer size
      */
-    public static final int READ_BUFFER_SIZE = 1024*32;
+    public static final int READ_BUFFER_SIZE = 1024 * 32;
 
 
     private CommonDefine() {

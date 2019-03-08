@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author : sunyuecheng
  */
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class HttpSessionHandler extends HttpSessionHandshakeInterceptor {
 
     /**

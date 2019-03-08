@@ -37,7 +37,7 @@ public class ServiceHealthIndicator implements HealthIndicator {
         } else {
             return Health.status(MicroServiceDefine.SERVICE_STATUS_BUSY).
                     withDetail(MicroServiceDefine.AGENT_ONLINE_NUM_KEY, WsSessionInfoMap.getInstance().
-                    getPoolSize()).
+                            getPoolSize()).
                     withDetail(MicroServiceDefine.MSG_DEAL_STATUS_KEY, JSON.toJSONString(CounterUtils.getCounterMap())).
                     withDetail(MicroServiceDefine.SERVICE_THREAD_POOL_USED_COUNT_KEY,
                             threadPoolTaskExecutor.getActiveCount()).build();

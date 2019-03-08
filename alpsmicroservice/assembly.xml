@@ -6,11 +6,11 @@
     <baseDirectory>${project.build.directory}</baseDirectory>
     <includeBaseDirectory>false</includeBaseDirectory>
     <!--<dependencySets>-->
-        <!--<dependencySet>-->
-            <!--<useProjectArtifact>true</useProjectArtifact>-->
-            <!--<outputDirectory>lib</outputDirectory>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependencySet>-->
+    <!--<dependencySet>-->
+    <!--<useProjectArtifact>true</useProjectArtifact>-->
+    <!--<outputDirectory>lib</outputDirectory>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependencySet>-->
     <!--</dependencySets>-->
     <fileSets>
         <fileSet>

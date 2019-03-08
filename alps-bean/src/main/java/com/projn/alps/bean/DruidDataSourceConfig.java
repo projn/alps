@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 @Configuration
 @PropertySource(value = "file:${config.dir}/config/druid.properties", ignoreResourceNotFound = true)
-@ConditionalOnProperty(name = "system.bean.switch.mybatis", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.mybatis", havingValue = "true", matchIfMissing = true)
 public class DruidDataSourceConfig {
 
     @Value("${druid.name}")

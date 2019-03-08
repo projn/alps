@@ -16,9 +16,7 @@ import org.apache.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -40,8 +38,14 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
 
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+    /**
+     * order msg consumer listener
+     *
+     * @param defaultMQPushConsumer  :
+     * @param threadPoolTaskExecutor :
+     */
     public OrderMsgConsumerListener(DefaultMQPushConsumer defaultMQPushConsumer,
-                                         ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+                                    ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.defaultMQPushConsumer = defaultMQPushConsumer;
         this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
@@ -56,7 +60,6 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
     @Override
     public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
         context.setAutoCommit(true);
-
         for (MessageExt msg : msgs) {
             MsgRequestInfo msgRequestInfo = null;
             try {
@@ -86,7 +89,6 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
 
                 MsgRequestInfo targetMsgRequestInfo = null;
                 if (requestServiceInfo.getParamClass() != null) {
-
                     try {
                         String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
                         targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
@@ -95,7 +97,6 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
                         LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
                         continue;
                     }
-
                     if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
                         try {
                             ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
@@ -104,8 +105,7 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
                             continue;
                         }
                     }
-
-                    if(targetMsgRequestInfo != null) {
+                    if (targetMsgRequestInfo != null) {
                         targetMsgRequestInfo.setId(msgRequestInfo.getId());
                         targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                     }

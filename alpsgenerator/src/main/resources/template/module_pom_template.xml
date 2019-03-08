@@ -42,7 +42,9 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>../../install/alpsmicroservice-install/alpsmicroservice/module/${project.artifactId}</directory>
+                            <directory>
+                                ../../install/alpsmicroservice-install/alpsmicroservice/module/${project.artifactId}
+                            </directory>
                             <includes>
                                 <include>${project.artifactId}-${project.version}.jar</include>
                                 <include>module_config.xml</include>
@@ -63,16 +65,18 @@
                         </goals>
                         <configuration>
                             <target>
-                                <property name="install-dir">../../install/alpsmicroservice-install/alpsmicroservice/module</property>
+                                <property name="install-dir">
+                                    ../../install/alpsmicroservice-install/alpsmicroservice/module
+                                </property>
 
-                                <mkdir dir="${install-dir}" />
-                                <mkdir dir="${install-dir}/${project.artifactId}" />
+                                <mkdir dir="${install-dir}"/>
+                                <mkdir dir="${install-dir}/${project.artifactId}"/>
 
                                 <copy file="${project.basedir}/src/main/resources/xml/module_config.xml"
-                                      todir="${install-dir}/${project.artifactId}" />
+                                      todir="${install-dir}/${project.artifactId}"/>
 
                                 <copy file="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
-                                      todir="${install-dir}/${project.artifactId}" />
+                                      todir="${install-dir}/${project.artifactId}"/>
                             </target>
                         </configuration>
                     </execution>

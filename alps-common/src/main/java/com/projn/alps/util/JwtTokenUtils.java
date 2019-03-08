@@ -42,7 +42,7 @@ public final class JwtTokenUtils {
         }
 
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-         JwtBuilder builder = Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setAudience(audience)
                 .setClaims(claimMap)

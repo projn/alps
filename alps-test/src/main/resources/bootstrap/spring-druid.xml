@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
-            http://www.springframework.org/schema/beans/spring-beans.xsd" >
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="druidDataSource" destroy-method="close" init-method="init"
-          class="com.alibaba.druid.pool.DruidDataSource" >
+          class="com.alibaba.druid.pool.DruidDataSource">
         <property name="name" value="${druid.name}"/>
         <property name="url" value="${druid.url}"/>
         <property name="username" value="${druid.username}"/>
@@ -26,6 +26,7 @@
         <property name="initialSize" value="${druid.initialSize}"/>
         <property name="minIdle" value="${druid.minIdle}"/>
         <property name="maxActive" value="${druid.maxActive}"/>
-        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="${druid.maxPoolPreparedStatementPerConnectionSize}"/>
     </bean>
 </beans>

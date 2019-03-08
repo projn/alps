@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource(value = {"file:${config.dir}/config/rocketmq.properties",
         "file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
-@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing = true)
 public class RocketMqConfig {
 
     @Value("${spring.application.name}")

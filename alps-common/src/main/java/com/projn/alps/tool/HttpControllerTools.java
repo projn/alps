@@ -9,13 +9,13 @@ import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
 import com.projn.alps.work.HttpProcessWorker;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,17 +42,17 @@ public class HttpControllerTools {
     /**
      * deal
      *
-     * @param url      :
+     * @param url          :
      * @param request      :
      * @param response     :
      * @param pathParamMap :
-     * @param requestObj  :
+     * @param requestObj   :
      * @return DeferredResult<Object> :
      * @throws HttpException :
      */
     public DeferredResult<Object> deal(String url, HttpServletRequest request, HttpServletResponse response,
                                        Map<String, String> pathParamMap, Object requestObj) throws HttpException {
-        if(StringUtils.isEmpty(url)|| request == null || response == null) {
+        if (StringUtils.isEmpty(url) || request == null || response == null) {
             LOGGER.error("Invaild param.");
             throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
         }
@@ -90,12 +90,12 @@ public class HttpControllerTools {
         HttpRequestInfo httpRequestInfo = null;
         if (requestServiceInfo.getParamClass() != null) {
             try {
-                if(requestObj instanceof JSONObject) {
+                if (requestObj instanceof JSONObject) {
                     httpRequestInfo = RequestInfoUtils.convertHttpRequestInfo(request, pathParamMap,
-                            (JSONObject)requestObj, null, requestServiceInfo.getParamClass());
-                } else if(requestObj instanceof MultipartFile) {
+                            (JSONObject) requestObj, null, requestServiceInfo.getParamClass());
+                } else if (requestObj instanceof MultipartFile) {
                     httpRequestInfo = RequestInfoUtils.convertHttpRequestInfo(request, pathParamMap,
-                            null, (MultipartFile)requestObj, requestServiceInfo.getParamClass());
+                            null, (MultipartFile) requestObj, requestServiceInfo.getParamClass());
                 } else {
                     httpRequestInfo = RequestInfoUtils.convertHttpRequestInfo(request, pathParamMap,
                             null, null, requestServiceInfo.getParamClass());
@@ -115,7 +115,7 @@ public class HttpControllerTools {
             }
         }
 
-        if(httpRequestInfo!= null) {
+        if (httpRequestInfo != null) {
             LocaleContext.set(httpRequestInfo.getLocale());
         }
 

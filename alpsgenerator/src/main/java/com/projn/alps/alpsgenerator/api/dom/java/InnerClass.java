@@ -12,38 +12,55 @@ import java.util.*;
  */
 public class InnerClass extends AbstractJavaElement {
 
-    /** The fields. */
+    /**
+     * The fields.
+     */
     private List<Field> fields;
 
-    /** The inner classes. */
+    /**
+     * The inner classes.
+     */
     private List<InnerClass> innerClasses;
 
-    /** The inner enums. */
+    /**
+     * The inner enums.
+     */
     private List<InnerEnum> innerEnums;
 
-    /** The super class. */
+    /**
+     * The super class.
+     */
     private FullyQualifiedJavaType superClass;
 
-    /** The type. */
+    /**
+     * The type.
+     */
     private FullyQualifiedJavaType type;
 
-    /** The super interface types. */
+    /**
+     * The super interface types.
+     */
     private Set<FullyQualifiedJavaType> superInterfaceTypes;
 
-    /** The methods. */
+    /**
+     * The methods.
+     */
     private List<Method> methods;
 
-    /** The is abstract. */
+    /**
+     * The is abstract.
+     */
     private boolean isAbstract;
 
-    /** The initialization blocks. */
+    /**
+     * The initialization blocks.
+     */
     private List<InitializationBlock> initializationBlocks;
 
     /**
      * Instantiates a new inner class.
      *
-     * @param type
-     *            the type
+     * @param type the type
      */
     public InnerClass(FullyQualifiedJavaType type) {
         super();
@@ -59,8 +76,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Instantiates a new inner class.
      *
-     * @param typeName
-     *            the type name
+     * @param typeName the type name
      */
     public InnerClass(String typeName) {
         this(new FullyQualifiedJavaType(typeName));
@@ -78,8 +94,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the field.
      *
-     * @param field
-     *            the field
+     * @param field the field
      */
     public void addField(Field field) {
         fields.add(field);
@@ -97,8 +112,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Sets the super class.
      *
-     * @param superClass
-     *            The superClass to set.
+     * @param superClass The superClass to set.
      */
     public void setSuperClass(FullyQualifiedJavaType superClass) {
         this.superClass = superClass;
@@ -107,8 +121,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Sets the super class.
      *
-     * @param superClassType
-     *            the new super class
+     * @param superClassType the new super class
      */
     public void setSuperClass(String superClassType) {
         this.superClass = new FullyQualifiedJavaType(superClassType);
@@ -126,8 +139,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the inner class.
      *
-     * @param innerClass
-     *            the inner class
+     * @param innerClass the inner class
      */
     public void addInnerClass(InnerClass innerClass) {
         innerClasses.add(innerClass);
@@ -145,8 +157,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the inner enum.
      *
-     * @param innerEnum
-     *            the inner enum
+     * @param innerEnum the inner enum
      */
     public void addInnerEnum(InnerEnum innerEnum) {
         innerEnums.add(innerEnum);
@@ -164,8 +175,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the initialization block.
      *
-     * @param initializationBlock
-     *            the initialization block
+     * @param initializationBlock the initialization block
      */
     public void addInitializationBlock(InitializationBlock initializationBlock) {
         initializationBlocks.add(initializationBlock);
@@ -174,8 +184,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Gets the formatted content.
      *
-     * @param indentLevel
-     *            the indent level
+     * @param indentLevel     the indent level
      * @param compilationUnit the compilation unit
      * @return the formatted content
      */
@@ -311,8 +320,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the super interface.
      *
-     * @param superInterface
-     *            the super interface
+     * @param superInterface the super interface
      */
     public void addSuperInterface(FullyQualifiedJavaType superInterface) {
         superInterfaceTypes.add(superInterface);
@@ -330,8 +338,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Adds the method.
      *
-     * @param method
-     *            the method
+     * @param method the method
      */
     public void addMethod(Method method) {
         methods.add(method);
@@ -358,8 +365,7 @@ public class InnerClass extends AbstractJavaElement {
     /**
      * Sets the abstract.
      *
-     * @param isAbtract
-     *            the new abstract
+     * @param isAbtract the new abstract
      */
     public void setAbstract(boolean isAbtract) {
         this.isAbstract = isAbtract;

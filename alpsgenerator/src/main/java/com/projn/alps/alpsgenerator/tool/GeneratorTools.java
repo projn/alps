@@ -4,22 +4,23 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.projn.alps.alpsgenerator.api.dom.java.*;
-import com.projn.alps.define.CommonDefine;
-import com.projn.alps.exception.HttpException;
-import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.alpsgenerator.api.AbstractGeneratedJavaFile;
+import com.projn.alps.alpsgenerator.api.dom.java.*;
 import com.projn.alps.alpsgenerator.generator.JavaBeanGenerator;
 import com.projn.alps.alpsgenerator.generator.MybatisConfigurationGenerator;
 import com.projn.alps.alpsgenerator.struct.MsgBodyInfo;
-import com.projn.alps.alpsgenerator.struct.RequestParamInfo;
 import com.projn.alps.alpsgenerator.struct.MsgPropertyInfo;
+import com.projn.alps.alpsgenerator.struct.RequestParamInfo;
+import com.projn.alps.define.CommonDefine;
+import com.projn.alps.exception.HttpException;
+import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.service.IComponentsHttpService;
 import com.projn.alps.service.IComponentsMsgService;
 import com.projn.alps.service.IComponentsWsService;
 import com.projn.alps.struct.*;
 import com.projn.alps.tool.HttpControllerTools;
 import com.projn.alps.util.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -35,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +43,9 @@ import org.yaml.snakeyaml.Yaml;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.*;
 
 import static com.projn.alps.define.CommonDefine.DEFAULT_ENCODING;
@@ -129,14 +131,14 @@ public class GeneratorTools {
     private static final String MODULE_SERVICE_PACKAGE_TAIL = ".service.impl.";
     private static final String MODULE_CONTROLLER_PACKAGE_TAIL = ".controller.";
     private static final String MODULE_CONTROLLER_NAME_TAIL = "ModuleController";
-    private static final String MODULE_CONTROLLER_MATHOD_DOC_FROMAT="/**%n" +
-            "     * service bean :%n" +
-            "     * @see %s%n" +
-            "     * request bean :%n" +
-            "     * @see %s%n" +
-            "     * response bean :%n" +
-            "     * @see %s%n" +
-            "     */";
+    private static final String MODULE_CONTROLLER_MATHOD_DOC_FROMAT = "/**%n"
+            + "     * service bean :%n"
+            + "     * @see %s%n"
+            + "     * request bean :%n"
+            + "     * @see %s%n"
+            + "     * response bean :%n"
+            + "     * @see %s%n"
+            + "     */";
 
     private static final String JAVA_CLASS_COMPONENT_ANNOUNCE_FORMAT = "@Component(\"%s\")";
     private static final String JAVA_CLASS_CONTROLLER_ANNOUNCE = "@Controller";
@@ -220,7 +222,7 @@ public class GeneratorTools {
                 return false;
             }
 
-            if(!generatorProjectInfo()) {
+            if (!generatorProjectInfo()) {
                 return false;
             }
 
@@ -239,7 +241,7 @@ public class GeneratorTools {
                     return false;
                 }
 
-                String modulePath = outputDir +File.separator + MODULE_DIR_NAME + File.separator + artifactId;
+                String modulePath = outputDir + File.separator + MODULE_DIR_NAME + File.separator + artifactId;
                 File modulePathFile = new File(modulePath);
                 if (!modulePathFile.exists()) {
                     if (!modulePathFile.mkdirs()) {
@@ -306,8 +308,8 @@ public class GeneratorTools {
         parentGroupId = rootElement.elementText(XML_ELEMENT_PARENT_GROUP_ID);
         parentArtifactId = rootElement.elementText(XML_ELEMENT_PARENT_ARTIFACT_ID);
         outputDir = rootElement.elementText(XML_ELEMENT_OUTPUT_DIR);
-        recoverExist = rootElement.elementText(XML_ELEMENT_RECOVER_EXIST)== null
-                ? true: Boolean.parseBoolean(rootElement.elementText(XML_ELEMENT_RECOVER_EXIST));
+        recoverExist = rootElement.elementText(XML_ELEMENT_RECOVER_EXIST) == null
+                ? true : Boolean.parseBoolean(rootElement.elementText(XML_ELEMENT_RECOVER_EXIST));
         if (StringUtils.isEmpty(apiFilePath)
                 || StringUtils.isEmpty(parentGroupId) || StringUtils.isEmpty(parentArtifactId)
                 || StringUtils.isEmpty(outputDir)) {
@@ -318,8 +320,8 @@ public class GeneratorTools {
             return false;
         }
         outputDir = outputDir + File.separator + parentArtifactId;
-        groupId = parentGroupId+POINT_DIVISION_FLAG+parentArtifactId;
-        String modulePomTemplatePath=System.getProperty("user.dir") + File.separator + TEMPLATE_MODULE_POM_NAME;
+        groupId = parentGroupId + POINT_DIVISION_FLAG + parentArtifactId;
+        String modulePomTemplatePath = System.getProperty("user.dir") + File.separator + TEMPLATE_MODULE_POM_NAME;
 
         Yaml yaml = new Yaml();
         File apiFile = new File(apiFilePath);
@@ -340,7 +342,7 @@ public class GeneratorTools {
             return false;
         }
 
-        try  {
+        try {
             pomTemplateContent = FileUtils.readFileByStr(modulePomTemplatePath);
         } catch (Exception e) {
             LOGGER.error("Read pom template file info error, error info({}).", formatExceptionInfo(e));
@@ -382,7 +384,7 @@ public class GeneratorTools {
             String pomContent = FileUtils.readFileByStr(templatePomPath);
             pomContent = pomContent.replace("MODULE_PARENT_GROUP_ID", parentGroupId);
             pomContent = pomContent.replace("MODULE_PARENT_ARTIFACT_ID", parentArtifactId);
-            if(!new File(targetPomPath).exists() || recoverExist) {
+            if (!new File(targetPomPath).exists() || recoverExist) {
                 FileUtils.writeFileByStr(targetPomPath, pomContent, false);
             }
 
@@ -404,7 +406,7 @@ public class GeneratorTools {
                     + TEMPLATE_MAVEN_PLUGIN_CONFIG_DIR_NAME;
             String targetMavenPluginConfigPath = outputDir + File.separator + MAVEN_PLUGIN_CONFIG_DIR_NAME;
             FileUtils.copyDirectory(templateMavenPluginConfigPath, targetMavenPluginConfigPath);
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Generate project info error, error info({}).", formatExceptionInfo(e));
             return false;
         }
@@ -426,9 +428,9 @@ public class GeneratorTools {
         if (!mybatisConfigurationGenerator.setJavaModelConfiguration(
                 basePackage + JAVA_MODEL_TAIL, moduleSrcPath)
                 || !mybatisConfigurationGenerator.setSqlMapConfiguration(
-                        basePackage + SQL_MAP_TAIL, moduleSrcPath)
+                basePackage + SQL_MAP_TAIL, moduleSrcPath)
                 || !mybatisConfigurationGenerator.setJavaClientConfiguration(
-                        basePackage + JAVA_CLIENT_TAIL, moduleSrcPath)) {
+                basePackage + JAVA_CLIENT_TAIL, moduleSrcPath)) {
             LOGGER.error("Set module mybatis bean config info error, module name({}).", artifactId);
             return false;
         }
@@ -603,7 +605,7 @@ public class GeneratorTools {
                         if (!consumeContentType.equals(YML_ELEMENT_APPLICATION_JSON)
                                 && !consumeContentType.equals(YML_ELEMENT_APPLICATION_FILE)) {
                             LOGGER.error("Get module api url consume info error, path({}), "
-                                            + "method({}), module name({}).", urlPath, urlMethod, artifactId);
+                                    + "method({}), module name({}).", urlPath, urlMethod, artifactId);
                             return false;
                         }
                     }
@@ -845,7 +847,7 @@ public class GeneratorTools {
                 }
 
                 Field field = null;
-                if(defaultValue == null) {
+                if (defaultValue == null) {
                     field = JavaBeanGenerator.getField(requestParamInfo.getName(),
                             requestParamInfo.getDescription(), fieldTypeStr);
                 } else {
@@ -1264,7 +1266,7 @@ public class GeneratorTools {
 
             Method getterMethod
                     = JavaBeanGenerator.getFieldGetterMethod(
-                            JavaBeanGenerator.getCamelCaseString(msgInfoTypeName, false),
+                    JavaBeanGenerator.getCamelCaseString(msgInfoTypeName, false),
                     msgInfoTypeName);
             msgInfoClass.addMethod(getterMethod);
             Method setterMethod
@@ -1448,11 +1450,11 @@ public class GeneratorTools {
 
             } else {
                 Field field = null;
-                if(msgPropertyInfo.getDefaultValue() == null) {
-                    field=JavaBeanGenerator.getField(name,
+                if (msgPropertyInfo.getDefaultValue() == null) {
+                    field = JavaBeanGenerator.getField(name,
                             msgPropertyInfo.getDescription(), fieldTypeStr);
                 } else {
-                    field=JavaBeanGenerator.getField(name,
+                    field = JavaBeanGenerator.getField(name,
                             msgPropertyInfo.getDescription(), fieldTypeStr, msgPropertyInfo.getDefaultValue());
                 }
                 if (!field.getAnnotations().isEmpty()) {
@@ -1636,7 +1638,7 @@ public class GeneratorTools {
 
         if (YML_ELEMENT_APPLICATION_JSON.equals(consumeContentType)
                 && (SERVICE_METHOD_HTTP_POST.equalsIgnoreCase(urlMethod)
-                ||SERVICE_METHOD_HTTP_PUT.equalsIgnoreCase(urlMethod))) {
+                || SERVICE_METHOD_HTTP_PUT.equalsIgnoreCase(urlMethod))) {
             Parameter parameterRequestJson = new Parameter(
                     new FullyQualifiedJavaType(JSONObject.class.getSimpleName()), "requestJson");
             parameterRequestJson.addAnnotation(JAVA_METHOD_REQUEST_BODY_ANNOUNCE);
@@ -1668,8 +1670,8 @@ public class GeneratorTools {
         }
         method.addBodyLine(String.format("String url = \"%s\";", urlPath));
         if (YML_ELEMENT_APPLICATION_JSON.equals(consumeContentType)) {
-            if(SERVICE_METHOD_HTTP_POST.equalsIgnoreCase(urlMethod)
-                    ||SERVICE_METHOD_HTTP_PUT.equalsIgnoreCase(urlMethod)) {
+            if (SERVICE_METHOD_HTTP_POST.equalsIgnoreCase(urlMethod)
+                    || SERVICE_METHOD_HTTP_PUT.equalsIgnoreCase(urlMethod)) {
                 method.addBodyLine("return httpControllerTools.deal(url, request, response, "
                         + "pathParamMap, (Object)requestJson);");
             } else {
@@ -1709,7 +1711,7 @@ public class GeneratorTools {
 
         String filePath = moduleResourcePath + File.separator + MODULE_CONFIG_FILE_NAME;
 
-        if(!new File(filePath).exists() || recoverExist) {
+        if (!new File(filePath).exists() || recoverExist) {
             try {
                 OutputFormat format = OutputFormat.createPrettyPrint();
                 format.setEncoding(DEFAULT_ENCODING);
@@ -1734,7 +1736,7 @@ public class GeneratorTools {
             pomContent = pomContent.replace("MODULE_ARTIFACT_ID", artifactId);
             pomContent = pomContent.replace("MODULE_PARENT_GROUP_ID", parentGroupId);
             pomContent = pomContent.replace("MODULE_PARENT_ARTIFACT_ID", parentArtifactId);
-            if(!new File(modulePomPath).exists() || recoverExist) {
+            if (!new File(modulePomPath).exists() || recoverExist) {
                 FileUtils.writeFileByStr(modulePomPath, pomContent, false);
             }
         } catch (Exception e) {

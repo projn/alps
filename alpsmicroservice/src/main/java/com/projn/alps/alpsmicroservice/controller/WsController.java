@@ -1,12 +1,12 @@
 package com.projn.alps.alpsmicroservice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.define.HttpDefine;
-import com.projn.alps.msg.request.WsRequestMsgInfo;
-import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
 import com.projn.alps.alpsmicroservice.work.WsProcessWorker;
+import com.projn.alps.dao.IAgentMasterInfoDao;
+import com.projn.alps.define.HttpDefine;
+import com.projn.alps.initialize.ServiceData;
+import com.projn.alps.msg.request.WsRequestMsgInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.util.ParamCheckUtils;
@@ -36,7 +36,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class WsController extends TextWebSocketHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WsController.class);
 
@@ -60,8 +60,9 @@ public class WsController extends TextWebSocketHandler {
 
     /**
      * after connection closed
+     *
      * @param session :
-     * @param status :
+     * @param status  :
      * @throws Exception :
      */
     @Override
@@ -91,14 +92,15 @@ public class WsController extends TextWebSocketHandler {
 
             Map<String, RequestServiceInfo> requestServiceInfoMap
                     = ServiceData.getRequestServiceInfoMap().get(wsRequestMsgInfo.getMsgId().toString());
-            if(requestServiceInfoMap==null || requestServiceInfoMap.isEmpty()
-                    || requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase()) ==null) {
+            if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
+                    || requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase()) == null) {
                 throw new Exception("Invaild request service info, msg id("
-                        +wsRequestMsgInfo.getMsgId()+"), method("+HttpDefine.HTTP_METHOD_POST+").");
+                        + wsRequestMsgInfo.getMsgId() + "), method(" + HttpDefine.HTTP_METHOD_POST + ").");
             }
-            RequestServiceInfo requestServiceInfo = requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase());
-            if(!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
-                throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType()+").");
+            RequestServiceInfo requestServiceInfo
+                    = requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase());
+            if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
+                throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
             }
 
             if (requestServiceInfo.getAuthorizationFilter() != null) {
@@ -115,7 +117,7 @@ public class WsController extends TextWebSocketHandler {
                     throw new Exception("Convert request info error,error info(" + e.getMessage() + ").");
                 }
 
-                if (wsRequestInfo != null && wsRequestInfo.getParamObj()!=null) {
+                if (wsRequestInfo != null && wsRequestInfo.getParamObj() != null) {
                     try {
                         ParamCheckUtils.checkParam(wsRequestInfo.getParamObj());
                     } catch (Exception e) {
@@ -139,8 +141,9 @@ public class WsController extends TextWebSocketHandler {
 
     /**
      * handle transport error
+     *
      * @param session :
-     * @param error :
+     * @param error   :
      * @throws Exception :
      */
     @Override

@@ -10,20 +10,20 @@ import java.util.List;
  * @author : sunyuecheng
  */
 public class RequestServiceInfo {
-    public static final String SERVICE_METHOD_HTTP_POST="post";
-    public static final String SERVICE_METHOD_HTTP_GET="get";
-    public static final String SERVICE_METHOD_HTTP_PUT="put";
-    public static final String SERVICE_METHOD_HTTP_DELETE="delete";
+    public static final String SERVICE_METHOD_HTTP_POST = "post";
+    public static final String SERVICE_METHOD_HTTP_GET = "get";
+    public static final String SERVICE_METHOD_HTTP_PUT = "put";
+    public static final String SERVICE_METHOD_HTTP_DELETE = "delete";
 
-    public static final String SERVICE_METHOD_WS_POST="post";
+    public static final String SERVICE_METHOD_WS_POST = "post";
 
-    public static final String SERVICE_METHOD_MSG_NORMAL="normal";
-    public static final String SERVICE_METHOD_MSG_ORDER="order";
-    public static final String SERVICE_METHOD_MSG_BROADCAST="broadcast";
+    public static final String SERVICE_METHOD_MSG_NORMAL = "normal";
+    public static final String SERVICE_METHOD_MSG_ORDER = "order";
+    public static final String SERVICE_METHOD_MSG_BROADCAST = "broadcast";
 
-    public static final String SERVICE_TYPE_HTTP="http";
-    public static final String SERVICE_TYPE_WS="ws";
-    public static final String SERVICE_TYPE_MSG="msg";
+    public static final String SERVICE_TYPE_HTTP = "http";
+    public static final String SERVICE_TYPE_WS = "ws";
+    public static final String SERVICE_TYPE_MSG = "msg";
 
     private String serviceName;
 

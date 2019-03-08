@@ -191,7 +191,7 @@ public final class RequestInfoUtils {
      * convert msg request info
      *
      * @param msgText :
-     * @param clazz    :
+     * @param clazz   :
      * @return MsgRequestInfo :
      * @throws Exception :
      */

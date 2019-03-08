@@ -1,26 +1,26 @@
 package com.projn.alps.alpsmicroservice.listener;
 
+import com.projn.alps.alpsmicroservice.aop.HttpServiceMonitorAop;
+import com.projn.alps.alpsmicroservice.aop.MsgServiceMonitorAop;
+import com.projn.alps.alpsmicroservice.aop.WsServiceMonitorAop;
+import com.projn.alps.alpsmicroservice.filter.impl.JwtAuthenticationFilterImpl;
+import com.projn.alps.alpsmicroservice.job.RemoveInvaildWsSessionInfoJob;
+import com.projn.alps.alpsmicroservice.job.SendAgentMsgJob;
+import com.projn.alps.alpsmicroservice.mq.MsgConsumerListener;
+import com.projn.alps.alpsmicroservice.mq.OrderMsgConsumerListener;
+import com.projn.alps.alpsmicroservice.property.RocketMqProperties;
+import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
+import com.projn.alps.alpsmicroservice.struct.ModuleInfo;
+import com.projn.alps.alpsmicroservice.struct.ModuleJobInfo;
 import com.projn.alps.aop.IHttpServiceMonitorAop;
 import com.projn.alps.aop.IMsgServiceMonitorAop;
 import com.projn.alps.aop.IWsServiceMonitorAop;
 import com.projn.alps.define.HttpDefine;
 import com.projn.alps.filter.IAuthorizationFilter;
 import com.projn.alps.i18n.MessageContext;
-import com.projn.alps.alpsmicroservice.aop.HttpServiceMonitorAop;
-import com.projn.alps.alpsmicroservice.aop.MsgServiceMonitorAop;
-import com.projn.alps.alpsmicroservice.aop.WsServiceMonitorAop;
-import com.projn.alps.alpsmicroservice.filter.impl.JwtAuthenticationFilterImpl;
 import com.projn.alps.initialize.ServiceData;
-import com.projn.alps.alpsmicroservice.job.RemoveInvaildWsSessionInfoJob;
-import com.projn.alps.alpsmicroservice.job.SendAgentMsgJob;
-import com.projn.alps.alpsmicroservice.mq.MsgConsumerListener;
-import com.projn.alps.alpsmicroservice.mq.OrderMsgConsumerListener;
 import com.projn.alps.msg.request.HttpBatchSendMsgRequestMsgInfo;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
-import com.projn.alps.alpsmicroservice.property.RocketMqProperties;
-import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
-import com.projn.alps.alpsmicroservice.struct.ModuleInfo;
-import com.projn.alps.alpsmicroservice.struct.ModuleJobInfo;
 import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
@@ -46,8 +46,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-import static com.projn.alps.define.CommonDefine.COLLECTION_INIT_SIZE;
 import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
+import static com.projn.alps.define.CommonDefine.COLLECTION_INIT_SIZE;
 import static com.projn.alps.struct.RequestServiceInfo.SERVICE_TYPE_HTTP;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
@@ -92,7 +92,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
      * system initialize context listener
      *
      * @param configPath :
-     * @throws  Exception :
+     * @throws Exception :
      */
     public SystemInitializeContextListener(String configPath) throws Exception {
         loadModuleInfo(configPath);
@@ -109,13 +109,13 @@ public final class SystemInitializeContextListener implements ApplicationListene
             runTimeProperties =
                     (RunTimeProperties) contextRefreshedEvent.getApplicationContext().getBean("runTimeProperties");
 
-            if(runTimeProperties.isBeanSwitchRocketMq()) {
+            if (runTimeProperties.isBeanSwitchRocketMq()) {
                 rocketMqProperties = (RocketMqProperties)
                         contextRefreshedEvent.getApplicationContext().getBean("rocketMqProperties");
             }
 
-            threadPoolTaskExecutor =
-                    (ThreadPoolTaskExecutor) contextRefreshedEvent.getApplicationContext().getBean("threadPoolTaskExecutor");
+            threadPoolTaskExecutor = (ThreadPoolTaskExecutor) contextRefreshedEvent.getApplicationContext().
+                    getBean("threadPoolTaskExecutor");
 
             ServiceData.setMasterInfo(
                     new MasterInfo(runTimeProperties.getAppName(), runTimeProperties.getServerAddress(),
@@ -141,7 +141,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             return;
         }
 
-        if(runTimeProperties.isBeanSwitchRocketMq()) {
+        if (runTimeProperties.isBeanSwitchRocketMq()) {
             Map<String, MqConsumerInfo> mqConsumerInfoMap = null;
             try {
                 mqConsumerInfoMap = initializeRocketMq(requestServiceInfoMap);
@@ -157,46 +157,46 @@ public final class SystemInitializeContextListener implements ApplicationListene
         moduleInfoList = new ArrayList<>();
 
         File modulesDirFile = new File(modulesDir);
-        if (!modulesDirFile.isDirectory()||!modulesDirFile.exists()) {
+        if (!modulesDirFile.isDirectory() || !modulesDirFile.exists()) {
             LOGGER.info("Invaild modules dir, dir({}).", modulesDir);
             return;
         }
 
         File[] moduleDirFileList = modulesDirFile.listFiles();
-        if(moduleDirFileList == null || moduleDirFileList.length==0) {
+        if (moduleDirFileList == null || moduleDirFileList.length == 0) {
             throw new Exception("Invaild module info.");
         }
 
-        for(int i=0;i<moduleDirFileList.length;i++) {
+        for (int i = 0; i < moduleDirFileList.length; i++) {
             File moduleDirFile = moduleDirFileList[i];
-            if(!moduleDirFile.isDirectory()) {
+            if (!moduleDirFile.isDirectory()) {
                 continue;
             }
 
             File[] moduleInfoFileList = moduleDirFile.listFiles();
-            if(moduleInfoFileList==null || moduleInfoFileList.length< MODULE_INFO_ITEM_SIZE) {
+            if (moduleInfoFileList == null || moduleInfoFileList.length < MODULE_INFO_ITEM_SIZE) {
                 continue;
             }
 
             String moduleJarPath = null;
             String moduleConfigPath = null;
 
-            for(int j=0;j<moduleInfoFileList.length;j++) {
+            for (int j = 0; j < moduleInfoFileList.length; j++) {
                 File moduleInfoFile = moduleInfoFileList[j];
-                if(moduleInfoFile.isDirectory()) {
+                if (moduleInfoFile.isDirectory()) {
                     continue;
                 }
 
-                if(moduleInfoFile.getName().endsWith(MODULE_JAR_FILE_TAIL)) {
+                if (moduleInfoFile.getName().endsWith(MODULE_JAR_FILE_TAIL)) {
                     moduleJarPath = moduleInfoFile.getAbsolutePath();
                 }
 
-                if(moduleInfoFile.getName().equals(MODULE_CONFIG_FILE_NAME)) {
+                if (moduleInfoFile.getName().equals(MODULE_CONFIG_FILE_NAME)) {
                     moduleConfigPath = moduleInfoFile.getAbsolutePath();
                 }
             }
 
-            if(StringUtils.isEmpty(moduleJarPath) || StringUtils.isEmpty(moduleConfigPath) ) {
+            if (StringUtils.isEmpty(moduleJarPath) || StringUtils.isEmpty(moduleConfigPath)) {
                 continue;
             }
 
@@ -256,13 +256,13 @@ public final class SystemInitializeContextListener implements ApplicationListene
             loadModuleJobInfo(jobRootElement, moduleJobInfoList);
         }
 
-        if(runTimeProperties.isBeanSwitchRocketMq()) {
+        if (runTimeProperties.isBeanSwitchRocketMq()) {
             if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
                 throw new Exception("Register http api service info error.");
             }
         }
 
-        if(runTimeProperties.isBeanSwitchWebsocket()) {
+        if (runTimeProperties.isBeanSwitchWebsocket()) {
             registerHttpApiJob(moduleJobInfoList);
         }
 
@@ -311,7 +311,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             }
             return propertyPropertiesMap;
         }
-         return null;
+        return null;
     }
 
     private void loadModulePropertyInfo(ApplicationContext applicationContext, Element propertiesRootElement)
@@ -467,7 +467,6 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 if (!RequestServiceInfo.SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
                     continue;
                 }
-
                 String[] topicTags = uri.split("/");
                 if (topicTags.length != MSG_URI_PART_NUM) {
                     continue;
@@ -478,7 +477,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
                     mqConsumerInfo.setTopic(topic);
                     mqConsumerInfo.setMethod(method);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags()==null? topicTags[1]
+                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
                             : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
                     DefaultMQPushConsumer consumer
@@ -492,7 +491,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
                         mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
                         consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
                     } else if (RequestServiceInfo.SERVICE_METHOD_MSG_ORDER.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new OrderMsgConsumerListener(consumer, threadPoolTaskExecutor));
+                        mqConsumerInfo.setMessageListener(
+                                new OrderMsgConsumerListener(consumer, threadPoolTaskExecutor));
                         consumer.registerMessageListener(
                                 (OrderMsgConsumerListener) mqConsumerInfo.getMessageListener());
                     } else if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
@@ -508,7 +508,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
                 } else {
                     MqConsumerInfo mqConsumerInfo = mqConsumerInfoMap.get(topic);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags()==null? topicTags[1]
+                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
                             : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
                     if (mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
@@ -553,7 +553,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             httpServiceMonitorAop.setHttpServiceMonitorAopList(httpServiceMonitorAopList);
         }
 
-        if(runTimeProperties.isBeanSwitchWebsocket()) {
+        if (runTimeProperties.isBeanSwitchWebsocket()) {
             List<IWsServiceMonitorAop> wsServiceMonitorAopList = new ArrayList<>();
             Map<String, IWsServiceMonitorAop> wsServiceMonitorAopMap =
                     applicationContext.getBeansOfType(IWsServiceMonitorAop.class);
@@ -573,7 +573,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             }
         }
 
-        if(runTimeProperties.isBeanSwitchRocketMq()) {
+        if (runTimeProperties.isBeanSwitchRocketMq()) {
             List<IMsgServiceMonitorAop> msgServiceMonitorAopList = new ArrayList<>();
             Map<String, IMsgServiceMonitorAop> msgServiceMonitorAopMap =
                     applicationContext.getBeansOfType(IMsgServiceMonitorAop.class);
@@ -603,7 +603,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
         }
 
         List<String> userRoleNameList = null;
-        if(!StringUtils.isEmpty(runTimeProperties.getApiAccessRoleSendMsg())) {
+        if (!StringUtils.isEmpty(runTimeProperties.getApiAccessRoleSendMsg())) {
             String[] userRoleNames = runTimeProperties.getApiAccessRoleSendMsg().split(",");
             userRoleNameList = Arrays.asList(userRoleNames);
         }

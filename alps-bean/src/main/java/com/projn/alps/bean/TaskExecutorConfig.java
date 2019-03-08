@@ -29,6 +29,7 @@ public class TaskExecutorConfig {
 
     /**
      * thread pool task executor
+     *
      * @return org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor :
      */
     @Bean

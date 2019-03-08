@@ -1,7 +1,6 @@
 package com.projn.alps.work;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.define.HttpDefine;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.i18n.LocaleContext;
@@ -17,11 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Map;
 
-import static com.projn.alps.exception.code.CommonErrorCode.*;
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
+import static com.projn.alps.exception.code.CommonErrorCode.*;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 
@@ -106,7 +104,7 @@ public class HttpProcessWorker implements Runnable {
             if (httpResponseInfo.getMsg() == null) {
                 httpResponseInfo.setMsg(new HttpErrorResponseMsgInfo(RESULT_OK.getErrorCode(), null));
             }
-            if(httpResponseInfo.getMsg().getClass() ==(byte[].class)) {
+            if (httpResponseInfo.getMsg().getClass() == (byte[].class)) {
                 try {
                     response.getOutputStream().write((byte[]) httpResponseInfo.getMsg());
                     response.getOutputStream().flush();

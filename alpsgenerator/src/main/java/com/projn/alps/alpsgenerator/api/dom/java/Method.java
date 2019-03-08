@@ -14,28 +14,44 @@ import java.util.ListIterator;
  */
 public class Method extends AbstractJavaElement {
 
-    /** The body lines. */
+    /**
+     * The body lines.
+     */
     private List<String> bodyLines;
 
-    /** The constructor. */
+    /**
+     * The constructor.
+     */
     private boolean constructor;
 
-    /** The return type. */
+    /**
+     * The return type.
+     */
     private FullyQualifiedJavaType returnType;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name;
 
-    /** The parameters. */
+    /**
+     * The parameters.
+     */
     private List<Parameter> parameters;
 
-    /** The exceptions. */
+    /**
+     * The exceptions.
+     */
     private List<FullyQualifiedJavaType> exceptions;
 
-    /** The is synchronized. */
+    /**
+     * The is synchronized.
+     */
     private boolean isSynchronized;
 
-    /** The is native. */
+    /**
+     * The is native.
+     */
     private boolean isNative;
 
     /**
@@ -49,8 +65,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Instantiates a new method.
      *
-     * @param name
-     *            the name
+     * @param name the name
      */
     public Method(String name) {
         super();
@@ -63,8 +78,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Copy constructor. Not a truly deep copy, but close enough for most purposes.
      *
-     * @param original
-     *            the original
+     * @param original the original
      */
     public Method(Method original) {
         super(original);
@@ -93,8 +107,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the body line.
      *
-     * @param line
-     *            the line
+     * @param line the line
      */
     public void addBodyLine(String line) {
         bodyLines.add(line);
@@ -103,10 +116,8 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the body line.
      *
-     * @param index
-     *            the index
-     * @param line
-     *            the line
+     * @param index the index
+     * @param line  the line
      */
     public void addBodyLine(int index, String line) {
         bodyLines.add(index, line);
@@ -115,8 +126,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the body lines.
      *
-     * @param lines
-     *            the lines
+     * @param lines the lines
      */
     public void addBodyLines(Collection<String> lines) {
         bodyLines.addAll(lines);
@@ -125,10 +135,8 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the body lines.
      *
-     * @param index
-     *            the index
-     * @param lines
-     *            the lines
+     * @param index the index
+     * @param lines the lines
      */
     public void addBodyLines(int index, Collection<String> lines) {
         bodyLines.addAll(index, lines);
@@ -137,10 +145,8 @@ public class Method extends AbstractJavaElement {
     /**
      * Gets the formatted content.
      *
-     * @param indentLevel
-     *            the indent level
-     * @param interfaceMethod
-     *            the interface method
+     * @param indentLevel     the indent level
+     * @param interfaceMethod the interface method
      * @param compilationUnit the compilation unit
      * @return the formatted content
      */
@@ -272,8 +278,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Sets the constructor.
      *
-     * @param constructor
-     *            The constructor to set.
+     * @param constructor The constructor to set.
      */
     public void setConstructor(boolean constructor) {
         this.constructor = constructor;
@@ -291,8 +296,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Sets the name.
      *
-     * @param name
-     *            The name to set.
+     * @param name The name to set.
      */
     public void setName(String name) {
         this.name = name;
@@ -310,8 +314,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the parameter.
      *
-     * @param parameter
-     *            the parameter
+     * @param parameter the parameter
      */
     public void addParameter(Parameter parameter) {
         parameters.add(parameter);
@@ -320,10 +323,8 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the parameter.
      *
-     * @param index
-     *            the index
-     * @param parameter
-     *            the parameter
+     * @param index     the index
+     * @param parameter the parameter
      */
     public void addParameter(int index, Parameter parameter) {
         parameters.add(index, parameter);
@@ -341,8 +342,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Sets the return type.
      *
-     * @param returnType
-     *            The returnType to set.
+     * @param returnType The returnType to set.
      */
     public void setReturnType(FullyQualifiedJavaType returnType) {
         this.returnType = returnType;
@@ -360,8 +360,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Adds the exception.
      *
-     * @param exception
-     *            the exception
+     * @param exception the exception
      */
     public void addException(FullyQualifiedJavaType exception) {
         exceptions.add(exception);
@@ -379,8 +378,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Sets the synchronized.
      *
-     * @param isSynchronized
-     *            the new synchronized
+     * @param isSynchronized the new synchronized
      */
     public void setSynchronized(boolean isSynchronized) {
         this.isSynchronized = isSynchronized;
@@ -398,8 +396,7 @@ public class Method extends AbstractJavaElement {
     /**
      * Sets the native.
      *
-     * @param isNative
-     *            the new native
+     * @param isNative the new native
      */
     public void setNative(boolean isNative) {
         this.isNative = isNative;

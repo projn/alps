@@ -70,42 +70,37 @@ public interface ICompilationUnit {
     /**
      * Adds the imported type.
      *
-     * @param importedType
-     *            the imported type
+     * @param importedType the imported type
      */
     void addImportedType(FullyQualifiedJavaType importedType);
 
     /**
      * Adds the imported types.
      *
-     * @param importedTypes
-     *            the imported types
+     * @param importedTypes the imported types
      */
     void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes);
 
     /**
      * Adds the static import.
      *
-     * @param staticImport
-     *            the static import
+     * @param staticImport the static import
      */
     void addStaticImport(String staticImport);
 
     /**
      * Adds the static imports.
      *
-     * @param staticImports
-     *            the static imports
+     * @param staticImports the static imports
      */
     void addStaticImports(Set<String> staticImports);
 
     /**
      * Comments will be written at the top of the file as is, we do not append any start or end comment characters.
-     *
+     * <p>
      * Note that in the Eclipse plugin, file comments will not be merged.
      *
-     * @param commentLine
-     *            the comment line
+     * @param commentLine the comment line
      */
     void addFileCommentLine(String commentLine);
 

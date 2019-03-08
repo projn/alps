@@ -7,7 +7,6 @@ import java.util.Set;
  * This class contains a list of Java reserved words.
  *
  * @author Jeff Butler
- *
  */
 public final class JavaReservedWords {
 
@@ -75,6 +74,7 @@ public final class JavaReservedWords {
 
     /**
      * contains word
+     *
      * @param word :
      * @return boolean :
      */

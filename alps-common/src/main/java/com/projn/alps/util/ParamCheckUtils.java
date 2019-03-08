@@ -27,7 +27,6 @@ public final class ParamCheckUtils {
      * @throws Exception :
      */
     public static boolean checkParam(Object param) throws Exception {
-
         Class clazz = param.getClass();
         if (clazz.isAnnotationPresent(ParamLimit.class)) {
             ParamFilter paramFilter = (ParamFilter) clazz.getAnnotation(ParamFilter.class);
@@ -53,9 +52,9 @@ public final class ParamCheckUtils {
             Object fieldValue = getMethod.invoke(param, new Object[]{});
             Class type = field.getType();
 
-            if(field.isAnnotationPresent(ParamLocation.class)) {
+            if (field.isAnnotationPresent(ParamLocation.class)) {
                 ParamLocation paramLocation = (ParamLocation) field.getAnnotation(ParamLocation.class);
-                if (paramLocation != null && paramLocation.location()==ParamLocationType.BODY) {
+                if (paramLocation != null && paramLocation.location() == ParamLocationType.BODY) {
                     checkParam(fieldValue);
                 }
                 continue;
@@ -71,50 +70,54 @@ public final class ParamCheckUtils {
 
             if (!paramLimit.nullable()) {
                 if (fieldValue == null) {
-                    throw new Exception("Field is null, field name("
-                            + fieldName + "),type(" + type.getName() + ").");
+                    throw new Exception("Field is null, field name(" + fieldName + "),type(" + type.getName() + ").");
                 }
             }
             if (fieldValue == null) {
                 continue;
             }
-            List<String> valueList = null;
-            if (paramLimit.value().length != 0) {
-                valueList = Arrays.asList(paramLimit.value());
-            }
 
-            if (Integer.class.equals(type) || int.class.equals(type)) {
-                checkInt(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (Long.class.equals(type) || long.class.equals(type)) {
-                checkLong(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
-                Boolean boolVal = (Boolean) fieldValue;
-            } else if (Date.class.equals(type)) {
-                Date date = (Date) fieldValue;
-            } else if (Short.class.equals(type) || short.class.equals(type)) {
-                checkShort(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (Float.class.equals(type) || float.class.equals(type)) {
-                checkFloat(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (Double.class.equals(type) || double.class.equals(type)) {
-                checkDouble(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (String.class.equals(type)) {
-                checkString(fieldValue, paramLimit, fieldName, type, valueList);
-            } else if (List.class.equals(type)) {
-                List<Object> objList = (List<Object>) fieldValue;
-                for (Object obj : objList) {
-                    try {
-                        ParamCheckUtils.checkParam(obj);
-                    } catch (Exception e) {
-                        throw e;
-                    }
-                }
-            } else if (MultipartFile.class.equals(type)) {
-            } else {
-                throw new Exception("Unsupport value type,field name("
-                        + fieldName + "),type(" + type.getName() + ").");
-            }
+            checkByType(fieldValue, paramLimit, fieldName, type);
         }
         return true;
+    }
+
+    private static void checkByType(Object fieldValue, ParamLimit paramLimit, String fieldName, Class type)
+            throws Exception {
+        List<String> valueList = null;
+        if (paramLimit.value().length != 0) {
+            valueList = Arrays.asList(paramLimit.value());
+        }
+
+        if (Integer.class.equals(type) || int.class.equals(type)) {
+            checkInt(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (Long.class.equals(type) || long.class.equals(type)) {
+            checkLong(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
+            Boolean boolVal = (Boolean) fieldValue;
+        } else if (Date.class.equals(type)) {
+            Date date = (Date) fieldValue;
+        } else if (Short.class.equals(type) || short.class.equals(type)) {
+            checkShort(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (Float.class.equals(type) || float.class.equals(type)) {
+            checkFloat(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (Double.class.equals(type) || double.class.equals(type)) {
+            checkDouble(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (String.class.equals(type)) {
+            checkString(fieldValue, paramLimit, fieldName, type, valueList);
+        } else if (List.class.equals(type)) {
+            List<Object> objList = (List<Object>) fieldValue;
+            for (Object obj : objList) {
+                try {
+                    ParamCheckUtils.checkParam(obj);
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+        } else if (MultipartFile.class.equals(type)) {
+        } else {
+            throw new Exception("Unsupport value type,field name(" + fieldName + "),type(" + type.getName() + ").");
+        }
     }
 
     private static void checkInt(Object fieldValue, ParamLimit paramLimit, String fieldName,

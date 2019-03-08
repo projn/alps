@@ -1,7 +1,7 @@
 package com.projn.alps.alpsgenerator.generator;
 
-import org.mybatis.generator.config.*;
 import org.apache.commons.lang3.StringUtils;
+import org.mybatis.generator.config.*;
 
 /**
  * mybatis configuration generator

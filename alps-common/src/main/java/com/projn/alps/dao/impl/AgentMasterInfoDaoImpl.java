@@ -3,10 +3,10 @@ package com.projn.alps.dao.impl;
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.domain.AgentMasterInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * agent server info dao impl

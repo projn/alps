@@ -18,8 +18,8 @@ public class ModuleInfo {
     /**
      * module info
      *
-     * @param jarPath     :
-     * @param configPath  :
+     * @param jarPath    :
+     * @param configPath :
      */
     public ModuleInfo(String jarPath, String configPath) {
         this.jarPath = jarPath;

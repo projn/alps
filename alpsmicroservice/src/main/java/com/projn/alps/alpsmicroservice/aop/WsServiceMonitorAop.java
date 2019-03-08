@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class WsServiceMonitorAop {
 
     private List<IWsServiceMonitorAop> wsServiceMonitorAopList = null;
@@ -41,7 +41,7 @@ public class WsServiceMonitorAop {
     /**
      * before handler
      *
-     * @param joinPoint       :
+     * @param joinPoint     :
      * @param wsRequestInfo :
      */
     @Before(value = "userOperation() && args(wsRequestInfo)")
@@ -56,7 +56,7 @@ public class WsServiceMonitorAop {
     /**
      * after handler
      *
-     * @param joinPoint :
+     * @param joinPoint     :
      * @param wsRequestInfo :
      */
     @After(value = "userOperation() && args(wsRequestInfo)")
@@ -71,7 +71,7 @@ public class WsServiceMonitorAop {
     /**
      * return handler
      *
-     * @param joinPoint        :
+     * @param joinPoint      :
      * @param wsRequestInfo  :
      * @param wsResponseInfo :
      */

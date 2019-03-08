@@ -6,9 +6,9 @@ import com.projn.alps.initialize.InitializeBean;
 import com.projn.alps.service.IComponentsMsgService;
 import com.projn.alps.struct.MsgRequestInfo;
 import com.projn.alps.util.CounterUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 

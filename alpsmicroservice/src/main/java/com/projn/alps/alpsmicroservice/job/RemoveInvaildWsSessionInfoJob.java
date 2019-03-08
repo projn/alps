@@ -1,8 +1,8 @@
 package com.projn.alps.alpsmicroservice.job;
 
+import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,10 +19,11 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
  * remove invaild web socket session info job
+ *
  * @author : sunyuecheng
  */
 @Component("RemoveInvaildWsSessionInfoJob")
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class RemoveInvaildWsSessionInfoJob implements Job {
     private static final Logger LOGGER = LoggerFactory.getLogger(RemoveInvaildWsSessionInfoJob.class);
 
@@ -46,7 +47,7 @@ public class RemoveInvaildWsSessionInfoJob implements Job {
             List<String> agentIdList = WsSessionInfoMap.getInstance().
                     removeInvaildWebSocketSessionInfo(runTimeProperties.getWsSessionTimeOutMinutes());
 
-            for(String agentId : agentIdList) {
+            for (String agentId : agentIdList) {
                 agentMasterInfoDao.deleteAgentMasterInfo(agentId);
             }
 

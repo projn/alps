@@ -1,7 +1,8 @@
 package com.projn.alps.bean;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * mybatis config
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ImportResource("classpath:bootstrap/spring-mybatis.xml")
 //@PropertySource(value = {"file:${config.dir}/config/mybatis.properties"})
-@ConditionalOnProperty(name = "system.bean.switch.mybatis", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.mybatis", havingValue = "true", matchIfMissing = true)
 public class MybatisConfig {
 
 //    @Value("${mybatis.configLocation}")

@@ -5,9 +5,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.projn.alps.define.CommonDefine.DAY_HOURS;
-import static com.projn.alps.define.CommonDefine.MAX_IP_ADDRESS_LEN;
-import static com.projn.alps.define.CommonDefine.MIN_IP_ADDRESS_LEN;
+import static com.projn.alps.define.CommonDefine.*;
 
 /**
  * common utils

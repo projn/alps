@@ -184,7 +184,7 @@ public final class FileUtils {
         }
 
         File[] fileList = srcFile.listFiles();
-        if(fileList!=null) {
+        if (fileList != null) {
             for (int i = 0; i < fileList.length; i++) {
                 if (fileList[i].isFile()) {
                     copyFile(srcDir + File.separator + fileList[i].getName(),

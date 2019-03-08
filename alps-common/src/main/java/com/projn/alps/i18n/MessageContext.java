@@ -141,10 +141,10 @@ public final class MessageContext {
                     }
                 }
 
-            } catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 logger.error("Load module local key message error, error info({}).", e.getMessage());
                 return false;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.error("Load module local key message error, error info({}).", e.getMessage());
                 return false;
             }

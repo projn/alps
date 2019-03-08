@@ -22,7 +22,7 @@ import java.util.List;
  * @author : sunyuecheng
  */
 @Repository("RocketMqDao")
-public class RocketMqDaoImpl implements IRocketMqDao{
+public class RocketMqDaoImpl implements IRocketMqDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqDaoImpl.class);
 
     private static final String DEFAULT_ENCODING = "UTF-8";

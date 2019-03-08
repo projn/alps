@@ -21,7 +21,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 @EnableConfigurationProperties(RunTimeProperties.class)
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class WebSocketConfig implements WebSocketConfigurer {
 
 
@@ -30,6 +30,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     /**
      * register web socket handlers
+     *
      * @param registry :
      */
     @Override
@@ -40,6 +41,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     /**
      * web socket controller
+     *
      * @return org.springframework.web.socket.WebSocketHandler :
      */
     @Bean

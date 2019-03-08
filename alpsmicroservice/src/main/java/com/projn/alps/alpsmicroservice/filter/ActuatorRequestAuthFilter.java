@@ -1,9 +1,9 @@
 package com.projn.alps.alpsmicroservice.filter;
 
 import com.alibaba.fastjson.JSONObject;
+import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import com.projn.alps.filter.IAuthorizationFilter;
 import com.projn.alps.msg.response.HttpErrorResponseMsgInfo;
-import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,7 +28,7 @@ import static com.projn.alps.exception.code.CommonErrorCode.RESULT_INVAILD_USER_
  * @author : sunyuecheng
  */
 @Component
-@ConditionalOnProperty(name = "system.bean.switch.actuator.auth", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.actuator.auth", havingValue = "true", matchIfMissing = true)
 public class ActuatorRequestAuthFilter extends OncePerRequestFilter {
 
     @Autowired

@@ -12,32 +12,45 @@ import java.util.*;
  */
 public class InnerEnum extends AbstractJavaElement {
 
-    /** The fields. */
+    /**
+     * The fields.
+     */
     private List<Field> fields;
 
-    /** The inner classes. */
+    /**
+     * The inner classes.
+     */
     private List<InnerClass> innerClasses;
 
-    /** The inner enums. */
+    /**
+     * The inner enums.
+     */
     private List<InnerEnum> innerEnums;
 
-    /** The type. */
+    /**
+     * The type.
+     */
     private FullyQualifiedJavaType type;
 
-    /** The super interface types. */
+    /**
+     * The super interface types.
+     */
     private Set<FullyQualifiedJavaType> superInterfaceTypes;
 
-    /** The methods. */
+    /**
+     * The methods.
+     */
     private List<Method> methods;
 
-    /** The enum constants. */
+    /**
+     * The enum constants.
+     */
     private List<String> enumConstants;
 
     /**
      * Instantiates a new inner enum.
      *
-     * @param type
-     *            the type
+     * @param type the type
      */
     public InnerEnum(FullyQualifiedJavaType type) {
         super();
@@ -62,8 +75,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the field.
      *
-     * @param field
-     *            the field
+     * @param field the field
      */
     public void addField(Field field) {
         fields.add(field);
@@ -81,8 +93,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the inner class.
      *
-     * @param innerClass
-     *            the inner class
+     * @param innerClass the inner class
      */
     public void addInnerClass(InnerClass innerClass) {
         innerClasses.add(innerClass);
@@ -100,8 +111,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the inner enum.
      *
-     * @param innerEnum
-     *            the inner enum
+     * @param innerEnum the inner enum
      */
     public void addInnerEnum(InnerEnum innerEnum) {
         innerEnums.add(innerEnum);
@@ -119,8 +129,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the enum constant.
      *
-     * @param enumConstant
-     *            the enum constant
+     * @param enumConstant the enum constant
      */
     public void addEnumConstant(String enumConstant) {
         enumConstants.add(enumConstant);
@@ -129,8 +138,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Gets the formatted content.
      *
-     * @param indentLevel
-     *            the indent level
+     * @param indentLevel     the indent level
      * @param compilationUnit the compilation unit
      * @return the formatted content
      */
@@ -256,8 +264,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the super interface.
      *
-     * @param superInterface
-     *            the super interface
+     * @param superInterface the super interface
      */
     public void addSuperInterface(FullyQualifiedJavaType superInterface) {
         superInterfaceTypes.add(superInterface);
@@ -275,8 +282,7 @@ public class InnerEnum extends AbstractJavaElement {
     /**
      * Adds the method.
      *
-     * @param method
-     *            the method
+     * @param method the method
      */
     public void addMethod(Method method) {
         methods.add(method);

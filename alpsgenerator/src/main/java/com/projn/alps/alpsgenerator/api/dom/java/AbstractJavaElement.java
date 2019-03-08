@@ -11,20 +11,30 @@ import java.util.List;
  * @author Jeff Butler
  */
 public abstract class AbstractJavaElement {
-    
-    /** The java doc lines. */
+
+    /**
+     * The java doc lines.
+     */
     private List<String> javaDocLines;
 
-    /** The visibility. */
+    /**
+     * The visibility.
+     */
     private JavaVisibility visibility = JavaVisibility.DEFAULT;
 
-    /** The is static. */
+    /**
+     * The is static.
+     */
     private boolean isStatic;
 
-    /** The is final. */
+    /**
+     * The is final.
+     */
     private boolean isFinal;
 
-    /** The annotations. */
+    /**
+     * The annotations.
+     */
     private List<String> annotations;
 
     /**
@@ -35,12 +45,11 @@ public abstract class AbstractJavaElement {
         javaDocLines = new ArrayList<String>();
         annotations = new ArrayList<String>();
     }
-    
+
     /**
      * Copy Constructor.
      *
-     * @param original
-     *            the original
+     * @param original the original
      */
     public AbstractJavaElement(AbstractJavaElement original) {
         this();
@@ -63,8 +72,7 @@ public abstract class AbstractJavaElement {
     /**
      * Adds the java doc line.
      *
-     * @param javaDocLine
-     *            the java doc line
+     * @param javaDocLine the java doc line
      */
     public void addJavaDocLine(String javaDocLine) {
         javaDocLines.add(javaDocLine);
@@ -82,8 +90,7 @@ public abstract class AbstractJavaElement {
     /**
      * Adds the annotation.
      *
-     * @param annotation
-     *            the annotation
+     * @param annotation the annotation
      */
     public void addAnnotation(String annotation) {
         annotations.add(annotation);
@@ -101,8 +108,7 @@ public abstract class AbstractJavaElement {
     /**
      * Sets the visibility.
      *
-     * @param visibility
-     *            The visibility to set.
+     * @param visibility The visibility to set.
      */
     public void setVisibility(JavaVisibility visibility) {
         this.visibility = visibility;
@@ -118,10 +124,8 @@ public abstract class AbstractJavaElement {
     /**
      * Adds the formatted javadoc.
      *
-     * @param sb
-     *            the sb
-     * @param indentLevel
-     *            the indent level
+     * @param sb          the sb
+     * @param indentLevel the indent level
      */
     public void addFormattedJavadoc(StringBuilder sb, int indentLevel) {
         for (String javaDocLine : javaDocLines) {
@@ -134,10 +138,8 @@ public abstract class AbstractJavaElement {
     /**
      * Adds the formatted annotations.
      *
-     * @param sb
-     *            the sb
-     * @param indentLevel
-     *            the indent level
+     * @param sb          the sb
+     * @param indentLevel the indent level
      */
     public void addFormattedAnnotations(StringBuilder sb, int indentLevel) {
         for (String annotation : annotations) {
@@ -159,8 +161,7 @@ public abstract class AbstractJavaElement {
     /**
      * Sets the final.
      *
-     * @param isFinal
-     *            the new final
+     * @param isFinal the new final
      */
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
@@ -178,8 +179,7 @@ public abstract class AbstractJavaElement {
     /**
      * Sets the static.
      *
-     * @param isStatic
-     *            the new static
+     * @param isStatic the new static
      */
     public void setStatic(boolean isStatic) {
         this.isStatic = isStatic;

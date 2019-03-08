@@ -23,7 +23,7 @@ public class HttpRequestInfo implements Serializable {
     /**
      * http request info
      *
-     * @param paramObj      :
+     * @param paramObj :
      */
     public HttpRequestInfo(Object paramObj) {
         this.paramObj = paramObj;
@@ -32,8 +32,8 @@ public class HttpRequestInfo implements Serializable {
     /**
      * http request info
      *
-     * @param locale        :
-     * @param paramObj      :
+     * @param locale   :
+     * @param paramObj :
      */
     public HttpRequestInfo(Locale locale, Object paramObj) {
         this.locale = locale;

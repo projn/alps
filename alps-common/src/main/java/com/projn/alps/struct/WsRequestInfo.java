@@ -19,7 +19,7 @@ public class WsRequestInfo {
     /**
      * ws request info
      *
-     * @param paramObj      :
+     * @param paramObj :
      */
     public WsRequestInfo(Object paramObj) {
         this.paramObj = paramObj;

@@ -197,10 +197,10 @@ public final class JavaBeanGenerator {
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setType(fieldType);
         field.setName(fieldName);
-        if(fieldTypeStr.equals(String.class.getTypeName())) {
-            field.setInitializationString("\"" +defaultValue + "\"");
-        } else if(fieldTypeStr.equals(Long.class.getTypeName())) {
-            field.setInitializationString(defaultValue +"L");
+        if (fieldTypeStr.equals(String.class.getTypeName())) {
+            field.setInitializationString("\"" + defaultValue + "\"");
+        } else if (fieldTypeStr.equals(Long.class.getTypeName())) {
+            field.setInitializationString(defaultValue + "L");
         } else {
             field.setInitializationString(defaultValue);
         }
@@ -395,7 +395,7 @@ public final class JavaBeanGenerator {
     /**
      * write generated java file
      *
-     * @param gjf :
+     * @param gjf          :
      * @param recoverExist :
      * @throws Exception :
      */
@@ -408,7 +408,7 @@ public final class JavaBeanGenerator {
                     .getTargetProject(), gjf.getTargetPackage());
             targetFile = new File(directory, gjf.getFileName());
             source = gjf.getFormattedContent();
-            if(!targetFile.exists() || recoverExist) {
+            if (!targetFile.exists() || recoverExist) {
                 writeFile(targetFile, source, gjf.getFileEncoding());
             }
         } catch (Exception e) {

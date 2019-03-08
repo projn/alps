@@ -4,9 +4,9 @@ import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import com.projn.alps.filter.IAuthorizationFilter;
 import com.projn.alps.util.JwtTokenUtils;
 import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

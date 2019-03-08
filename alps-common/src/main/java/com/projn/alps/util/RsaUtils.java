@@ -9,17 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
-import java.security.Key;
-import java.security.KeyException;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Security;
-import java.security.spec.DSAPrivateKeySpec;
-import java.security.spec.KeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.RSAPrivateCrtKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.*;
+import java.security.spec.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,18 +38,18 @@ public final class RsaUtils {
 
     private static final long DECRYPT_FILE_MAX_PLAIN_SIZE = 50 * 1024 * 1024;
 
-    private static final String RSA="RSA";
+    private static final String RSA = "RSA";
 
-    private static final String DSA="DSA";
+    private static final String DSA = "DSA";
 
-    private static final String CIPHER_PLUGIN="BC";
+    private static final String CIPHER_PLUGIN = "BC";
 
-    private static final String BEGIN_RSA_PRIVATE_KEY ="-----BEGIN RSA PRIVATE KEY-----";
-    private static final String END_RSA_PRIVATE_KEY ="-----END RSA PRIVATE KEY-----";
-    private static final String BEGIN_DSA_PRIVATE_KEY ="-----BEGIN DSA PRIVATE KEY-----";
-    private static final String END_DSA_PRIVATE_KEY ="-----END DSA PRIVATE KEY-----";
-    private static final String BEGIN_PRIVATE_KEY ="-----BEGIN PRIVATE KEY-----";
-    private static final String END_PRIVATE_KEY ="-----END PRIVATE KEY-----";
+    private static final String BEGIN_RSA_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----";
+    private static final String END_RSA_PRIVATE_KEY = "-----END RSA PRIVATE KEY-----";
+    private static final String BEGIN_DSA_PRIVATE_KEY = "-----BEGIN DSA PRIVATE KEY-----";
+    private static final String END_DSA_PRIVATE_KEY = "-----END DSA PRIVATE KEY-----";
+    private static final String BEGIN_PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----";
+    private static final String END_PRIVATE_KEY = "-----END PRIVATE KEY-----";
 
     private RsaUtils() {
     }
@@ -263,7 +254,7 @@ public final class RsaUtils {
             return false;
         }
         boolean ok = false;
-        try(FileInputStream fis = new FileInputStream(inFile);FileOutputStream fos = new FileOutputStream(outFile)) {
+        try (FileInputStream fis = new FileInputStream(inFile); FileOutputStream fos = new FileOutputStream(outFile)) {
 
             byte[] head = new byte[4];
             int readSize = fis.read(head, 0, 4);

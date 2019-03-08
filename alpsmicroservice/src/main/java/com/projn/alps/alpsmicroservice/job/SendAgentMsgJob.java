@@ -23,10 +23,11 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
  * send agent msg job
+ *
  * @author : sunyuecheng
  */
 @Component("SendAgentMsgJob")
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class SendAgentMsgJob implements Job {
     private static final Logger LOGGER = LoggerFactory.getLogger(SendAgentMsgJob.class);
 
@@ -46,12 +47,12 @@ public class SendAgentMsgJob implements Job {
 
         Set<String> agentIdList = WsSessionInfoMap.getInstance().getWebSocketSessionAgentIdList();
 
-        if(agentIdList!=null) {
+        if (agentIdList != null) {
             for (String agentId : agentIdList) {
                 AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
-                if(agentMessageInfo!=null) {
-                    if(agentMessageInfo.getExpireTime() == null
-                            || agentMessageInfo.getExpireTime()> System.currentTimeMillis()) {
+                if (agentMessageInfo != null) {
+                    if (agentMessageInfo.getExpireTime() == null
+                            || agentMessageInfo.getExpireTime() > System.currentTimeMillis()) {
 
                         WsResponseMsgInfo wsResponseMsgInfo =
                                 new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
@@ -64,9 +65,9 @@ public class SendAgentMsgJob implements Job {
                     }
                 }
 
-                for(int i= MIN_AGENT_MSG_ID; i <=MAX_AGENT_MSG_ID; i++) {
+                for (int i = MIN_AGENT_MSG_ID; i <= MAX_AGENT_MSG_ID; i++) {
                     agentMessageInfo = agentMessageInfoDao.getAgentCoverMessageInfo(agentId, i);
-                    if(agentMessageInfo!=null) {
+                    if (agentMessageInfo != null) {
                         WsResponseMsgInfo webSocketResponseMessage =
                                 new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
                         try {

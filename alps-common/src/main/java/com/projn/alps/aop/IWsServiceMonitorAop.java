@@ -13,7 +13,7 @@ public interface IWsServiceMonitorAop {
     /**
      * before handler
      *
-     * @param joinPoint       :
+     * @param joinPoint     :
      * @param wsRequestInfo :
      */
     void beforeHandler(JoinPoint joinPoint, WsRequestInfo wsRequestInfo);
@@ -21,7 +21,7 @@ public interface IWsServiceMonitorAop {
     /**
      * after handler
      *
-     * @param joinPoint        :
+     * @param joinPoint     :
      * @param wsRequestInfo :
      */
     void afterHandler(JoinPoint joinPoint, WsRequestInfo wsRequestInfo);
@@ -29,7 +29,7 @@ public interface IWsServiceMonitorAop {
     /**
      * return handler
      *
-     * @param joinPoint        :
+     * @param joinPoint      :
      * @param wsRequestInfo  :
      * @param wsResponseInfo :
      */

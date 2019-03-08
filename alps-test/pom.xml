@@ -153,7 +153,7 @@
                                 <property name="install-dir">../install/alpsdev-init</property>
 
                                 <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
-                                      todir="${install-dir}" />
+                                      todir="${install-dir}"/>
                             </target>
                         </configuration>
                     </execution>

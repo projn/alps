@@ -11,13 +11,13 @@ import org.apache.rocketmq.common.protocol.body.ConsumerConnection;
 import org.apache.rocketmq.common.protocol.body.TopicList;
 import org.apache.rocketmq.common.protocol.heartbeat.ConsumeType;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.tools.admin.DefaultMQAdminExt;
+import org.apache.rocketmq.tools.command.SubCommandException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.apache.rocketmq.tools.admin.DefaultMQAdminExt;
-import org.apache.rocketmq.tools.command.SubCommandException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
  * @author : sunyuecheng
  */
 @Component("rocketmq")
-@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing = true)
 public class RocketMqHealthIndicator implements HealthIndicator {
     private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqHealthIndicator.class);
 

@@ -81,18 +81,18 @@
         </resources>
         <plugins>
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<mainClass>com.projn.alps.alpsgeneratoreneratorApplicationClass>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
-                    <!--<descriptorRefs>-->
-                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
-                    <!--</descriptorRefs>-->
-                <!--</configuration>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-assembly-plugin</artifactId>-->
+            <!--<configuration>-->
+            <!--<archive>-->
+            <!--<manifest>-->
+            <!--<mainClass>com.projn.alps.alpsgeneratoreneratorApplicationClass>-->
+            <!--</manifest>-->
+            <!--</archive>-->
+            <!--<descriptorRefs>-->
+            <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+            <!--</descriptorRefs>-->
+            <!--</configuration>-->
             <!--</plugin>-->
 
             <plugin>
@@ -136,18 +136,21 @@
                         </goals>
                         <configuration>
                             <target>
-                                <property name="alpsmicroservice-install-dir">../install/alpsmicroservice-install</property>
+                                <property name="alpsmicroservice-install-dir">../install/alpsmicroservice-install
+                                </property>
                                 <property name="alpsdev-init-dir">../install/alpsdev-init</property>
-                                <property name="maven-plugin-config-dir">${project.basedir}/src/main/resources/template/maven-plugin-config</property>
+                                <property name="maven-plugin-config-dir">
+                                    ${project.basedir}/src/main/resources/template/maven-plugin-config
+                                </property>
                                 <property name="template-dir">${project.basedir}/src/main/resources/template</property>
                                 <property name="demo-dir">${project.basedir}/src/main/resources/demo</property>
                                 <property name="des-dir">../target/${project.artifactId}</property>
 
-                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/module" />
+                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/module"/>
 
                                 <copy todir="${des-dir}/lib">
                                     <fileset dir="${project.build.directory}/lib">
-                                        <include name="*.jar" />
+                                        <include name="*.jar"/>
                                     </fileset>
                                 </copy>
 
@@ -157,73 +160,80 @@
 
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/bootstrap">
                                     <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/bootstrap">
-                                        <include name="log4j2-config.xml" />
+                                        <include name="log4j2-config.xml"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud">
                                     <fileset dir="${alpsmicroservice-install-dir}/config/cloud">
-                                        <include name="*.properties" />
+                                        <include name="*.properties"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud/git">
                                     <fileset dir="${alpsmicroservice-install-dir}/config/cloud/git">
-                                        <include name="*.properties" />
+                                        <include name="*.properties"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/single">
                                     <fileset dir="${alpsmicroservice-install-dir}/config/single">
-                                        <include name="*.properties" />
+                                        <include name="*.properties"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/single/config">
                                     <fileset dir="${alpsmicroservice-install-dir}/config/single/config">
-                                        <include name="*.properties" />
+                                        <include name="*.properties"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/i18n">
                                     <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice/context/i18n">
-                                        <include name="*.properties" />
+                                        <include name="*.properties"/>
                                     </fileset>
                                 </copy>
-                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/keystore" />
+                                <mkdir dir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice/context/keystore"/>
 
-                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-cloud" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-single" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/install.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/config.properties" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/docker-entrypoint.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/docker-healthcheck.sh" todir="${des-dir}/template/install/alpsmicroservice-install" />
-                                <copy file="${alpsmicroservice-install-dir}/Dockerfile" todir="${des-dir}/template/install/alpsmicroservice-install" />
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-cloud"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/alpsmicroserviced-single"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/install.sh"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/config.properties"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/docker-entrypoint.sh"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/docker-healthcheck.sh"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
+                                <copy file="${alpsmicroservice-install-dir}/Dockerfile"
+                                      todir="${des-dir}/template/install/alpsmicroservice-install"/>
 
                                 <copy todir="${des-dir}/template/install/alpsmicroservice-install/alpsmicroservice">
                                     <fileset dir="${alpsmicroservice-install-dir}/alpsmicroservice">
-                                        <include name="*.jar" />
+                                        <include name="*.jar"/>
                                     </fileset>
                                 </copy>
 
                                 <copy todir="${des-dir}/alpsdev-init">
                                     <fileset dir="${alpsdev-init-dir}/">
-                                        <include name="*.*" />
+                                        <include name="*.*"/>
                                     </fileset>
                                 </copy>
-                                <copy file="../VERSION" todir="${des-dir}/alpsdev-init" />
+                                <copy file="../VERSION" todir="${des-dir}/alpsdev-init"/>
 
 
                                 <copy todir="${des-dir}/template/maven-plugin-config">
                                     <fileset dir="${maven-plugin-config-dir}/">
-                                        <include name="*.*" />
+                                        <include name="*.*"/>
                                     </fileset>
                                 </copy>
 
                                 <copy todir="${des-dir}/template">
                                     <fileset dir="${template-dir}/">
-                                        <include name="*.*" />
+                                        <include name="*.*"/>
                                     </fileset>
                                 </copy>
 
                                 <copy todir="${des-dir}/demo">
                                     <fileset dir="${demo-dir}/">
-                                        <include name="*.*" />
+                                        <include name="*.*"/>
                                     </fileset>
                                 </copy>
                             </target>

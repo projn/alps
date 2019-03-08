@@ -1,8 +1,8 @@
 package com.projn.alps.alpsmicroservice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.exception.HttpException;
 import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
+import com.projn.alps.exception.HttpException;
 import com.projn.alps.tool.HttpControllerTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.projn.alps.define.CommonDefine.*;
+import static com.projn.alps.define.CommonDefine.COLLECTION_INIT_SIZE;
 
 /**
  * http controller
@@ -24,7 +24,7 @@ import static com.projn.alps.define.CommonDefine.*;
  * @author : sunyuecheng
  */
 @Controller
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(RunTimeProperties.class)
 public class HttpController {
     @Autowired
@@ -33,10 +33,10 @@ public class HttpController {
     /**
      * deal controller
      *
-     * @param request      :
-     * @param response     :
-     * @param serviceName  :
-     * @param requestJson  :
+     * @param request     :
+     * @param response    :
+     * @param serviceName :
+     * @param requestJson :
      * @return org.springframework.web.context.request.async.DeferredResult<java.lang.Object> :
      * @throws HttpException :
      */
@@ -52,9 +52,9 @@ public class HttpController {
         Map<String, String> pathParamMap = new HashMap<>(COLLECTION_INIT_SIZE);
         pathParamMap.put("serviceName", serviceName);
 
-        String url= "/api/{service_name}";
+        String url = "/api/{service_name}";
 
-        return httpControllerTools.deal(url, request,response,pathParamMap, (Object)requestJson);
+        return httpControllerTools.deal(url, request, response, pathParamMap, (Object) requestJson);
     }
 
 }

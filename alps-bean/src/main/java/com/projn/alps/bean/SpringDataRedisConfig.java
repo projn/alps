@@ -25,9 +25,7 @@ import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_TEST_ON
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_TEST_ON_RETURN;
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_TEST_WHILE_IDLE;
 import static org.apache.commons.pool2.impl.BaseObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
-import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MAX_IDLE;
-import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
-import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MIN_IDLE;
+import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.*;
 
 /**
  * spring data redis config
@@ -36,7 +34,7 @@ import static org.apache.commons.pool2.impl.GenericObjectPoolConfig.DEFAULT_MIN_
  */
 @Configuration
 @PropertySource(value = "file:${config.dir}/config/redis.properties", ignoreResourceNotFound = true)
-@ConditionalOnProperty(name = "system.bean.switch.redis.single", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.redis.single", havingValue = "true", matchIfMissing = true)
 public class SpringDataRedisConfig {
 
     @Value("${redis.pool.maxTotal}")

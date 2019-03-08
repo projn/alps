@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
 import com.projn.alps.exception.HttpException;
-import com.projn.alps.msg.response.WsResponseMsgInfo;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.msg.response.HttpSendMsgResponseMsgInfo;
+import com.projn.alps.msg.response.WsResponseMsgInfo;
 import com.projn.alps.service.IComponentsHttpService;
 import com.projn.alps.struct.HttpRequestInfo;
 import com.projn.alps.struct.HttpResponseInfo;
@@ -29,7 +29,7 @@ import static com.projn.alps.exception.code.CommonErrorCode.RESULT_INVAILD_PARAM
  * @author : sunyuecheng
  */
 @Service
-@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing=true)
+@ConditionalOnProperty(name = "system.bean.switch.websocket", havingValue = "true", matchIfMissing = true)
 public class SendMsgServiceImpl implements IComponentsHttpService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SendMsgServiceImpl.class);
