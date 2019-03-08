@@ -129,13 +129,13 @@ public class GeneratorTools {
     private static final String MODULE_SERVICE_PACKAGE_TAIL = ".service.impl.";
     private static final String MODULE_CONTROLLER_PACKAGE_TAIL = ".controller.";
     private static final String MODULE_CONTROLLER_NAME_TAIL = "ModuleController";
-    private static final String MODULE_CONTROLLER_MATHOD_DOC_FROMAT="/**\n" +
-            "     * service bean :\n" +
-            "     * @see %s\n" +
-            "     * request bean :\n" +
-            "     * @see %s\n" +
-            "     * response bean :\n" +
-            "     * @see %s\n" +
+    private static final String MODULE_CONTROLLER_MATHOD_DOC_FROMAT="/**%n" +
+            "     * service bean :%n" +
+            "     * @see %s%n" +
+            "     * request bean :%n" +
+            "     * @see %s%n" +
+            "     * response bean :%n" +
+            "     * @see %s%n" +
             "     */";
 
     private static final String JAVA_CLASS_COMPONENT_ANNOUNCE_FORMAT = "@Component(\"%s\")";
