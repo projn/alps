@@ -38,8 +38,18 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
 
 2. 使用Swagger编写yaml格式的API文档，文档格式Swagger， 文档地址：https://swagger.io/resources/open-api/，本项目支持OSA 2.0和OSA 3.0编写的API，并在其基础上增加了一些衍生用法，具体使用方式可参见范例项目， 项目地址：https://github.com/projn/sample/tree/master/alps；
 
-3. 根据需要编写模块生成配置文件generator_config.xml，具体格式参见范例项目；
+3. 根据需要编写模块生成配置文件generator_config.xml，具体格式参见范例项目，文件地址：https://raw.githubusercontent.com/projn/sample/master/alps/generator/generator_config-sample.xml；
 
-4. 使用代码生成器模块生成配置文件生成模块代码；
+4. 使用代码生成器模块生成配置文件生成模块代码，
 
    `java -jar alpsgenerator-X.X.X.jar /you/path/to/generator_config.xml`
+
+   ### 生成项目包含目录文件说明
+
+   1. generator用来存放生成代码所需的配置文件和API文档；
+   2. install中存放了项目部署安装做需要的Dockerfile范例以及安装包范例，其中文件install/alpsmicroservice-install/alpsmicroservice/alpsmicroservice-X.X.X.jar是模块加载器，用户也可使用该文件对已编写好的功能模块进行调试。模块加载器有两种使用方式，一种是加载本地配置启动，具体配置信息参见install/alpsmicroservice-install/config/single目录中文件，程序启动命令参见文件alpsmicroserviced-single；另一种是结合配置中心加载远端配置，具体配置信息参见install/alpsmicroservice-install/config/cloud目录中文件，程序启动命令参见文件alpsmicroserviced-cloud；
+   3. maven-plugin-config中存放maven插件的配置文件，预制了checkstyle和findbugs配置文件；
+   4. modules中存放了生成的功能模块；
+   5. test中存放了调试模块功能所需的配置文件，用户可根据自己需要，将install/alpsmicroservice-install/alpsmicroservice/config中的配置文件拷贝到该目录并修改配置，从而实现单元测试和整体调试，具体使用方法参考范例项目。
+   6. Jenkinsfile是预制的流水线文件，用户可使用Jenkins加载该流水线实现CI/CD，详情见代码；
+   7. pom.xml是生成的maven工程文件，中间并没有添加生成的模块信息，请手动添加以实现以整体编译。
