@@ -44,7 +44,9 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
 
    `java -jar alpsgenerator-X.X.X.jar /you/path/to/generator_config.xml`
 
-   ### 生成项目包含目录文件说明
+5. 使用代码生成器中目录alpsdev-init中的ini.sh将编译模块所需要的jar安装到本地maven库或者远端Nexus maven库。
+
+### 生成项目包含目录文件说明
 
    1. generator用来存放生成代码所需的配置文件和API文档；
    2. install中存放了项目部署安装做需要的Dockerfile范例以及安装包范例，其中文件install/alpsmicroservice-install/alpsmicroservice/alpsmicroservice-X.X.X.jar是模块加载器，用户也可使用该文件对已编写好的功能模块进行调试。模块加载器有两种使用方式，一种是加载本地配置启动，具体配置信息参见install/alpsmicroservice-install/config/single目录中文件，程序启动命令参见文件alpsmicroserviced-single；另一种是结合配置中心加载远端配置，具体配置信息参见install/alpsmicroservice-install/config/cloud目录中文件，程序启动命令参见文件alpsmicroserviced-cloud；
