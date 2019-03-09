@@ -53,3 +53,15 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
    5. test中存放了调试模块功能所需的配置文件，用户可根据自己需要，将install/alpsmicroservice-install/alpsmicroservice/config中的配置文件拷贝到该目录并修改配置，从而实现单元测试和整体调试，具体使用方法参考范例项目。
    6. Jenkinsfile是预制的流水线文件，用户可使用Jenkins加载该流水线实现CI/CD，详情见代码；
    7. pom.xml是生成的maven工程文件，中间并没有添加生成的模块信息，请手动添加以实现以整体编译。
+
+## CI/CD流水线搭建
+
+该流程需借助PRON下popigai项目，项目地址：https://github.com/projn/popigai
+
+1. 使用popigai项目中master分支中的openjdk-install和jenkins-install搭建部署环境用流水线，我们将该环境简称Deploy环境，该环境将用来搭建整套CI/CD所需环境，修改jenkins-install中的配置文件以制定Jenkins访问地址，安装好后在Deploy环境使用service jenkinsd start启动Jenkins，更多配置使用方法见install.sh和jenkinsd文件。启动Jenkins还需要安装流水线必须插件；
+
+   ```
+   Dashboard View/SSH Agent/github/git/gitlab/Publish Over SSH/SSH/BlueOcean/SSH Pipeline Steps plugin
+   ```
+
+2. 将popigai项目中repo和build分支代码拉到本地，对其中Jenkinsfile文件进行修改，将Build环境和Repo环境参数填好，然后将修改过的代码提交到自己本地的git或者gitlab中，打开Deploy环境中的Jenkins，使用BlueOcean创建流水线，选择repo和build代码库，运行流水线部署Build环境和Repo环境。Build环境包含openjdk、maven、jenkins、git、docker-ce、docker-compose等组件，用来编译打包代码；Repo环境包含nexus用来存储maven jar包和编译打包生成的二进制文件，以及Harbor用来存储编译打包生成的Docker镜像和Charts。
