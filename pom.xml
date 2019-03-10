@@ -103,12 +103,12 @@
         <!--<repository>-->
             <!--<id>nexus-releases</id>-->
             <!--<name>Nexus Release Repository</name>-->
-            <!--<url>http://192.168.37.133:8082/repository/maven-releases/</url>-->
+            <!--<url>http://192.168.37.XXX:8082/repository/maven-releases/</url>-->
         <!--</repository>-->
         <!--<snapshotRepository>-->
             <!--<id>nexus-snapshots</id>-->
             <!--<name>Nexus Snapshot Repository</name>-->
-            <!--<url>http://192.168.37.133:8082/repository/maven-snapshots/</url>-->
+            <!--<url>http://192.168.37.XXX:8082/repository/maven-snapshots/</url>-->
         <!--</snapshotRepository>-->
     <!--</distributionManagement>-->
 
@@ -288,5 +288,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

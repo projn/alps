@@ -213,9 +213,10 @@
 
                                 <copy todir="${des-dir}/alpsdev-init">
                                     <fileset dir="${alpsdev-init-dir}/">
-                                        <include name="*.*"/>
+                                        <include name="**/*"/>
                                     </fileset>
                                 </copy>
+                                <copy file="../pom.xml" todir="${des-dir}/alpsdev-init"/>
                                 <copy file="../VERSION" todir="${des-dir}/alpsdev-init"/>
 
 
