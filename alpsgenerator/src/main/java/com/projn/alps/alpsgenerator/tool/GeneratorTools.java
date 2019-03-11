@@ -173,9 +173,11 @@ public class GeneratorTools {
     private static final String TEST_DIR_SERVICE_NAME = "test/alpsmicroservice/context";
     private static final String TEMPLATE_MAVEN_PLUGIN_CONFIG_DIR_NAME = "template/maven-plugin-config";
     private static final String MAVEN_PLUGIN_CONFIG_DIR_NAME = "maven-plugin-config";
+    private static final String TEMPLATE_JENKINSFILE_NAME = "template/Jenkinsfile";
     private static final String TEMPLATE_POM_NAME = "template/pom_template.xml";
     private static final String TEMPLATE_MODULE_POM_NAME = "template/module_pom_template.xml";
     private static final String POM_FILE_NAME = "pom.xml";
+    private static final String JENKINSFILE_NAME = "Jenkinsfile";
     private static final String MODULE_CONFIG_FILE_NAME = "module_config.xml";
     private static final String MODULE_DIR_NAME = "modules";
 
@@ -387,6 +389,10 @@ public class GeneratorTools {
             if (!new File(targetPomPath).exists() || recoverExist) {
                 FileUtils.writeFileByStr(targetPomPath, pomContent, false);
             }
+
+            String templateJenkinsfilePath = System.getProperty("user.dir") + File.separator + TEMPLATE_JENKINSFILE_NAME;
+            String targetJenkinsfilePath = outputDir + File.separator + JENKINSFILE_NAME;
+            FileUtils.copyDirectory(templateJenkinsfilePath, targetJenkinsfilePath);
 
             String templateInstallPath = System.getProperty("user.dir") + File.separator + TEMPLATE_INSTALL_DIR_NAME;
             String targetInstallPath = outputDir + File.separator + INSTALL_DIR_NAME;

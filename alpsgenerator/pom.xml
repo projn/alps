@@ -228,7 +228,7 @@
 
                                 <copy todir="${des-dir}/template">
                                     <fileset dir="${template-dir}/">
-                                        <include name="*.*"/>
+                                        <include name="*"/>
                                     </fileset>
                                 </copy>
 

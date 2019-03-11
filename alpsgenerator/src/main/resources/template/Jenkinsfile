@@ -1,0 +1,152 @@
+pipeline {
+  agent any
+  options {
+    timeout(time: 1, unit: 'HOURS')
+  }
+  environment {
+    DOCKER_IMAGE_RELEASE_FLAG = 'true'
+    INSTALL_PACKAGE_RELEASE_FLAG = 'true'
+  }
+
+  stages {
+    stage('clean') {
+      steps {
+        sh '''mvn clean; \\
+        rm -rf ./target'''
+      }
+    }
+
+    stage('build') {
+      steps {
+        sh 'mvn install'
+      }
+    }
+
+    stage('code check') {
+      parallel {
+        stage('check style') {
+          steps {
+            sh 'mvn checkstyle:checkstyle'
+          }
+        }
+        stage('find bugs') {
+          steps {
+            sh 'mvn findbugs:findbugs'
+          }
+        }
+        stage('pmd') {
+          steps {
+            sh 'mvn pmd:pmd'
+          }
+        }
+        stage('pmd') {
+          steps {
+            sh 'mvn pmd:cpd'
+          }
+        }
+        stage('test') {
+           steps {
+             sh 'mvn surefire-report:report'
+           }
+        }
+      }
+    }
+
+    stage('report') {
+      parallel {
+        stage('test report') {
+          steps {
+            junit testResults: '**/target/*-reports/TEST-*.xml'
+          }
+        }
+        stage('maven report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: mavenConsole()
+            recordIssues enabledForFailure: true, tools: [java(), javaDoc()], sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('checkstyle report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: checkStyle(pattern: 'target/checkstyle-result.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('pmd report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: cpd(pattern: 'target/cpd.xml'), sourceCodeEncoding: 'UTF-8'
+            recordIssues enabledForFailure: true, tool: pmdParser(pattern: 'target/pmd.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+        stage('findbugs report') {
+          steps {
+            recordIssues enabledForFailure: true, tool: findBugs(pattern: 'target/findbugsXml.xml'), sourceCodeEncoding: 'UTF-8'
+          }
+        }
+      }
+    }
+
+    stage('release') {
+      parallel {
+        stage('docker image') {
+          input {
+            message "Should we build docker image?"
+            ok "Yes, we should."
+            submitter "alice,bob"
+            parameters {
+              string(name: 'DOCKER_IMAGE_TAG', defaultValue: 'sample-alps:v1.0', description: 'Docker image tag')
+            }
+          }
+          //if you want to upload you image to harbor, please create a repo ,name like 'sample'.
+          environment {
+            HARBOR_HOST='192.168.37.XXX'
+            HARBOR_PORT='80'
+            HARBOR_USERNAME='projn'
+            HARBOR_PASSWORD='pwd'
+            HARBOR_REPO_NAME='sample'
+            //DOCKER_IMAGE_TAG='sample-alps:v1.0'
+          }
+
+          when {
+            not {
+              environment name: 'DOCKER_IMAGE_RELEASE_FLAG', value: 'false'
+            }
+          }
+          steps {
+            sh '''cd ./install/alpsmicroservice-install&& \\
+              sudo docker build -f ./Dockerfile -t ${DOCKER_IMAGE_TAG} .&& \\
+              sudo docker tag ${DOCKER_IMAGE_TAG} ${HARBOR_HOST}:${HARBOR_PORT}/${HARBOR_REPO_NAME}/${DOCKER_IMAGE_TAG}&& \\
+              sudo docker login -u ${HARBOR_USERNAME} -p ${HARBOR_PASSWORD} ${HARBOR_HOST}:${HARBOR_PORT}&& \\
+              sudo docker push ${HARBOR_HOST}:${HARBOR_PORT}/${HARBOR_REPO_NAME}/${DOCKER_IMAGE_TAG}'''
+          }
+        }
+        stage('install package') {
+          when {
+            not {
+              environment name: 'INSTALL_PACKAGE_RELEASE_FLAG', value: 'false'
+            }
+
+          }
+
+          //if you want to upload you package to nexus server, please create a repo ,name like 'sample-releases', and make thie repo can be redeploied.
+          environment {
+            NEXUS_REPO_URL = 'http://192.168.37.XXX:8082'
+            NEXUS_USERNAME = 'admin'
+            NEXUS_PASSWORDE = 'admin123'
+            NEXUS_REPO_NAME = 'sample-releases'
+            INSTALL_PACKAGE_TAG = 'sample-alps-v1.0'
+          }
+          steps {
+            sh '''mkdir ./target || \\
+              cp -r ./install/alpsmicroservice-install ./target/&& \\
+              cd ./target/alpsmicroservice-install&& \\
+              rm -rf docker-entrypoint.sh docker-healthcheck.sh Dockerfile&& \\
+              tar czvf ${INSTALL_PACKAGE_TAG}.tar.gz * && \\
+              curl -X POST "${NEXUS_REPO_URL}/service/rest/v1/components?repository=${NEXUS_REPO_NAME}" \\
+                -H "accept: application/json" -H "Content-Type: multipart/form-data" \\
+                -F "raw.directory=/install" -F "raw.asset1=@${INSTALL_PACKAGE_TAG}.tar.gz;type=application/x-gzip" \\
+                -F "raw.asset1.filename=${INSTALL_PACKAGE_TAG}.tar.gz"'''
+          }
+        }
+      }
+    }
+  }
+}
