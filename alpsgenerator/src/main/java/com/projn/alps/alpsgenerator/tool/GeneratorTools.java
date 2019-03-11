@@ -392,7 +392,7 @@ public class GeneratorTools {
 
             String templateJenkinsfilePath = System.getProperty("user.dir") + File.separator + TEMPLATE_JENKINSFILE_NAME;
             String targetJenkinsfilePath = outputDir + File.separator + JENKINSFILE_NAME;
-            FileUtils.copyDirectory(templateJenkinsfilePath, targetJenkinsfilePath);
+            FileUtils.copyFile(templateJenkinsfilePath, targetJenkinsfilePath);
 
             String templateInstallPath = System.getProperty("user.dir") + File.separator + TEMPLATE_INSTALL_DIR_NAME;
             String targetInstallPath = outputDir + File.separator + INSTALL_DIR_NAME;
