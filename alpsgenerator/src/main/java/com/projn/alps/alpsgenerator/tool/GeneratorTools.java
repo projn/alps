@@ -390,7 +390,8 @@ public class GeneratorTools {
                 FileUtils.writeFileByStr(targetPomPath, pomContent, false);
             }
 
-            String templateJenkinsfilePath = System.getProperty("user.dir") + File.separator + TEMPLATE_JENKINSFILE_NAME;
+            String templateJenkinsfilePath = System.getProperty("user.dir")
+                    + File.separator + TEMPLATE_JENKINSFILE_NAME;
             String targetJenkinsfilePath = outputDir + File.separator + JENKINSFILE_NAME;
             FileUtils.copyFile(templateJenkinsfilePath, targetJenkinsfilePath);
 
