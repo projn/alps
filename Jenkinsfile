@@ -99,7 +99,8 @@ pipeline {
           steps {
             sh '''source ./VERSION; \\
             cp ./alpsconfigserver/target/*.jar ~/release/configserver; \\
-            tar czvf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator/*'''
+            cd ./target; \\
+            tar czvf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz alpsgenerator/*'''
           }
         }
       }
