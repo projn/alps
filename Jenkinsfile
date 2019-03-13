@@ -3,6 +3,9 @@ pipeline {
   options {
     timeout(time: 1, unit: 'HOURS')
   }
+  environment {
+    ALPS_CONFIG_SERVER_UPDATE_FLAG='false'
+  }
 
   stages {
     stage('clean') {
@@ -83,6 +86,12 @@ pipeline {
     stage('release') {
       parallel {
         stage('commit') {
+
+          when {
+            not {
+              environment name: 'ALPS_CONFIG_SERVER_UPDATE_FLAG', value: 'false'
+            }
+          }
           steps {
             sh '''cd ./target; \\
             git clone -b cloud https://github.com/projn/popigai.git; \\
@@ -99,7 +108,8 @@ pipeline {
           steps {
             sh '''source ./VERSION; \\
             cp ./alpsconfigserver/target/*.jar ~/release/configserver; \\
-            tar czvf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz ./target/alpsgenerator/*'''
+            cd ./target; \\
+            tar czvf ~/release/generator/alpsgenerator-${ALPS_GENERATOR_VERSION}.tar.gz alpsgenerator/*'''
           }
         }
       }
