@@ -61,12 +61,12 @@
         <snakeyaml.version>1.23</snakeyaml.version>
         <tomcat.version>8.5.31</tomcat.version>
 
-        <alps.version>1.0</alps.version>
+        <alps.version>1.1</alps.version>
 
-        <alps.common.version>1.0</alps.common.version>
-        <alps.bean.version>1.0</alps.bean.version>
-        <alps.dao.version>1.0</alps.dao.version>
-        <alps.test.version>1.0</alps.test.version>
+        <alps.common.version>1.1</alps.common.version>
+        <alps.bean.version>1.1</alps.bean.version>
+        <alps.dao.version>1.1</alps.dao.version>
+        <alps.test.version>1.1</alps.test.version>
     </properties>
 
     <dependencyManagement>
