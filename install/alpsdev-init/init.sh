@@ -29,7 +29,18 @@ if [ "$nexus_repo_url" != "" ]; then
 
     mvn deploy
 else
-    mvn install
-    #mvn install:install-file -Dfile=./alps-bean/target/alps-bean-${ALPS_MODULE_VERSION}.jar -DgroupId=com.projn.alps -DartifactId=alps-bean -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=jar
+    mvn install:install-file -Dfile=./pom.xml -DgroupId=com.projn -DartifactId=alps -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=pom
+
+    mvn install:install-file -Dfile=./alps-bean/target/alps-bean-${ALPS_MODULE_VERSION}.jar -DgroupId=com.projn.alps -DartifactId=alps-bean -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=jar
+    mvn install:install-file -Dfile=./alps-bean/pom.xml -DgroupId=com.projn.alps -DartifactId=alps-bean -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=pom
+
+    mvn install:install-file -Dfile=./alps-common/target/alps-common-${ALPS_MODULE_VERSION}.jar -DgroupId=com.projn.alps -DartifactId=alps-common -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=jar
+    mvn install:install-file -Dfile=./alps-common/pom.xml -DgroupId=com.projn.alps -DartifactId=alps-common -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=pom
+
+    mvn install:install-file -Dfile=./alps-dao/target/alps-dao-${ALPS_MODULE_VERSION}.jar -DgroupId=com.projn.alps -DartifactId=alps-dao -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=jar
+    mvn install:install-file -Dfile=./alps-dao/pom.xml -DgroupId=com.projn.alps -DartifactId=alps-dao -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=pom
+
+    mvn install:install-file -Dfile=./alps-test/target/alps-test-${ALPS_MODULE_VERSION}.jar -DgroupId=com.projn.alps -DartifactId=alps-test -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=jar
+    mvn install:install-file -Dfile=./alps-test/pom.xml -DgroupId=com.projn.alps -DartifactId=alps-test -Dversion=${ALPS_MODULE_VERSION} -Dpackaging=pom
 fi
 
