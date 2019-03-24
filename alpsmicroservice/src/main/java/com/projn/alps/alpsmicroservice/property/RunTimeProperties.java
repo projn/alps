@@ -12,6 +12,9 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * run time properties
  *
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RefreshScope
-@ConfigurationProperties
 @PropertySource(value = {"file:${config.dir}/application.properties"}, ignoreResourceNotFound = true)
 public class RunTimeProperties implements InitializingBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunTimeProperties.class);
@@ -32,6 +34,9 @@ public class RunTimeProperties implements InitializingBean {
 
     @Value("${server.port}")
     private int serverPort = 0;
+
+    @Value("${server.ssl:false}")
+    private boolean serverSsl = false;
 
     @Value("#{systemProperties['os.name']}")
     private String osName = null;
@@ -69,6 +74,11 @@ public class RunTimeProperties implements InitializingBean {
     @Value("${system.bean.switch.websocket:false}")
     private boolean beanSwitchWebsocket = false;
 
+    @Value("${system.ws.msg.ids}")
+    private String wsMsgIds=null;
+
+    private List<String> wsMsgIdList=null;
+
     /**
      * run time properties
      */
@@ -98,6 +108,14 @@ public class RunTimeProperties implements InitializingBean {
 
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public boolean isServerSsl() {
+        return serverSsl;
+    }
+
+    public void setServerSsl(boolean serverSsl) {
+        this.serverSsl = serverSsl;
     }
 
     public String getOsName() {
@@ -196,10 +214,30 @@ public class RunTimeProperties implements InitializingBean {
         this.beanSwitchWebsocket = beanSwitchWebsocket;
     }
 
+    public String getWsMsgIds() {
+        return wsMsgIds;
+    }
+
+    public void setWsMsgIds(String wsMsgIds) {
+        this.wsMsgIds = wsMsgIds;
+    }
+
+    public List<String> getWsMsgIdList() {
+        return wsMsgIdList;
+    }
+
+    public void setWsMsgIdList(List<String> wsMsgIdList) {
+        this.wsMsgIdList = wsMsgIdList;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         if (!StringUtils.isEmpty(logConfigPath)) {
             Configurator.initialize(null, logConfigPath);
+        }
+
+        if(!StringUtils.isEmpty(wsMsgIds)) {
+            wsMsgIdList= Arrays.asList(wsMsgIds.split(","));
         }
     }
 }

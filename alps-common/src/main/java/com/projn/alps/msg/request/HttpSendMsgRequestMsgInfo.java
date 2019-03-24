@@ -16,7 +16,7 @@ public class HttpSendMsgRequestMsgInfo {
     /**
      * msg id
      */
-    private int msgId = 0;
+    private String msgId;
 
     /**
      * msg
@@ -36,7 +36,7 @@ public class HttpSendMsgRequestMsgInfo {
      * @param msgId   :
      * @param msg     :
      */
-    public HttpSendMsgRequestMsgInfo(String agentId, int msgId, Object msg) {
+    public HttpSendMsgRequestMsgInfo(String agentId, String msgId, Object msg) {
         this.agentId = agentId;
         this.msgId = msgId;
         this.msg = msg;
@@ -50,11 +50,11 @@ public class HttpSendMsgRequestMsgInfo {
         this.agentId = agentId;
     }
 
-    public int getMsgId() {
+    public String getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(int msgId) {
+    public void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 

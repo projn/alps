@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
 import com.projn.alps.alpsmicroservice.work.WsProcessWorker;
 import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.define.HttpDefine;
 import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.msg.request.WsRequestMsgInfo;
 import com.projn.alps.struct.RequestServiceInfo;
@@ -26,8 +25,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.Map;
 
-import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.AGENT_ID_KEY;
-import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.WEBSOCKET_DEFAULT_BUFFER_SIZE;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
+import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
@@ -93,12 +92,12 @@ public class WsController extends TextWebSocketHandler {
             Map<String, RequestServiceInfo> requestServiceInfoMap
                     = ServiceData.getRequestServiceInfoMap().get(wsRequestMsgInfo.getMsgId().toString());
             if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
-                    || requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase()) == null) {
+                    || requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase()) == null) {
                 throw new Exception("Invaild request service info, msg id("
-                        + wsRequestMsgInfo.getMsgId() + "), method(" + HttpDefine.HTTP_METHOD_POST + ").");
+                        + wsRequestMsgInfo.getMsgId() + "), method(" + HTTP_METHOD_POST + ").");
             }
             RequestServiceInfo requestServiceInfo
-                    = requestServiceInfoMap.get(HttpDefine.HTTP_METHOD_POST.toLowerCase());
+                    = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
             if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
                 throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
             }

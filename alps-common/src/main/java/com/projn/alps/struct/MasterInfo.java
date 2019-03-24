@@ -23,6 +23,11 @@ public class MasterInfo {
     private Integer serverPort;
 
     /**
+     * server ssl
+     */
+    private boolean serverSsl = false;
+
+    /**
      * master info
      */
     public MasterInfo() {
@@ -34,11 +39,13 @@ public class MasterInfo {
      * @param roleName   :
      * @param serverIp   :
      * @param serverPort :
+     * @param serverSsl :
      */
-    public MasterInfo(String roleName, String serverIp, Integer serverPort) {
+    public MasterInfo(String roleName, String serverIp, Integer serverPort, boolean serverSsl) {
         this.roleName = roleName;
         this.serverIp = serverIp;
         this.serverPort = serverPort;
+        this.serverSsl = serverSsl;
     }
 
     public String getRoleName() {
@@ -63,5 +70,13 @@ public class MasterInfo {
 
     public void setServerPort(Integer serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public boolean isServerSsl() {
+        return serverSsl;
+    }
+
+    public void setServerSsl(boolean serverSsl) {
+        this.serverSsl = serverSsl;
     }
 }

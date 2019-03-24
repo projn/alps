@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import static com.projn.alps.define.CommonDefine.CONNECT_SERVER_MASTER_URL_FORMAT;
-
 /**
  * agent msg sender
  *
@@ -46,8 +44,8 @@ public class AgentMsgSender {
      * @param msg     :
      * @return boolean :
      */
-    public boolean sendOrderMsgWithoutResponse(String agentId, int msgId, Object msg) {
-        if (StringUtils.isEmpty(agentId) || msg == null) {
+    public boolean sendOrderMsgWithoutResponse(String agentId, String msgId, Object msg) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId) || msg == null) {
             LOGGER.error("Error param.");
             return false;
         }
@@ -63,8 +61,8 @@ public class AgentMsgSender {
      * @param timeoutSeconds :
      * @return boolean :
      */
-    public boolean sendOrderMsgWithoutResponse(String agentId, int msgId, Object msg, long timeoutSeconds) {
-        if (StringUtils.isEmpty(agentId) || msg == null) {
+    public boolean sendOrderMsgWithoutResponse(String agentId, String msgId, Object msg, long timeoutSeconds) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId) || msg == null) {
             LOGGER.error("Error param.");
             return false;
         }
@@ -80,8 +78,8 @@ public class AgentMsgSender {
      * @param msg     :
      * @return boolean :
      */
-    public boolean sendCoverMsgWithoutResponse(String agentId, int msgId, Object msg) {
-        if (StringUtils.isEmpty(agentId) || msg == null) {
+    public boolean sendCoverMsgWithoutResponse(String agentId, String msgId, Object msg) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId) || msg == null) {
             LOGGER.error("Error param.");
             return false;
         }
@@ -97,8 +95,8 @@ public class AgentMsgSender {
      * @param timeoutSeconds :
      * @return boolean :
      */
-    public boolean sendCoverMsgWithoutResponse(String agentId, int msgId, Object msg, long timeoutSeconds) {
-        if (StringUtils.isEmpty(agentId) || msg == null) {
+    public boolean sendCoverMsgWithoutResponse(String agentId, String msgId, Object msg, long timeoutSeconds) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId) || msg == null) {
             LOGGER.error("Error param.");
             return false;
         }
@@ -114,22 +112,20 @@ public class AgentMsgSender {
      * @param msg     :
      * @return HttpSendMsgResponseMsgInfo :
      */
-    public HttpSendMsgResponseMsgInfo sendMsgWithResponse(String agentId, int msgId, Object msg) {
-        if (StringUtils.isEmpty(agentId) || msg == null) {
+    public HttpSendMsgResponseMsgInfo sendMsgWithResponse(String agentId, String msgId, Object msg) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId) || msg == null) {
             LOGGER.error("Error param.");
             return null;
         }
 
         AgentMasterInfo agentMasterInfo = agentMasterInfoDao.getAgentMasterInfo(agentId);
-        if (agentMasterInfo == null || StringUtils.isEmpty(agentMasterInfo.getServerIp())) {
+        if (agentMasterInfo == null || StringUtils.isEmpty(agentMasterInfo.getApiUrl())) {
             LOGGER.error("Invaild agent connect info.");
             return new HttpSendMsgResponseMsgInfo(agentId, HttpSendMsgResponseMsgInfo.SEND_STATUS_AGENT_OFF_LINE);
         }
 
-        String requestUrl = String.format(CONNECT_SERVER_MASTER_URL_FORMAT,
-                agentMasterInfo.getServerIp() + ":" + agentMasterInfo.getServerPort());
-
-        ResponseEntity<HttpSendMsgResponseMsgInfo> responseEntity = restTemplate.postForEntity(requestUrl,
+        ResponseEntity<HttpSendMsgResponseMsgInfo> responseEntity
+                = restTemplate.postForEntity(agentMasterInfo.getApiUrl(),
                 new HttpSendMsgRequestMsgInfo(agentId, msgId, msg), HttpSendMsgResponseMsgInfo.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {

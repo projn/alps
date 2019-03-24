@@ -3,12 +3,17 @@ package com.projn.alps.alpsmicroservice.work;
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
+import com.projn.alps.dao.IAgentMasterInfoDao;
+import com.projn.alps.dao.impl.AgentMasterInfoDaoImpl;
+import com.projn.alps.domain.AgentMasterInfo;
 import com.projn.alps.initialize.InitializeBean;
+import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.service.IComponentsWsService;
 import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.struct.WsResponseInfo;
 import com.projn.alps.util.CounterUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
@@ -16,6 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
 
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
@@ -92,6 +98,16 @@ public class WsProcessWorker implements Runnable {
                             LOGGER.error("Add web socket session to pool error, pool size({}).",
                                     WsSessionInfoMap.getInstance().getPoolSize());
                             return;
+                        }
+
+                        IAgentMasterInfoDao agentMasterInfoDao = InitializeBean.getBean(AgentMasterInfoDaoImpl.class);
+                        if(agentMasterInfoDao!=null) {
+                            String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
+                                    + ServiceData.getMasterInfo().getServerIp() + ":"
+                                    + ServiceData.getMasterInfo().getServerPort() + "/" + HTTP_API_SERVICE_SEND_MSG_URI;
+                            agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
+                                    ServiceData.getMasterInfo().getServerIp(),
+                                    ServiceData.getMasterInfo().getServerPort(),url));
                         }
                     }
                 }

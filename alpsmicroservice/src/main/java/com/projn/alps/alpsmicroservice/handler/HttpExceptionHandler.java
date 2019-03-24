@@ -1,7 +1,6 @@
 package com.projn.alps.alpsmicroservice.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.projn.alps.define.HttpDefine;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.msg.response.HttpErrorResponseMsgInfo;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.projn.alps.define.HttpDefine.CONTENT_TYPE_APPLICATION_JSON_UTF_8;
+
 
 /**
  * http exception handler
@@ -31,7 +33,7 @@ public class HttpExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
                                          Object handler, Exception ex) {
-        response.setContentType(HttpDefine.CONTENT_TYPE_APPLICATION_JSON_UTF_8);
+        response.setContentType(CONTENT_TYPE_APPLICATION_JSON_UTF_8);
 
         if (HttpException.class.isInstance(ex)) {
             HttpException httpException = (HttpException) ex;

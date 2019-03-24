@@ -1,6 +1,7 @@
 package com.projn.alps.alpsmicroservice.job;
 
 import com.alibaba.fastjson.JSON;
+import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
 import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMessageInfoDao;
 import com.projn.alps.domain.AgentMessageInfo;
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-import static com.projn.alps.define.CommonDefine.MAX_AGENT_MSG_ID;
-import static com.projn.alps.define.CommonDefine.MIN_AGENT_MSG_ID;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
@@ -34,6 +33,9 @@ public class SendAgentMsgJob implements Job {
     @Autowired
     @Qualifier("AgentMessageInfoDao")
     private IAgentMessageInfoDao agentMessageInfoDao;
+
+    @Autowired
+    private RunTimeProperties runTimeProperties;
 
     /**
      * execute
@@ -65,20 +67,22 @@ public class SendAgentMsgJob implements Job {
                     }
                 }
 
-                for (int i = MIN_AGENT_MSG_ID; i <= MAX_AGENT_MSG_ID; i++) {
-                    agentMessageInfo = agentMessageInfoDao.getAgentCoverMessageInfo(agentId, i);
-                    if (agentMessageInfo != null) {
-                        WsResponseMsgInfo webSocketResponseMessage =
-                                new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
-                        try {
-                            WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                                    JSON.toJSONString(webSocketResponseMessage));
-                            agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, i);
-                        } catch (Exception e) {
-                            LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
-                            continue;
+                if(runTimeProperties.getWsMsgIdList() != null) {
+                    for (String msgId : runTimeProperties.getWsMsgIdList()) {
+                        agentMessageInfo = agentMessageInfoDao.getAgentCoverMessageInfo(agentId, msgId);
+                        if (agentMessageInfo != null) {
+                            WsResponseMsgInfo webSocketResponseMessage =
+                                    new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                            try {
+                                WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
+                                        JSON.toJSONString(webSocketResponseMessage));
+                                agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, msgId);
+                            } catch (Exception e) {
+                                LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+                                continue;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }

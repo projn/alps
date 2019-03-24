@@ -40,7 +40,7 @@ public interface IAgentMessageInfoDao {
      * @param msgId   :
      * @return AgentMessageInfo :
      */
-    AgentMessageInfo getAgentCoverMessageInfo(String agentId, Integer msgId);
+    AgentMessageInfo getAgentCoverMessageInfo(String agentId, String msgId);
 
     /**
      * delete agent cover message info
@@ -49,5 +49,5 @@ public interface IAgentMessageInfoDao {
      * @param msgId   :
      * @return boolean :
      */
-    boolean deleteAgentCoverMessageInfo(String agentId, Integer msgId);
+    boolean deleteAgentCoverMessageInfo(String agentId, String msgId);
 }

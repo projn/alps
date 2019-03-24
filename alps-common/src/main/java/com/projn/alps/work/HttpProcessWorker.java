@@ -1,7 +1,6 @@
 package com.projn.alps.work;
 
 import com.alibaba.fastjson.JSON;
-import com.projn.alps.define.HttpDefine;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.i18n.LocaleContext;
 import com.projn.alps.initialize.InitializeBean;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
+import static com.projn.alps.define.HttpDefine.CONTENT_TYPE_APPLICATION_JSON_UTF_8;
 import static com.projn.alps.exception.code.CommonErrorCode.*;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
@@ -60,7 +60,7 @@ public class HttpProcessWorker implements Runnable {
     @Override
     public void run() {
         LocaleContext.set(httpRequestInfo.getLocale());
-        response.setContentType(HttpDefine.CONTENT_TYPE_APPLICATION_JSON_UTF_8);
+        response.setContentType(CONTENT_TYPE_APPLICATION_JSON_UTF_8);
 
         HttpErrorResponseMsgInfo httpErrorResponseMsgInfo = null;
         HttpResponseInfo httpResponseInfo = null;

@@ -10,6 +10,7 @@ public class AgentMasterInfo {
     private String agentId;
     private String serverIp;
     private Integer serverPort;
+    private String apiUrl;
 
     /**
      * agent master info
@@ -25,7 +26,7 @@ public class AgentMasterInfo {
      * @param serverIp   :
      * @param serverPort :
      */
-    public AgentMasterInfo(String agentId, String serverIp, Integer serverPort) {
+    public AgentMasterInfo(String agentId, String serverIp, Integer serverPort, String apiUrl) {
         this.agentId = agentId;
         this.serverIp = serverIp;
         this.serverPort = serverPort;
@@ -53,5 +54,13 @@ public class AgentMasterInfo {
 
     public void setServerPort(Integer serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public void setApiUrl(String apiUrl) {
+        this.apiUrl = apiUrl;
     }
 }

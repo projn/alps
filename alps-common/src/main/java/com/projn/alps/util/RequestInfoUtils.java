@@ -3,7 +3,6 @@ package com.projn.alps.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import com.projn.alps.define.HttpDefine;
 import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.msg.filter.ParamLocationType;
 import com.projn.alps.struct.HttpRequestInfo;
@@ -25,8 +24,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.projn.alps.define.CommonDefine.LANG_EN_US;
-import static com.projn.alps.define.CommonDefine.RADIX_10;
+import static com.projn.alps.define.CommonDefine.*;
+import static com.projn.alps.define.HttpDefine.HEADER_LANGUAGE;
 
 /**
  * http param utils
@@ -107,7 +106,7 @@ public final class RequestInfoUtils {
             }
         }
 
-        String language = request.getHeader(HttpDefine.HEADER_X_LANGUAGE.toLowerCase());
+        String language = request.getHeader(HEADER_LANGUAGE.toLowerCase());
         Locale locale = getLocale(language);
 
         HttpRequestInfo httpRequestInfo = new HttpRequestInfo(locale, paramObj);

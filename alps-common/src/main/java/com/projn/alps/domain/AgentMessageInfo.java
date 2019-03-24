@@ -10,7 +10,7 @@ import static com.projn.alps.define.CommonDefine.MILLI_SECOND_1000;
 public class AgentMessageInfo {
     private String agentId;
 
-    private int msgId;
+    private String msgId;
 
     private Object msg;
 
@@ -29,7 +29,7 @@ public class AgentMessageInfo {
      * @param msgId   :
      * @param msg     :
      */
-    public AgentMessageInfo(String agentId, int msgId, Object msg) {
+    public AgentMessageInfo(String agentId, String msgId, Object msg) {
         this.agentId = agentId;
         this.msgId = msgId;
         this.msg = msg;
@@ -43,7 +43,7 @@ public class AgentMessageInfo {
      * @param msg            :
      * @param timeoutSeconds :
      */
-    public AgentMessageInfo(String agentId, int msgId, Object msg, long timeoutSeconds) {
+    public AgentMessageInfo(String agentId, String msgId, Object msg, long timeoutSeconds) {
         this.agentId = agentId;
         this.msgId = msgId;
         this.msg = msg;
@@ -58,11 +58,11 @@ public class AgentMessageInfo {
         this.agentId = agentId;
     }
 
-    public int getMsgId() {
+    public String getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(int msgId) {
+    public void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 

@@ -8,9 +8,9 @@ package com.projn.alps.msg.response;
 public class WsResponseMsgInfo {
 
     /**
-     * msgid
+     * msgId
      */
-    private int msgid;
+    private String msgId;
 
     /**
      * msg
@@ -26,20 +26,20 @@ public class WsResponseMsgInfo {
     /**
      * web socket response message
      *
-     * @param msgid :
+     * @param msgId :
      * @param msg   :
      */
-    public WsResponseMsgInfo(int msgid, Object msg) {
-        this.msgid = msgid;
+    public WsResponseMsgInfo(String msgId, Object msg) {
+        this.msgId = msgId;
         this.msg = msg;
     }
 
-    public int getMsgid() {
-        return msgid;
+    public String getMsgId() {
+        return msgId;
     }
 
-    public void setMsgid(int msgid) {
-        this.msgid = msgid;
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 
     public Object getMsg() {

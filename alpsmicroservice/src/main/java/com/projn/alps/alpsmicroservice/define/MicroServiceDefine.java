@@ -15,6 +15,17 @@ public final class MicroServiceDefine {
     public static final int DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES = 30;
 
     /**
+     * http url header
+     */
+    public static final String HTTP_URL_HEADER = "http://";
+
+
+    /**
+     * https url header
+     */
+    public static final String HTTPS_URL_HEADER = "https://";
+
+    /**
      * http api service send msg
      */
     public static final String HTTP_API_SERVICE_SEND_MSG = "sendMsg";
@@ -25,16 +36,8 @@ public final class MicroServiceDefine {
     public static final String HTTP_API_SERVICE_SEND_MSG_URI = "/api/sendMsg";
 
     /**
-     * http api service batch send msg
+     * http api job cron expression
      */
-    public static final String HTTP_API_SERVICE_BATCH_SEND_MSG = "batchSendMsg";
-
-    /**
-     * http api service batch send msg uri
-     */
-    public static final String HTTP_API_SERVICE_BATCH_SEND_MSG_URI = "/api/batchSendMsg";
-
-
     public static final String HTTP_API_JOB_CRON_EXPRESSION = "0 0/1 * * * ?";
 
     /**

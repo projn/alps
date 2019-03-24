@@ -15,11 +15,9 @@ import com.projn.alps.alpsmicroservice.struct.ModuleJobInfo;
 import com.projn.alps.aop.IHttpServiceMonitorAop;
 import com.projn.alps.aop.IMsgServiceMonitorAop;
 import com.projn.alps.aop.IWsServiceMonitorAop;
-import com.projn.alps.define.HttpDefine;
 import com.projn.alps.filter.IAuthorizationFilter;
 import com.projn.alps.i18n.MessageContext;
 import com.projn.alps.initialize.ServiceData;
-import com.projn.alps.msg.request.HttpBatchSendMsgRequestMsgInfo;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
@@ -48,6 +46,7 @@ import java.util.*;
 
 import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
 import static com.projn.alps.define.CommonDefine.COLLECTION_INIT_SIZE;
+import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
 import static com.projn.alps.struct.RequestServiceInfo.SERVICE_TYPE_HTTP;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
@@ -119,7 +118,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
             ServiceData.setMasterInfo(
                     new MasterInfo(runTimeProperties.getAppName(), runTimeProperties.getServerAddress(),
-                            runTimeProperties.getServerPort()));
+                            runTimeProperties.getServerPort(), runTimeProperties.isServerSsl()));
 
         } catch (Exception e) {
             LOGGER.error("Get context info error,error info(" + formatExceptionInfo(e) + ").");
@@ -610,27 +609,15 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
         RequestServiceInfo sendMsgServiceInfo = new RequestServiceInfo();
         sendMsgServiceInfo.setServiceName(HTTP_API_SERVICE_SEND_MSG);
-        sendMsgServiceInfo.setMethod(HttpDefine.HTTP_METHOD_POST);
+        sendMsgServiceInfo.setMethod(HTTP_METHOD_POST);
         sendMsgServiceInfo.setType(SERVICE_TYPE_HTTP);
         sendMsgServiceInfo.setParamClass(HttpSendMsgRequestMsgInfo.class);
         sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
         sendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
 
         Map<String, RequestServiceInfo> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        subRequestServiceInfoMap.put(HttpDefine.HTTP_METHOD_POST, sendMsgServiceInfo);
+        subRequestServiceInfoMap.put(HTTP_METHOD_POST, sendMsgServiceInfo);
         requestServiceInfoMap.put(HTTP_API_SERVICE_SEND_MSG_URI, subRequestServiceInfoMap);
-
-        RequestServiceInfo batchSendMsgServiceInfo = new RequestServiceInfo();
-        batchSendMsgServiceInfo.setServiceName(HTTP_API_SERVICE_BATCH_SEND_MSG);
-        batchSendMsgServiceInfo.setMethod(HttpDefine.HTTP_METHOD_POST);
-        batchSendMsgServiceInfo.setType(SERVICE_TYPE_HTTP);
-        batchSendMsgServiceInfo.setParamClass(HttpBatchSendMsgRequestMsgInfo.class);
-        sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
-        batchSendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
-
-        subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        subRequestServiceInfoMap.put(HttpDefine.HTTP_METHOD_POST, batchSendMsgServiceInfo);
-        requestServiceInfoMap.put(HTTP_API_SERVICE_BATCH_SEND_MSG_URI, subRequestServiceInfoMap);
 
         return true;
     }

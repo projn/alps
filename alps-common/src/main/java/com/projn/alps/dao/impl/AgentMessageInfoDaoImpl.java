@@ -82,14 +82,14 @@ public class AgentMessageInfoDaoImpl extends SpringDataRedisInfoDaoImpl
     }
 
     @Override
-    public AgentMessageInfo getAgentCoverMessageInfo(String agentId, Integer msgId) {
-        if (StringUtils.isEmpty(agentId) || msgId == null) {
+    public AgentMessageInfo getAgentCoverMessageInfo(String agentId, String msgId) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId)) {
             LOGGER.error("Error param.");
             return null;
         }
 
         String key = String.format(AGENT_COVER_MSG_INFO_MAP_HEADER, agentId);
-        String value = getMapItemInfo(key, msgId.toString());
+        String value = getMapItemInfo(key, msgId);
         if (StringUtils.isEmpty(value)) {
             return null;
         }
@@ -104,14 +104,14 @@ public class AgentMessageInfoDaoImpl extends SpringDataRedisInfoDaoImpl
     }
 
     @Override
-    public boolean deleteAgentCoverMessageInfo(String agentId, Integer msgId) {
-        if (StringUtils.isEmpty(agentId) || msgId == null) {
+    public boolean deleteAgentCoverMessageInfo(String agentId, String msgId) {
+        if (StringUtils.isEmpty(agentId) || StringUtils.isEmpty(msgId)) {
             LOGGER.error("Error param.");
             return false;
         }
 
         String key = String.format(AGENT_COVER_MSG_INFO_MAP_HEADER, agentId);
-        return deleteMapItemInfo(key, msgId.toString());
+        return deleteMapItemInfo(key, msgId);
     }
 
 }

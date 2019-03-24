@@ -7,29 +7,9 @@ package com.projn.alps.define;
  */
 public final class CommonDefine {
     /**
-     * max agent msg id
-     */
-    public static final int MAX_AGENT_MSG_ID = 1009;
-
-    /**
-     * min agent msg id
-     */
-    public static final int MIN_AGENT_MSG_ID = 1001;
-
-    /**
      * default encoding
      */
     public static final String DEFAULT_ENCODING = "UTF-8";
-
-    /**
-     * connect server master url format
-     */
-    public static final String CONNECT_SERVER_MASTER_URL_FORMAT = "http://%s/hostmgr/http";
-
-    /**
-     * max batch sql item size
-     */
-    public static final long MAX_BATCH_SQL_ITEM_SIZE = 1000;
 
     /**
      * collection init size
