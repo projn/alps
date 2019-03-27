@@ -177,7 +177,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 continue;
             }
 
-            String moduleJarPath = null;
+            List<String> moduleJarPathList = new ArrayList<>();
             String moduleConfigPath = null;
 
             for (int j = 0; j < moduleInfoFileList.length; j++) {
@@ -187,30 +187,31 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 }
 
                 if (moduleInfoFile.getName().endsWith(MODULE_JAR_FILE_TAIL)) {
-                    moduleJarPath = moduleInfoFile.getAbsolutePath();
+                    String jarPath = "file:" + moduleInfoFile.getAbsolutePath();
+                    URL urlResource = new URL(jarPath);
+                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+                    boolean accessible = method.isAccessible();
+                    if (!accessible) {
+                        method.setAccessible(true);
+                    }
+                    URLClassLoader classLoader = (URLClassLoader) this.getClass().getClassLoader();
+                    method.invoke(classLoader, urlResource);
+                    method.setAccessible(accessible);
+
+                    moduleJarPathList.add(moduleInfoFile.getAbsolutePath());
                 }
+
 
                 if (moduleInfoFile.getName().equals(MODULE_CONFIG_FILE_NAME)) {
                     moduleConfigPath = moduleInfoFile.getAbsolutePath();
                 }
             }
 
-            if (StringUtils.isEmpty(moduleJarPath) || StringUtils.isEmpty(moduleConfigPath)) {
+            if (moduleJarPathList.isEmpty() || StringUtils.isEmpty(moduleConfigPath)) {
                 continue;
             }
 
-            ModuleInfo moduleInfo = new ModuleInfo(moduleJarPath, moduleConfigPath);
-
-            String jarPath = "file:" + moduleInfo.getJarPath();
-            URL urlResource = new URL(jarPath);
-            Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            boolean accessible = method.isAccessible();
-            if (!accessible) {
-                method.setAccessible(true);
-            }
-            URLClassLoader classLoader = (URLClassLoader) this.getClass().getClassLoader();
-            method.invoke(classLoader, urlResource);
-            method.setAccessible(accessible);
+            ModuleInfo moduleInfo = new ModuleInfo(moduleJarPathList, moduleConfigPath);
 
             moduleInfoList.add(moduleInfo);
         }

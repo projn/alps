@@ -1,12 +1,14 @@
 package com.projn.alps.alpsmicroservice.struct;
 
+import java.util.List;
+
 /**
  * module info
  *
  * @author : sunyuecheng
  */
 public class ModuleInfo {
-    private String jarPath = null;
+    private List<String> jarPathList = null;
     private String configPath = null;
 
     /**
@@ -18,20 +20,20 @@ public class ModuleInfo {
     /**
      * module info
      *
-     * @param jarPath    :
+     * @param jarPathList    :
      * @param configPath :
      */
-    public ModuleInfo(String jarPath, String configPath) {
-        this.jarPath = jarPath;
+    public ModuleInfo(List<String> jarPathList, String configPath) {
+        this.jarPathList = jarPathList;
         this.configPath = configPath;
     }
 
-    public String getJarPath() {
-        return jarPath;
+    public List<String> getJarPathList() {
+        return jarPathList;
     }
 
-    public void setJarPath(String jarPath) {
-        this.jarPath = jarPath;
+    public void setJarPathList(List<String> jarPathList) {
+        this.jarPathList = jarPathList;
     }
 
     public String getConfigPath() {
