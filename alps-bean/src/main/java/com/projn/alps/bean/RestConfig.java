@@ -32,13 +32,13 @@ public class RestConfig {
     private int readTimeout;
 
     /**
-     * rest template
+     * ssl rest template
      *
      * @return org.springframework.web.client.RestTemplate :
      * @throws Exception :
      */
-    @Bean
-    public RestTemplate restTemplate() throws Exception {
+    @Bean("sslRestTemplate")
+    public RestTemplate sslRestTemplate() throws Exception {
 
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
@@ -60,6 +60,25 @@ public class RestConfig {
         requestFactory.setReadTimeout(readTimeout);
 
         requestFactory.setHttpClient(httpClient);
+
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+        return restTemplate;
+    }
+
+    /**
+     * rest template
+     *
+     * @return org.springframework.web.client.RestTemplate :
+     * @throws Exception :
+     */
+    @Bean("restTemplate")
+    public RestTemplate restTemplate() throws Exception {
+
+        HttpComponentsClientHttpRequestFactory requestFactory =
+                new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(connectTimeout);
+        requestFactory.setReadTimeout(readTimeout);
 
         RestTemplate restTemplate = new RestTemplate(requestFactory);
 
