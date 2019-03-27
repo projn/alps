@@ -22,7 +22,6 @@
         <property name="mapperLocations">
             <array>
                 <value>${mybatis.mapperLocations.module}</value>
-                <value>${mybatis.mapperLocations.local}</value>
             </array>
         </property>
     </bean>
