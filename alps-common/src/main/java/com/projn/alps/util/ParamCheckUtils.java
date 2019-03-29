@@ -2,7 +2,6 @@ package com.projn.alps.util;
 
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.msg.filter.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +42,7 @@ public final class ParamCheckUtils {
 
         for (Field field : fields) {
             String fieldName = field.getName();
-            if (fieldName == null) {
+            if (StringUtils.isEmpty(fieldName)) {
                 continue;
             }
 
