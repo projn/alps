@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.List;
  * @author : sunyuecheng
  */
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
     /**
      * configure handler exception resolvers
      *
@@ -25,7 +27,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        super.configureHandlerExceptionResolvers(exceptionResolvers);
         exceptionResolvers.add(new HttpExceptionHandler());
     }
 

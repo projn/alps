@@ -2,6 +2,7 @@ package com.projn.alps.util;
 
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.msg.filter.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +47,9 @@ public final class ParamCheckUtils {
                 continue;
             }
 
-            PropertyDescriptor pd = new PropertyDescriptor(fieldName, clazz);
+            PropertyDescriptor pd = field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)
+                    ? new PropertyDescriptor(fieldName, clazz)
+                    : new PropertyDescriptor(fieldName, clazz, getGetterMethodName(fieldName), null);
             Method getMethod = pd.getReadMethod();
 
             Object fieldValue = getMethod.invoke(param, new Object[]{});
@@ -80,6 +83,21 @@ public final class ParamCheckUtils {
             checkByType(fieldValue, paramLimit, fieldName, type);
         }
         return true;
+    }
+
+    private static String getGetterMethodName(String name) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(name);
+        if (Character.isLowerCase(sb.charAt(0))) {
+            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
+                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            }
+        }
+
+        sb.insert(0, "get");
+
+        return sb.toString();
     }
 
     private static void checkByType(Object fieldValue, ParamLimit paramLimit, String fieldName, Class type)
