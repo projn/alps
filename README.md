@@ -34,11 +34,11 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
 
 ## 使用方法
 
-1. 根据自己业务需要下载对应的代码生成器，下载地址：https://github.com/projn/alps/releases；
+1. 根据自己业务需要下载对应的代码生成器，下载地址：https://github.com/projn/alps/releases ；
 
-2. 使用Swagger编写yaml格式的API文档，文档格式Swagger， 文档地址：https://swagger.io/resources/open-api/，本项目支持OSA 2.0和OSA 3.0编写的API，并在其基础上增加了一些衍生用法，具体使用方式可参见范例项目， 项目地址：https://github.com/projn/sample；
+2. 使用Swagger编写yaml格式的API文档，文档格式Swagger， 文档地址：https://swagger.io/resources/open-api/ ，本项目支持OSA 2.0和OSA 3.0编写的API，并在其基础上增加了一些衍生用法，具体使用方式可参见范例项目， 项目地址：https://github.com/projn/sample/alps ；
 
-3. 根据需要编写模块生成配置文件generator_config.xml，具体格式参见范例项目，文件地址：https://raw.githubusercontent.com/projn/sample/master/alps/generator/generator_config-sample.xml；
+3. 根据需要编写模块生成配置文件generator_config.xml，具体格式参见范例项目，文件地址：https://raw.githubusercontent.com/projn/sample/master/alps/generator/generator_config-sample.xml ；
 
 4. 使用代码生成器模块生成配置文件生成模块代码，
 
