@@ -21,7 +21,7 @@ Message Queue（处理内外部消息调用）的服务模型；
 1. 支持Swagger 2.0和Swagger 3.0 API标准；
 2. 增加tag标签，生成器会根据tag后的标记生成不同业务模块，标记对应关系（http -- HTTP、  
 ws -- WebSocket、msg -- RocketMQ Msg）；
-3. 可根据API文档中呢绒自动添加注释和枚举类型声明。
+3. 可根据API文档中说明自动添加注释和枚举类型声明。
 
 ### 三方组件bean配置包 alps-bean
 1. 提供了常用的三方组件的配置，基于JavaConfig，该包会随着框架发展增加对各种组件支持。  
@@ -36,7 +36,7 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
 
 1. 根据自己业务需要下载对应的代码生成器，下载地址：https://github.com/projn/alps/releases；
 
-2. 使用Swagger编写yaml格式的API文档，文档格式Swagger， 文档地址：https://swagger.io/resources/open-api/，本项目支持OSA 2.0和OSA 3.0编写的API，并在其基础上增加了一些衍生用法，具体使用方式可参见范例项目， 项目地址：https://github.com/projn/sample/tree/master/alps；
+2. 使用Swagger编写yaml格式的API文档，文档格式Swagger， 文档地址：https://swagger.io/resources/open-api/，本项目支持OSA 2.0和OSA 3.0编写的API，并在其基础上增加了一些衍生用法，具体使用方式可参见范例项目， 项目地址：https://github.com/projn/sample；
 
 3. 根据需要编写模块生成配置文件generator_config.xml，具体格式参见范例项目，文件地址：https://raw.githubusercontent.com/projn/sample/master/alps/generator/generator_config-sample.xml；
 
