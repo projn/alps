@@ -18,7 +18,7 @@
             <method>POST</method> //post get put delete/post/normal order broadcast
             <init_method>init</init_method>
             <auth_filter_name>default</auth_filter_name> //null//
-            <user_role_name>te_admin,op_restricted,op_suspended,cgs_adm,readonly</user_role_name>
+            <user_role_name>admin,readonly</user_role_name>
             <param_bean_class_name></param_bean_class_name>
             <enable>true</enable>
             <properties>
