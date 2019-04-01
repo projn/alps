@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <bean id="consumerProperties" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="bootstrap.servers" value="${kafka.consumer.bootstrap.servers}"/>
+                <entry key="group.id" value="${kafka.consumer.group.id}"/>
+                <entry key="session.timeout.ms" value="${kafka.consumer.session.timeout.ms}"/>
+                <entry key="auto.offset.reset" value="${kafka.consumer.auto.offset.reset}"/>
+                <entry key="connections.max.idle.ms" value="${kafka.consumer.connections.max.idle.ms}"/>
+                <entry key="enable.auto.commit" value="${kafka.consumer.enable.auto.commit}"/>
+                <entry key="fetch.max.bytes" value="${kafka.consumer.fetch.max.bytes}"/>
+                <entry key="max.poll.interval.ms" value="${kafka.consumer.max.poll.interval.ms}"/>
+                <entry key="max.poll.records" value="${kafka.consumer.max.poll.records}"/>
+                <entry key="request.timeout.ms" value="${kafka.consumer.request.timeout.ms}"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="consumerFactory" class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg>
+            <ref bean="consumerProperties"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="kafkaListenerContainerFactory" class="org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory">
+        <property name="consumerFactory" ref="consumerFactory"/>
+    </bean>
+
+</beans>

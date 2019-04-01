@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+
+    <bean id="producerProperties" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="acks" value="${kafka.producer.acks}"/>
+                <entry key="bootstrap.servers" value="${kafka.producer.bootstrap.servers}"/>
+                <entry key="buffer.memory" value="${kafka.producer.buffer.memory}"/>
+                <entry key="compression.type" value="${kafka.producer.compression.type}"/>
+                <entry key="retries" value="${kafka.producer.retries}"/>
+                <entry key="batch.size" value="${kafka.producer.batch.size}"/>
+                <entry key="client.id" value="${kafka.producer.client.id}"/>
+                <entry key="connections.max.idle.ms" value="${kafka.producer.connections.max.idle.ms}"/>
+                <entry key="delivery.timeout.ms" value="${kafka.producer.delivery.timeout.ms}"/>
+                <entry key="max.block.ms" value="${kafka.producer.max.block.ms}"/>
+                <entry key="linger.ms" value="${kafka.producer.linger.ms}"/>
+                <entry key="max.request.size" value="${kafka.producer.max.request.size}"/>
+                <entry key="request.timeout.ms" value="${kafka.producer.request.timeout.ms}"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="producerFactory"
+          class="org.springframework.kafka.core.DefaultKafkaProducerFactory">
+        <constructor-arg>
+            <ref bean="producerProperties" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="kafkaTemplate" class="org.springframework.kafka.core.KafkaTemplate">
+        <constructor-arg ref="producerFactory" />
+        <constructor-arg name="autoFlush" value="true" />
+    </bean>
+</beans>
