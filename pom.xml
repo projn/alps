@@ -7,7 +7,7 @@
     <groupId>com.projn</groupId>
     <artifactId>alps</artifactId>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <modules>
         <module>alps-common</module>
@@ -73,12 +73,12 @@
 
         <alps.version>1.1</alps.version>
 
-        <alps.common.version>1.1</alps.common.version>
-        <alps.bean.version>1.1</alps.bean.version>
-        <alps.dao.version>1.1</alps.dao.version>
-        <alps.test.version>1.1</alps.test.version>
-        <alps.alpsgenerator.version>0.0.2</alps.alpsgenerator.version>
-        <alps.alpsmicroservice.version>0.0.2</alps.alpsmicroservice.version>
+        <alps.common.version>1.2</alps.common.version>
+        <alps.bean.version>1.2</alps.bean.version>
+        <alps.dao.version>1.2</alps.dao.version>
+        <alps.test.version>1.2</alps.test.version>
+        <alps.alpsgenerator.version>0.0.3</alps.alpsgenerator.version>
+        <alps.alpsmicroservice.version>0.0.3</alps.alpsmicroservice.version>
         <alps.alpsconfigserver.version>0.0.1</alps.alpsconfigserver.version>
     </properties>
 
