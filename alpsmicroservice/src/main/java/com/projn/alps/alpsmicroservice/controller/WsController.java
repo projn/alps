@@ -18,6 +18,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.Map;
 
 import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
+import static com.projn.alps.define.CommonDefine.AGENT_ID_KEY;
 import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 

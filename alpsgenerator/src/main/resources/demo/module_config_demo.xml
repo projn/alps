@@ -14,8 +14,8 @@
         <service>
             <uri>/v1/*/cgs/charging_quotas</uri>
             <name>CgsQuotaInfoService</name>
-            <type>http</type> //http/ws/msg
-            <method>POST</method> //post get put delete/post/normal broadcast
+            <type>http</type> //http/ws/msg/rpc
+            <method>POST</method> //post get put delete/post/normal broadcast/post
             <init_method>init</init_method>
             <auth_filter_name>default</auth_filter_name> //null//
             <user_role_name>admin,readonly</user_role_name>

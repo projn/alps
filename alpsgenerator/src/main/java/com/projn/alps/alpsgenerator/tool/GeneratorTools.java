@@ -16,6 +16,7 @@ import com.projn.alps.exception.HttpException;
 import com.projn.alps.msg.filter.ParamLocation;
 import com.projn.alps.service.IComponentsHttpService;
 import com.projn.alps.service.IComponentsMsgService;
+import com.projn.alps.service.IComponentsRpcService;
 import com.projn.alps.service.IComponentsWsService;
 import com.projn.alps.struct.*;
 import com.projn.alps.tool.HttpControllerTools;
@@ -582,8 +583,6 @@ public class GeneratorTools {
                 if (SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
                     if (SERVICE_METHOD_HTTP_GET.equalsIgnoreCase(urlMethod)) {
                         urlMethod = SERVICE_METHOD_MSG_NORMAL;
-                    } else if (SERVICE_METHOD_HTTP_POST.equalsIgnoreCase(urlMethod)) {
-                        urlMethod = SERVICE_METHOD_MSG_ORDER;
                     } else if (SERVICE_METHOD_HTTP_PUT.equalsIgnoreCase(urlMethod)) {
                         urlMethod = SERVICE_METHOD_MSG_BROADCAST;
                     } else {
@@ -1599,6 +1598,30 @@ public class GeneratorTools {
             serviceClass.addImportedType(MsgRequestInfo.class.getTypeName());
 
             method.addBodyLine("return true;");
+
+            serviceClass.addMethod(method);
+        } else if (SERVICE_TYPE_RPC.equals(type)) {
+            FullyQualifiedJavaType interfaceType = new FullyQualifiedJavaType(IComponentsRpcService.class.getTypeName());
+            serviceClass.addSuperInterface(interfaceType);
+            serviceClass.addImportedType(IComponentsRpcService.class.getTypeName());
+
+            FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(RpcResponseInfo.class.getTypeName());
+
+            Method method = new Method();
+            method.setVisibility(JavaVisibility.PUBLIC);
+            method.setReturnType(returnType);
+            method.setName("execute");
+
+            Parameter parameter = new Parameter(new FullyQualifiedJavaType(RpcRequestInfo.class.getTypeName()),
+                    JavaBeanGenerator.getCamelCaseString(RpcRequestInfo.class.getSimpleName(), false));
+            method.addParameter(0, parameter);
+
+            method.addAnnotation(JAVA_METHOD_OVERRIDE_ANNOUNCE);
+
+            serviceClass.addImportedType(RpcResponseInfo.class.getTypeName());
+            serviceClass.addImportedType(RpcRequestInfo.class.getTypeName());
+
+            method.addBodyLine("return null;");
 
             serviceClass.addMethod(method);
         }
