@@ -1,8 +1,8 @@
-package com.sct.mongodbtest.dao.impl;
+package com.projn.alps.third.mongodb.dao.impl;
 
-import com.sct.mongodbtest.dao.IMongoDbInfoDao;
-import com.sct.mongodbtest.entity.EntityInfo;
-import org.apache.log4j.Logger;
+import com.projn.alps.third.mongodb.dao.IMongoDbInfoDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,9 +14,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-@Repository("MongoDbInfoDao")
-public class MongoDbInfoDaoImpl implements IMongoDbInfoDao {
-    private static final Logger logger = Logger.getLogger(MongoDbInfoDaoImpl.class);
+@Repository("SpringDataMongoDbInfoDao")
+public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpringDataMongoDbInfoDaoImpl.class);
 
     @Autowired
     private MongoTemplate mongoTemplate = null;
@@ -30,106 +30,105 @@ public class MongoDbInfoDaoImpl implements IMongoDbInfoDao {
     }
 
     @Override
-    public boolean saveObjInfo(EntityInfo obj) {
+    public <T>boolean saveObjInfo(T obj) {
         if(obj==null) {
-            logger.error("Invaild param!");
+            LOGGER.error("Invaild param!");
             return false;
         }
         try {
             mongoTemplate.insert(obj);
             return true;
         } catch (Exception e) {
-            logger.error("Save obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Save obj info error, error info("+ e.getMessage() +")!");
         }
         return false;
     }
 
     @Override
-    public EntityInfo getObjInfo(String id) {
+    public <T> T getObjInfo(String id, Class<T> cls) {
         if(StringUtils.isEmpty(id)) {
-            logger.error("Invaild param!");
+            LOGGER.error("Invaild param!");
             return null;
         }
         try {
             Query query = new Query(Criteria.where("id").is(id));
-            EntityInfo entityInfo = mongoTemplate.findOne(query, EntityInfo.class);
+            T entityInfo = mongoTemplate.findOne(query, cls);
             return entityInfo;
         } catch (Exception e) {
-            logger.error("Get obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info error, error info("+ e.getMessage() +")!");
         }
         return null;
     }
 
     @Override
-    public Long getObjInfoCount(String itemName, Object item) {
+    public <T> Long getObjInfoCount(String itemName, Object item, Class<T> cls) {
         if(StringUtils.isEmpty(itemName) || itemName ==null) {
-            logger.error("Invaild param!");
+            LOGGER.error("Invaild param!");
             return null;
         }
 
         try {
             Query query = new Query();
             query.addCriteria(Criteria.where(itemName).is(item));
-            return mongoTemplate.count(query, EntityInfo.class);
+            return mongoTemplate.count(query, cls);
         } catch (Exception e) {
-            logger.error("Get obj info count error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info count error, error info("+ e.getMessage() +")!");
         }
         return null;
     }
 
     @Override
-    public List<EntityInfo> getObjInfoList(String itemName, Object item, int beginIndex, int size) {
+    public <T> List<T> getObjInfoList(String itemName, Object item, int beginIndex, int size, Class<T> cls) {
         if(StringUtils.isEmpty(itemName) || beginIndex<=0 || size<0) {
-            logger.error("Invaild param!");
+            LOGGER.error("Invaild param!");
             return null;
         }
         try {
             Query query = new Query();
-            query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createDate")));
             Criteria criteria = Criteria.where(itemName).is(item);
             query.addCriteria(criteria);
             query.skip(beginIndex);
             query.limit(size);
-            return mongoTemplate.find(query, EntityInfo.class);
+            return mongoTemplate.find(query, cls);
         } catch (Exception e) {
-            logger.error("Get obj info list error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info list error, error info("+ e.getMessage() +")!");
         }
 
         return null;
     }
 
     @Override
-    public boolean updateObjItemInfo(String itemName, Object item, Object newItem) {
-        if(StringUtils.isEmpty(itemName)) {
-            logger.error("Invaild param!");
-            return false;
-        }
-        try {
-            Query query = new Query();
-            query.addCriteria(Criteria.where(itemName).is(item));
-            Update update = new Update();
-            update.set(itemName, newItem);
-            mongoTemplate.updateFirst(query, update, EntityInfo.class);
-            return true;
-        } catch (Exception e) {
-            logger.error("Update obj item info error, error info("+ e.getMessage() +")!");
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deleteObjInfo(String id) {
+    public <T> boolean updateObjItemInfo(String id, String itemName, Object newItem, Class<T> cls) {
         if(StringUtils.isEmpty(id)) {
-            logger.error("Invaild param!");
+            LOGGER.error("Invaild param!");
             return false;
         }
         try {
             Query query = new Query();
             query.addCriteria(Criteria.where("id").is(id));
-            mongoTemplate.remove(query, EntityInfo.class);
+            Update update = new Update();
+            update.set(itemName, newItem);
+            mongoTemplate.updateFirst(query, update, cls);
             return true;
         } catch (Exception e) {
-            logger.error("Delete obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Update obj item info error, error info("+ e.getMessage() +")!");
+        }
+        return false;
+    }
+
+    @Override
+    public <T> boolean deleteObjInfo(String id, Class<T> cls) {
+        if(StringUtils.isEmpty(id)) {
+            LOGGER.error("Invaild param!");
+            return false;
+        }
+        try {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("id").is(id));
+            mongoTemplate.remove(query, cls);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Delete obj info error, error info("+ e.getMessage() +")!");
         }
         return false;
     }

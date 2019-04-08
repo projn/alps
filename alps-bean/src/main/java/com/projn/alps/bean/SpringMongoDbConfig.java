@@ -1,7 +1,8 @@
-package com.projn.alps.third.mongodb.config;
+package com.projn.alps.bean;
 
 import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Configuration
 @PropertySource("classpath:config/mongodb.properties")
+@ConditionalOnProperty(name = "system.bean.switch.mongodb", havingValue = "true", matchIfMissing = true)
 public class SpringMongoDbConfig {
 
     @Value("${mongo.host}")

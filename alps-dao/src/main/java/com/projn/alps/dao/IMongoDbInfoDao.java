@@ -1,4 +1,4 @@
-package com.projn.alps.third.mongodb.dao;
+package com.projn.alps.dao;
 
 import java.util.List;
 

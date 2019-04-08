@@ -9,6 +9,6 @@
 
     <import resource="classpath:bootstrap/spring-*.xml"/>
     
-    <context:property-placeholder location="file:/Users/sunyuecheng/Documents/workspace/MongoDbTest/src/main/resources/config/*.properties"/>
+    <context:property-placeholder location="file:/Users/sunyuecheng/Documents/workspace/projn/alps/third/mongodb-test/src/main/resources/config/*.properties"/>
 
 </beans>
