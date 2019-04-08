@@ -8,6 +8,17 @@ package com.projn.alps.define;
 public final class HttpDefine {
 
     /**
+     * http url header
+     */
+    public static final String HTTP_URL_HEADER = "http://";
+
+
+    /**
+     * https url header
+     */
+    public static final String HTTPS_URL_HEADER = "https://";
+
+    /**
      * http method get
      */
     public static final String HTTP_METHOD_GET = "GET";
@@ -72,6 +83,16 @@ public final class HttpDefine {
      * content type application json utf-8
      */
     public static final String CONTENT_TYPE_APPLICATION_JSON_UTF_8 = "application/json;charset=utf-8;";
+
+    /**
+     * jwt token prefix
+     */
+    public static final String JWT_TOKEN_PREFIX = "token ";
+
+    /**
+     * header jwt token
+     */
+    public static final String HEADER_JWT_TOKEN = "Authorization";
 
 
     private HttpDefine() {

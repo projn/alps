@@ -12,7 +12,7 @@ public class WsRequestMsgInfo implements Serializable {
     /**
      * msg id
      */
-    private Integer msgId;
+    private String msgId;
 
     /**
      * agent id
@@ -24,11 +24,11 @@ public class WsRequestMsgInfo implements Serializable {
      */
     private Object msg;
 
-    public Integer getMsgId() {
+    public String getMsgId() {
         return msgId;
     }
 
-    public void setMsgId(Integer msgId) {
+    public void setMsgId(String msgId) {
         this.msgId = msgId;
     }
 

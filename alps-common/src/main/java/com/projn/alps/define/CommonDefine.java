@@ -102,9 +102,40 @@ public final class CommonDefine {
     public static final String MSG_RESPONSE_MAX_TIME_HEADER = "msgResponseMaxTime-%s";
 
     /**
+     * msg consume count header
+     */
+    public static final String MSG_CONSUME_COUNT_HEADER = "msgConsumeCount-%s";
+
+    /**
+     * msg consume total time header
+     */
+    public static final String MSG_CONSUME_TOTAL_TIME_HEADER = "msgConsumeTotalTime-%s";
+
+    /**
+     * msg consume max time header
+     */
+    public static final String MSG_CONSUME_MAX_TIME_HEADER = "msgConsumeMaxTime-%s";
+
+    /**
+     * agent id key
+     */
+    public static final String AGENT_ID_KEY = "AGENT_ID";
+
+    /**
+     * api header
+     */
+    public static final String API_URL_HEADER = "api/";
+
+    /**
+     * http api service send ws msg
+     */
+    public static final String HTTP_API_SERVICE_SEND_WS_MSG = "sendWsMsg";
+
+    /**
      * read buffer size
      */
     public static final int READ_BUFFER_SIZE = 1024 * 32;
+
 
 
     private CommonDefine() {

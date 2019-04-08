@@ -3,13 +3,13 @@ package com.projn.alps.struct;
 import java.util.Map;
 
 /**
- * ws request info
+ * msg request info
  *
  * @author : sunyuecheng
  */
 public class MsgRequestInfo {
 
-    private int id;
+    private String id;
 
     private Object msg;
 
@@ -28,17 +28,17 @@ public class MsgRequestInfo {
      * @param msg           :
      * @param extendInfoMap :
      */
-    public MsgRequestInfo(int id, Object msg, Map<String, Object> extendInfoMap) {
+    public MsgRequestInfo(String id, Object msg, Map<String, Object> extendInfoMap) {
         this.id = id;
         this.msg = msg;
         this.extendInfoMap = extendInfoMap;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

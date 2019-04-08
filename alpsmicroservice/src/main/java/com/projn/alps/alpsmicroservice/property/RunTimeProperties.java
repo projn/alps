@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
@@ -68,8 +67,11 @@ public class RunTimeProperties implements InitializingBean {
     @Value("${system.api.access.role.actuator}")
     private String apiAccessRoleActuator = null;
 
-    @Value("${system.bean.switch.rocketmq:false}")
-    private boolean beanSwitchRocketMq = false;
+    @Value("${system.bean.switch.mq.consumer:false}")
+    private boolean beanSwitchMqConsumer = false;
+
+    @Value("${system.bean.switch.mq.producer:false}")
+    private boolean beanSwitchMqProducer = false;
 
     @Value("${system.bean.switch.websocket:false}")
     private boolean beanSwitchWebsocket = false;
@@ -198,12 +200,20 @@ public class RunTimeProperties implements InitializingBean {
         this.apiAccessRoleActuator = apiAccessRoleActuator;
     }
 
-    public boolean isBeanSwitchRocketMq() {
-        return beanSwitchRocketMq;
+    public boolean isBeanSwitchMqConsumer() {
+        return beanSwitchMqConsumer;
     }
 
-    public void setBeanSwitchRocketMq(boolean beanSwitchRocketMq) {
-        this.beanSwitchRocketMq = beanSwitchRocketMq;
+    public void setBeanSwitchMqConsumer(boolean beanSwitchMqConsumer) {
+        this.beanSwitchMqConsumer = beanSwitchMqConsumer;
+    }
+
+    public boolean isBeanSwitchMqProducer() {
+        return beanSwitchMqProducer;
+    }
+
+    public void setBeanSwitchMqProducer(boolean beanSwitchMqProducer) {
+        this.beanSwitchMqProducer = beanSwitchMqProducer;
     }
 
     public boolean isBeanSwitchWebsocket() {

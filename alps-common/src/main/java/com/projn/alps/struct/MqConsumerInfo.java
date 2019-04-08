@@ -1,7 +1,6 @@
 package com.projn.alps.struct;
 
-import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.MessageListener;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 
 /**
  * mq consumer info
@@ -14,18 +13,7 @@ public class MqConsumerInfo {
 
     private String method;
 
-    private String tags;
-
-    private MessageListener messageListener;
-
-    private DefaultMQPushConsumer mqPushConsumer;
-
-
-    /**
-     * mq consumer info
-     */
-    public MqConsumerInfo() {
-    }
+    private KafkaMessageListenerContainer kafkaMessageListenerContainer;
 
     public String getTopic() {
         return topic;
@@ -43,27 +31,11 @@ public class MqConsumerInfo {
         this.method = method;
     }
 
-    public String getTags() {
-        return tags;
+    public KafkaMessageListenerContainer getKafkaMessageListenerContainer() {
+        return kafkaMessageListenerContainer;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public MessageListener getMessageListener() {
-        return messageListener;
-    }
-
-    public void setMessageListener(MessageListener messageListener) {
-        this.messageListener = messageListener;
-    }
-
-    public DefaultMQPushConsumer getMqPushConsumer() {
-        return mqPushConsumer;
-    }
-
-    public void setMqPushConsumer(DefaultMQPushConsumer mqPushConsumer) {
-        this.mqPushConsumer = mqPushConsumer;
+    public void setKafkaMessageListenerContainer(KafkaMessageListenerContainer kafkaMessageListenerContainer) {
+        this.kafkaMessageListenerContainer = kafkaMessageListenerContainer;
     }
 }

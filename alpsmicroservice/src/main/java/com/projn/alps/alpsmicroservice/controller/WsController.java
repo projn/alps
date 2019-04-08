@@ -1,22 +1,14 @@
 package com.projn.alps.alpsmicroservice.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
-import com.projn.alps.alpsmicroservice.work.WsProcessWorker;
 import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.initialize.ServiceData;
-import com.projn.alps.msg.request.WsRequestMsgInfo;
-import com.projn.alps.struct.RequestServiceInfo;
-import com.projn.alps.struct.WsRequestInfo;
-import com.projn.alps.util.ParamCheckUtils;
-import com.projn.alps.util.RequestInfoUtils;
+import com.projn.alps.tool.WsControllerTools;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -44,7 +36,7 @@ public class WsController extends TextWebSocketHandler {
     private IAgentMasterInfoDao agentMasterInfoDao;
 
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private WsControllerTools wsControllerTools;
 
     /**
      * after connection established
@@ -77,63 +69,7 @@ public class WsController extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        if (message.getPayload() == null) {
-            return;
-        }
-        String textMsg = message.getPayload();
-        try {
-
-            WsRequestMsgInfo wsRequestMsgInfo =
-                    JSONObject.parseObject(textMsg, WsRequestMsgInfo.class);
-            if (wsRequestMsgInfo == null) {
-                throw new Exception("Invaild web socket request msg,msg info(" + message + ").");
-            }
-
-            Map<String, RequestServiceInfo> requestServiceInfoMap
-                    = ServiceData.getRequestServiceInfoMap().get(wsRequestMsgInfo.getMsgId().toString());
-            if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
-                    || requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase()) == null) {
-                throw new Exception("Invaild request service info, msg id("
-                        + wsRequestMsgInfo.getMsgId() + "), method(" + HTTP_METHOD_POST + ").");
-            }
-            RequestServiceInfo requestServiceInfo
-                    = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
-            if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
-                throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
-            }
-
-            if (requestServiceInfo.getAuthorizationFilter() != null) {
-                requestServiceInfo.getAuthorizationFilter().auth(session, requestServiceInfo.getUserRoleNameList());
-            }
-
-            WsRequestInfo wsRequestInfo = null;
-            if (requestServiceInfo.getParamClass() != null) {
-
-                try {
-                    wsRequestInfo = RequestInfoUtils.convertWsRequestInfo(session, textMsg,
-                            requestServiceInfo.getParamClass());
-                } catch (Exception e) {
-                    throw new Exception("Convert request info error,error info(" + e.getMessage() + ").");
-                }
-
-                if (wsRequestInfo != null && wsRequestInfo.getParamObj() != null) {
-                    try {
-                        ParamCheckUtils.checkParam(wsRequestInfo.getParamObj());
-                    } catch (Exception e) {
-                        throw new Exception("Check param error,error info(" + e.getMessage() + ").");
-                    }
-                }
-            }
-
-            if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
-                taskExecutor.execute(new WsProcessWorker(requestServiceInfo.getServiceName(),
-                        wsRequestInfo, session));
-            } else {
-                LOGGER.debug("System is busy.");
-            }
-        } catch (Exception e) {
-            LOGGER.error("Analyse request info error,msg info({}),error info({}).",
-                    message, formatExceptionInfo(e));
+        if(!wsControllerTools.deal(session, message)) {
             removeWebSocketSessionInfo(session);
         }
     }

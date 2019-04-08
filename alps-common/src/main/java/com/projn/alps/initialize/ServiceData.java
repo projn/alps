@@ -23,6 +23,8 @@ public final class ServiceData {
         return masterInfo;
     }
 
+    public static String jwtSecretKey;
+
     public static void setMasterInfo(MasterInfo masterInfo) {
         ServiceData.masterInfo = masterInfo;
     }
@@ -41,6 +43,14 @@ public final class ServiceData {
 
     public static void setMqConsumerInfoMap(Map<String, MqConsumerInfo> mqConsumerInfoMap) {
         ServiceData.mqConsumerInfoMap = mqConsumerInfoMap;
+    }
+
+    public static String getJwtSecretKey() {
+        return jwtSecretKey;
+    }
+
+    public static void setJwtSecretKey(String jwtSecretKey) {
+        ServiceData.jwtSecretKey = jwtSecretKey;
     }
 
     private ServiceData() {

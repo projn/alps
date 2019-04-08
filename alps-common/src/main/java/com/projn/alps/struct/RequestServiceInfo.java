@@ -18,11 +18,11 @@ public class RequestServiceInfo {
     public static final String SERVICE_METHOD_WS_POST = "post";
 
     public static final String SERVICE_METHOD_MSG_NORMAL = "normal";
-    public static final String SERVICE_METHOD_MSG_ORDER = "order";
     public static final String SERVICE_METHOD_MSG_BROADCAST = "broadcast";
 
     public static final String SERVICE_TYPE_HTTP = "http";
     public static final String SERVICE_TYPE_WS = "ws";
+    public static final String SERVICE_TYPE_RPC = "rpc";
     public static final String SERVICE_TYPE_MSG = "msg";
 
     private String serviceName;

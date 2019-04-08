@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "system.bean.switch.mq.consumer", havingValue = "true", matchIfMissing = true)
 public class MsgServiceMonitorAop {
 
     private List<IMsgServiceMonitorAop> msgServiceMonitorAopList = null;

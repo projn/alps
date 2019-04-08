@@ -1,8 +1,10 @@
 package com.projn.alps.third.kafka.listener;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -38,6 +40,12 @@ public class KafkaAnnounceConsumerListener {
                                  @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                                  @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                                  @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts) {
+
+
+    }
+
+    @KafkaListener(id = "group.id", topics = "topic")
+    public void consumerListener(ConsumerRecord<Integer, String> consumerRecord, Acknowledgment acknowledgment) {
 
 
     }

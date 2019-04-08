@@ -7,33 +7,10 @@ package com.projn.alps.alpsmicroservice.define;
  */
 public final class MicroServiceDefine {
 
-    public static final String AGENT_ID_KEY = "AGENT_ID";
-
     /**
      * default websocket session timeout interval minutes
      */
     public static final int DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES = 30;
-
-    /**
-     * http url header
-     */
-    public static final String HTTP_URL_HEADER = "http://";
-
-
-    /**
-     * https url header
-     */
-    public static final String HTTPS_URL_HEADER = "https://";
-
-    /**
-     * http api service send msg
-     */
-    public static final String HTTP_API_SERVICE_SEND_MSG = "sendMsg";
-
-    /**
-     * http api service send msg uri
-     */
-    public static final String HTTP_API_SERVICE_SEND_MSG_URI = "/api/sendMsg";
 
     /**
      * http api job cron expression
@@ -51,16 +28,6 @@ public final class MicroServiceDefine {
     public static final int WEBSOCKET_MAX_BUFFER_SIZE = 250 * 1024;
 
     /**
-     * mq suspend secound
-     */
-    public static final int MQ_SUSPEND_SECOUND = 5;
-
-    /**
-     * mq delay level
-     */
-    public static final int MQ_DELAY_LEVEL = 2;
-
-    /**
      * service status busy
      */
     public static final String SERVICE_STATUS_BUSY = "BUSY";
@@ -76,34 +43,9 @@ public final class MicroServiceDefine {
     public static final String AGENT_ONLINE_NUM_KEY = "agentOnlineNum";
 
     /**
-     * msg consume count header
-     */
-    public static final String MSG_CONSUME_COUNT_HEADER = "msgConsumeCount-%d";
-
-    /**
-     * msg consume total time header
-     */
-    public static final String MSG_CONSUME_TOTAL_TIME_HEADER = "msgConsumeTotalTime-%d";
-
-    /**
-     * msg consume max time header
-     */
-    public static final String MSG_CONSUME_MAX_TIME_HEADER = "msgConsumeMaxTime-%d";
-
-    /**
      * msg deal status key
      */
     public static final String MSG_DEAL_STATUS_KEY = "msgDealStatus";
-
-    /**
-     * msg deal status key
-     */
-    public static final String ROCKET_MQ_CONSUME_STATUS_KEY = "rocketmqStatus";
-
-    /**
-     * rocket mq consume max diff size
-     */
-    public static final long ROCKET_MQ_CONSUME_MAX_DIFF_SIZE = 2000;
 
 
     private MicroServiceDefine() {
