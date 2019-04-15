@@ -256,7 +256,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             loadModuleJobInfo(jobRootElement, moduleJobInfoList);
         }
 
-        if (runTimeProperties.isBeanSwitchRocketMq()) {
+        if (runTimeProperties.isBeanSwitchWebsocket()) {
             if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
                 throw new Exception("Register http api service info error.");
             }
