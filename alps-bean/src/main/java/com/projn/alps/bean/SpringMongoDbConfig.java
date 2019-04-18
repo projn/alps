@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@PropertySource("classpath:config/mongodb.properties")
+@PropertySource(value = "file:${config.dir}/config/mongodb.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.mongodb", havingValue = "true", matchIfMissing = true)
 public class SpringMongoDbConfig {
 
@@ -58,10 +58,7 @@ public class SpringMongoDbConfig {
     private int socketTimeout = 0;
     @Value("${mongo.socketKeepAlive}")
     private boolean socketKeepAlive = false;
-    @Value("${mongo.sslEnabled}")
-    private boolean sslEnabled = false;
-    @Value("${mongo.sslInvalidHostNameAllowed}")
-    private boolean sslInvalidHostNameAllowed = false;
+
     @Value("${mongo.alwaysUseMBeans}")
     private boolean alwaysUseMBeans = false;
     @Value("${mongo.heartbeatFrequency}")
@@ -91,9 +88,6 @@ public class SpringMongoDbConfig {
                 .maxConnectionLifeTime(maxConnectionLifeTime)
                 .connectTimeout(connectTimeout)
                 .socketTimeout(socketTimeout)
-                .socketKeepAlive(Boolean.valueOf(socketKeepAlive))
-                .sslEnabled(Boolean.valueOf(sslEnabled))
-                .sslInvalidHostNameAllowed(Boolean.valueOf(sslInvalidHostNameAllowed))
                 .alwaysUseMBeans(Boolean.valueOf(alwaysUseMBeans))
                 .heartbeatFrequency(heartbeatFrequency)
                 .heartbeatConnectTimeout(heartbeatConnectTimeout)
@@ -109,10 +103,8 @@ public class SpringMongoDbConfig {
         serverAddressList.add(serverAddress);
 
         MongoCredential credential = MongoCredential.createScramSha1Credential(username, dbName, password.toCharArray());
-        List<MongoCredential> mongoCredentialList = new ArrayList<MongoCredential>();
-        mongoCredentialList.add(credential);
 
-        MongoClient mongoClient =new MongoClient(serverAddressList, mongoCredentialList);
+        MongoClient mongoClient =new MongoClient(serverAddressList, credential, mongoClientOptions() );
         return mongoClient;
     }
 
