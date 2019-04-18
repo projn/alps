@@ -71,7 +71,7 @@
         <snakeyaml.version>1.23</snakeyaml.version>
         <tomcat.version>8.5.31</tomcat.version>
 
-        <alps.version>1.1</alps.version>
+        <alps.version>1.2</alps.version>
 
         <alps.common.version>1.2</alps.common.version>
         <alps.bean.version>1.2</alps.bean.version>
