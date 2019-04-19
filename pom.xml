@@ -18,7 +18,6 @@
         <module>alpsmicroservice</module>
         <module>alpsgenerator</module>
         <module>alpsconfigserver</module>
-        <module>third/kafka-test</module>
     </modules>
 
     <properties>

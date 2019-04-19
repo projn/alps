@@ -111,9 +111,9 @@ public final class ParamCheckUtils {
         } else if (Long.class.equals(type) || long.class.equals(type)) {
             checkLong(fieldValue, paramLimit, fieldName, type, valueList);
         } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
-            Boolean boolVal = (Boolean) fieldValue;
+            //Boolean boolVal = (boolean) fieldValue;
         } else if (Date.class.equals(type)) {
-            Date date = (Date) fieldValue;
+            //Date date = (Date) fieldValue;
         } else if (Short.class.equals(type) || short.class.equals(type)) {
             checkShort(fieldValue, paramLimit, fieldName, type, valueList);
         } else if (Float.class.equals(type) || float.class.equals(type)) {

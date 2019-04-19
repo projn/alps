@@ -13,7 +13,6 @@ import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.struct.WsResponseInfo;
 import com.projn.alps.util.CounterUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
