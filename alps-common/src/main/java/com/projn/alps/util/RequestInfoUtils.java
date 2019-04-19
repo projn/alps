@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -110,7 +111,8 @@ public final class RequestInfoUtils {
         String language = request.getHeader(HEADER_LANGUAGE.toLowerCase());
         Locale locale = getLocale(language);
 
-        HttpRequestInfo httpRequestInfo = new HttpRequestInfo(locale, paramObj);
+        Map<String, Object> extendInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        HttpRequestInfo httpRequestInfo = new HttpRequestInfo(locale, paramObj, extendInfoMap);
         return httpRequestInfo;
     }
 
@@ -183,7 +185,8 @@ public final class RequestInfoUtils {
             }
         }
 
-        WsRequestInfo wsRequestInfo = new WsRequestInfo(paramObj);
+        Map<String, Object> extendInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        WsRequestInfo wsRequestInfo = new WsRequestInfo(paramObj, extendInfoMap);
         return wsRequestInfo;
     }
 
@@ -234,7 +237,8 @@ public final class RequestInfoUtils {
             }
         }
 
-        MsgRequestInfo msgRequestInfo = new MsgRequestInfo(null, paramObj, null);
+        Map<String, Object> extendInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        MsgRequestInfo msgRequestInfo = new MsgRequestInfo(null, paramObj, extendInfoMap);
         return msgRequestInfo;
     }
 
@@ -285,7 +289,8 @@ public final class RequestInfoUtils {
             }
         }
 
-        RpcRequestInfo rpcRequestInfo = new RpcRequestInfo(paramObj);
+        Map<String, Object> extendInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        RpcRequestInfo rpcRequestInfo = new RpcRequestInfo(paramObj, extendInfoMap);
         return rpcRequestInfo;
     }
 

@@ -1,7 +1,9 @@
 package com.projn.alps.struct;
 
+import java.util.Map;
+
 /**
- * ws request info
+ * rpc request info
  *
  * @author : sunyuecheng
  */
@@ -10,19 +12,33 @@ public class RpcRequestInfo {
 
     private Object paramObj = null;
 
+    private Map<String, Object> extendInfoMap = null;
+
     /**
-     * ws request info
+     * rpc request info
      */
     public RpcRequestInfo() {
     }
 
     /**
-     * ws request info
+     * rpc request info
      *
      * @param paramObj :
      */
     public RpcRequestInfo(Object paramObj) {
         this.paramObj = paramObj;
+    }
+
+
+    /**
+     * rpc request info
+     *
+     * @param paramObj :
+     * @param extendInfoMap :
+     */
+    public RpcRequestInfo(Object paramObj, Map<String, Object> extendInfoMap) {
+        this.paramObj = paramObj;
+        this.extendInfoMap = extendInfoMap;
     }
 
     public Object getParamObj() {
@@ -33,4 +49,11 @@ public class RpcRequestInfo {
         this.paramObj = paramObj;
     }
 
+    public Map<String, Object> getExtendInfoMap() {
+        return extendInfoMap;
+    }
+
+    public void setExtendInfoMap(Map<String, Object> extendInfoMap) {
+        this.extendInfoMap = extendInfoMap;
+    }
 }

@@ -2,6 +2,7 @@ package com.projn.alps.struct;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * http request info
@@ -13,6 +14,8 @@ public class HttpRequestInfo implements Serializable {
     private Locale locale = null;
 
     private Object paramObj = null;
+
+    private Map<String, Object> extendInfoMap = null;
 
     /**
      * http request info
@@ -40,6 +43,19 @@ public class HttpRequestInfo implements Serializable {
         this.paramObj = paramObj;
     }
 
+    /**
+     * http request info
+     *
+     * @param locale   :
+     * @param paramObj :
+     * @param extendInfoMap :
+     */
+    public HttpRequestInfo(Locale locale, Object paramObj, Map<String, Object> extendInfoMap) {
+        this.locale = locale;
+        this.paramObj = paramObj;
+        this.extendInfoMap = extendInfoMap;
+    }
+
     public Locale getLocale() {
         return locale;
     }
@@ -54,5 +70,13 @@ public class HttpRequestInfo implements Serializable {
 
     public void setParamObj(Object paramObj) {
         this.paramObj = paramObj;
+    }
+
+    public Map<String, Object> getExtendInfoMap() {
+        return extendInfoMap;
+    }
+
+    public void setExtendInfoMap(Map<String, Object> extendInfoMap) {
+        this.extendInfoMap = extendInfoMap;
     }
 }
