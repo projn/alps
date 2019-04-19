@@ -79,7 +79,7 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                     continue;
                 }
 
-                MsgRequestInfo targetMsgRequestInfo = null;
+                MsgRequestInfo targetMsgRequestInfo = msgRequestInfo;
                 if (requestServiceInfo.getParamClass() != null) {
 
                     try {

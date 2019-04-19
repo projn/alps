@@ -1,5 +1,7 @@
 package com.projn.alps.struct;
 
+import java.util.Map;
+
 /**
  * ws request info
  *
@@ -10,10 +12,23 @@ public class WsRequestInfo {
 
     private Object paramObj = null;
 
+    private Map<String, Object> extendInfoMap = null;
+
     /**
      * ws request info
      */
     public WsRequestInfo() {
+    }
+
+    /**
+     * ws request info
+     *
+     * @param paramObj      :
+     * @param extendInfoMap :
+     */
+    public WsRequestInfo(Object paramObj, Map<String, Object> extendInfoMap) {
+        this.paramObj = paramObj;
+        this.extendInfoMap = extendInfoMap;
     }
 
     /**
@@ -33,4 +48,11 @@ public class WsRequestInfo {
         this.paramObj = paramObj;
     }
 
+    public Map<String, Object> getExtendInfoMap() {
+        return extendInfoMap;
+    }
+
+    public void setExtendInfoMap(Map<String, Object> extendInfoMap) {
+        this.extendInfoMap = extendInfoMap;
+    }
 }

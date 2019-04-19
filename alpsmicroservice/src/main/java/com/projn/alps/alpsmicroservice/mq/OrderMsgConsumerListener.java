@@ -87,7 +87,7 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
                     continue;
                 }
 
-                MsgRequestInfo targetMsgRequestInfo = null;
+                MsgRequestInfo targetMsgRequestInfo = msgRequestInfo;
                 if (requestServiceInfo.getParamClass() != null) {
                     try {
                         String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
