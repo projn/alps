@@ -2,40 +2,27 @@ package com.projn.alps.tool;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.exception.HttpException;
-import com.projn.alps.i18n.LocaleContext;
 import com.projn.alps.initialize.ServiceData;
-import com.projn.alps.struct.HttpRequestInfo;
 import com.projn.alps.struct.MsgRequestInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
-import com.projn.alps.work.HttpProcessWorker;
 import com.projn.alps.work.MsgProcessWorker;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.async.DeferredResult;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import static com.projn.alps.define.CommonDefine.MAX_HTTP_RESPONSE_WAIT_SECONDS;
-import static com.projn.alps.define.CommonDefine.MILLI_SECOND_1000;
-import static com.projn.alps.exception.code.CommonErrorCode.*;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
- * http controller tools
+ * msg controller tools
  *
  * @author : sunyuecheng
  */

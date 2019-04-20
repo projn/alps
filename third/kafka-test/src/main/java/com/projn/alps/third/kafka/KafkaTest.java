@@ -6,9 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URLDecoder;
-import java.util.Properties;
 
 
 public class KafkaTest {
