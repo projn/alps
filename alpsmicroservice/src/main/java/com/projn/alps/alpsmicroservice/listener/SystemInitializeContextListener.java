@@ -194,7 +194,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 }
 
                 if (moduleInfoFile.getName().endsWith(MODULE_JAR_FILE_TAIL)) {
-                    String jarPath = "file:" + moduleInfoFile.getAbsolutePath();
+                    String jarPath = "file:" + moduleInfoFile.getCanonicalPath();
                     URL urlResource = new URL(jarPath);
                     Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
                     boolean accessible = method.isAccessible();
@@ -205,12 +205,12 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     method.invoke(classLoader, urlResource);
                     method.setAccessible(accessible);
 
-                    moduleJarPathList.add(moduleInfoFile.getAbsolutePath());
+                    moduleJarPathList.add(moduleInfoFile.getCanonicalPath());
                 }
 
 
                 if (moduleInfoFile.getName().equals(MODULE_CONFIG_FILE_NAME)) {
-                    moduleConfigPath = moduleInfoFile.getAbsolutePath();
+                    moduleConfigPath = moduleInfoFile.getCanonicalPath();
                 }
             }
 
