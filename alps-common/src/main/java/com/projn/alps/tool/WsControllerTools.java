@@ -1,6 +1,7 @@
 package com.projn.alps.tool;
 
 import com.alibaba.fastjson.JSONObject;
+import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.msg.request.WsRequestMsgInfo;
 import com.projn.alps.struct.RequestServiceInfo;
@@ -11,6 +12,7 @@ import com.projn.alps.work.WsProcessWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -32,6 +34,10 @@ public class WsControllerTools {
 
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
+
+    @Autowired
+    @Qualifier("AgentMasterInfoDao")
+    private IAgentMasterInfoDao agentMasterInfoDao;
 
     /**
      * deal
@@ -96,7 +102,7 @@ public class WsControllerTools {
 
             if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
                 taskExecutor.execute(new WsProcessWorker(requestServiceInfo.getServiceName(),
-                        wsRequestInfo, session));
+                        wsRequestInfo, session, agentMasterInfoDao));
             } else {
                 LOGGER.debug("System is busy.");
             }

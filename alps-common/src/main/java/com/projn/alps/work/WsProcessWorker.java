@@ -35,6 +35,7 @@ public class WsProcessWorker implements Runnable {
     private String serviceName = null;
     private WsRequestInfo wsRequestInfo = null;
     private WebSocketSession session = null;
+    private IAgentMasterInfoDao agentMasterInfoDao = null;
 
     /**
      * ws process worker
@@ -43,10 +44,12 @@ public class WsProcessWorker implements Runnable {
      * @param wsRequestInfo :
      * @param session       :
      */
-    public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo, WebSocketSession session) {
+    public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo,
+                           WebSocketSession session, IAgentMasterInfoDao agentMasterInfoDao) {
         this.serviceName = serviceName;
         this.wsRequestInfo = wsRequestInfo;
         this.session = session;
+        this.agentMasterInfoDao = agentMasterInfoDao;
     }
 
     /**
@@ -54,7 +57,8 @@ public class WsProcessWorker implements Runnable {
      */
     @Override
     public void run() {
-        if (StringUtils.isEmpty(serviceName) || wsRequestInfo == null || session == null) {
+        if (StringUtils.isEmpty(serviceName) || wsRequestInfo == null
+                || session == null || agentMasterInfoDao == null) {
             LOGGER.error("Invaild request info error,service name({}), request info({}).",
                     serviceName, JSON.toJSONString(wsRequestInfo));
             return;
@@ -99,22 +103,31 @@ public class WsProcessWorker implements Runnable {
                             return;
                         }
 
-                        IAgentMasterInfoDao agentMasterInfoDao = InitializeBean.getBean(AgentMasterInfoDaoImpl.class);
-                        if(agentMasterInfoDao!=null) {
-                            String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
-                                    + ServiceData.getMasterInfo().getServerIp() + ":"
-                                    + ServiceData.getMasterInfo().getServerPort() + "/"
-                                    + API_URL_HEADER + HTTP_API_SERVICE_SEND_WS_MSG;
-                            agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
-                                    ServiceData.getMasterInfo().getServerIp(),
-                                    ServiceData.getMasterInfo().getServerPort(),url));
-                        }
+                        String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
+                                + ServiceData.getMasterInfo().getServerIp() + ":"
+                                + ServiceData.getMasterInfo().getServerPort() + "/"
+                                + API_URL_HEADER + HTTP_API_SERVICE_SEND_WS_MSG;
+                        agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
+                                ServiceData.getMasterInfo().getServerIp(),
+                                ServiceData.getMasterInfo().getServerPort(),url));
                     }
                 }
             } catch (Exception e) {
                 LOGGER.error("Analyse response info error,service name({}), response info({}), error info({}).",
                         serviceName, JSON.toJSONString(wsResponseInfo), formatExceptionInfo(e));
                 return;
+            }
+        } else {
+            try {
+                String agentId = (String) session.getAttributes().get(AGENT_ID_KEY);
+                if (!StringUtils.isEmpty(agentId)) {
+                    WsSessionInfoMap.getInstance().removeWebSocketSessionInfo(agentId);
+                    agentMasterInfoDao.deleteAgentMasterInfo(agentId);
+                } else {
+                    session.close();
+                }
+            } catch (Exception e) {
+                LOGGER.error("Close web socket connection error,error info({}).", formatExceptionInfo(e));
             }
         }
     }
