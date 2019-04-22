@@ -77,9 +77,6 @@ public class WsController extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        if (message.getPayload() == null) {
-            return;
-        }
         String textMsg = message.getPayload();
         try {
 

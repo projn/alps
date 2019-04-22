@@ -125,6 +125,8 @@ public class RocketMqHealthIndicator implements HealthIndicator {
                     }
                 }
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new SubCommandException(this.getClass().getSimpleName() + " command failed", e);
         } finally {
