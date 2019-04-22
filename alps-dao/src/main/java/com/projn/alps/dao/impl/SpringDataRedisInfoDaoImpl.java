@@ -173,7 +173,9 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                     } catch (Exception e) {
                         LOGGER.debug(e.getMessage());
                     }
-                    redisConnection.setRange(keyByte, value, offset);
+                    if( keyByte != null ) {
+                        redisConnection.setRange(keyByte, value, offset);
+                    }
                     return null;
                 }
             });
@@ -368,7 +370,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                 LOGGER.error("Invaild param.");
                 return -1;
             }
-            return redisTemplate.opsForValue().getBit(key.getBytes(DEFAULT_ENCODING), offset) ? 1 : 0;
+            Boolean ret = redisTemplate.opsForValue().getBit(key.getBytes(DEFAULT_ENCODING), offset);
+            return ret == null ? 0 : (ret==true? 1 : 0);
         } catch (Exception e) {
             LOGGER.error("Get bitmap bit info error, error info(" + e.getMessage() + ").");
         }
@@ -455,7 +458,11 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         try {
             if (size == -1L) {
-                long totalSize = redisTemplate.opsForList().size(listName);
+                Long totalSize = redisTemplate.opsForList().size(listName);
+                if( totalSize == null) {
+                    LOGGER.error("Invaild param.");
+                    return null;
+                }
                 size = totalSize - beginIndex;
             }
 
@@ -482,8 +489,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            long totalSize = redisTemplate.opsForList().size(listName);
-            if (index >= totalSize) {
+            Long totalSize = redisTemplate.opsForList().size(listName);
+            if (index >= totalSize || totalSize == null) {
                 LOGGER.error("Invaild param.");
                 return null;
             }
@@ -508,9 +515,9 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            long totalSize = redisTemplate.opsForList().size(listName);
+            Long totalSize = redisTemplate.opsForList().size(listName);
             if (index >= 0) {
-                if (index >= totalSize) {
+                if (index >= totalSize || totalSize == null) {
                     LOGGER.error("Invaild param.");
                     return false;
                 }
@@ -556,15 +563,15 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     public long getStrInfoListSizeFromList(String listName) {
         if (StringUtils.isEmpty(listName)) {
             LOGGER.error("Invaild param.");
-            return 0;
+            return 0L;
         }
         try {
-            long totalSize = redisTemplate.opsForList().size(listName);
-            return totalSize;
+            Long totalSize = redisTemplate.opsForList().size(listName);
+            return totalSize == null ? 0L : totalSize;
         } catch (Exception e) {
             LOGGER.error("Get str info list size from list error, error info(" + e.getMessage() + ").");
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -581,7 +588,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            return redisTemplate.opsForList().rightPush(listName, value) > 0L;
+            Long ret = redisTemplate.opsForList().rightPush(listName, value);
+            return ret == null ? false : (ret > 0L);
         } catch (Exception e) {
             LOGGER.error("Push str info to list error, error info(" + e.getMessage() + ").");
         }
@@ -622,7 +630,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            return redisTemplate.opsForList().leftPush(listName, value) > 0L;
+            Long ret = redisTemplate.opsForList().leftPush(listName, value);
+            return ret == null ? false : (ret > 0L);
         } catch (Exception e) {
             LOGGER.error("Push str info to list error, error info(" + e.getMessage() + ").");
         }
@@ -868,7 +877,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     public long getMapItemInfoSize(String key) {
         if (StringUtils.isEmpty(key)) {
             LOGGER.error("Invaild param.");
-            return 0;
+            return 0L;
         }
 
         try {
@@ -876,7 +885,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         } catch (Exception e) {
             LOGGER.error("Delete obj item info error, error info(" + e.getMessage() + ").");
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -957,7 +966,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            return redisTemplate.opsForSet().isMember(setName, value);
+            Boolean ret = redisTemplate.opsForSet().isMember(setName, value);
+            return ret == null ? false : ret;
         } catch (Exception e) {
             LOGGER.error("Check exist str info from set error, error info(" + e.getMessage() + ").");
         }
@@ -973,15 +983,16 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     public long getStrInfoSetSizeFromSet(String setName) {
         if (StringUtils.isEmpty(setName)) {
             LOGGER.error("Invaild param.");
-            return 0;
+            return 0L;
         }
 
         try {
-            return redisTemplate.opsForSet().size(setName);
+            Long ret = redisTemplate.opsForSet().size(setName);
+            return ret == null ? 0L : ret;
         } catch (Exception e) {
             LOGGER.error("Get set size error, error info(" + e.getMessage() + ").");
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -1000,8 +1011,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
         try (Cursor<String> curosr =
-                     redisTemplate.opsForSet().
-                             scan(setName, scanOptions)) {
+                     redisTemplate.opsForSet().scan(setName, scanOptions)) {
 
             List<String> valueList = new ArrayList<>();
             while (curosr.hasNext()) {
@@ -1067,13 +1077,13 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
      * @return double :
      */
     public double getScoreByStrFromSortSet(String stName, String value) {
-
         if (StringUtils.isEmpty(stName) || StringUtils.isEmpty(value)) {
             LOGGER.error("Invaild param.");
             return 0;
         }
         try {
-            return redisTemplate.opsForZSet().score(stName, value);
+            Double ret = redisTemplate.opsForZSet().score(stName, value);
+            return ret == null ? 0 : ret;
         } catch (Exception e) {
             LOGGER.error("Get sort set value score error, error info(" + e.getMessage() + ").");
         }
@@ -1145,7 +1155,11 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         try {
             if (size == -1) {
-                long totalSize = redisTemplate.opsForZSet().size(setName);
+                Long totalSize = redisTemplate.opsForZSet().size(setName);
+                if(totalSize == null) {
+                    LOGGER.error("Invaild param.");
+                    return null;
+                }
                 size = totalSize - beginIndex;
             }
 
@@ -1186,7 +1200,11 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
         try {
             if (size == -1) {
-                long totalSize = redisTemplate.opsForZSet().size(setName);
+                Long totalSize = redisTemplate.opsForZSet().size(setName);
+                if(totalSize == null) {
+                    LOGGER.error("Invaild param.");
+                    return null;
+                }
                 size = totalSize - beginIndex;
             }
             Set<String> strInfoList = null;
@@ -1258,17 +1276,17 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     public long getStrInfoSetSizeByScoreFromSortSet(String setName, double min, double max) {
         if (StringUtils.isEmpty(setName)) {
             LOGGER.error("Invaild param.");
-            return 0;
+            return 0L;
         }
 
         try {
             Long count = redisTemplate.opsForZSet().count(setName, min, max);
-            return count;
+            return count == null ? 0L : count;
         } catch (Exception e) {
             LOGGER.error("Get str info size by score from sort set error, error info("
                     + e.getMessage() + ").");
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -1280,15 +1298,16 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     public long getStrInfoSizeFromSortSet(String setName) {
         if (StringUtils.isEmpty(setName)) {
             LOGGER.error("Invaild param.");
-            return 0;
+            return 0L;
         }
 
         try {
-            return redisTemplate.opsForZSet().size(setName);
+            Long ret = redisTemplate.opsForZSet().size(setName);
+            return ret == null ? 0L : ret;
         } catch (Exception e) {
             LOGGER.error("Get sort set size error, error info(" + e.getMessage() + ").");
         }
-        return 0;
+        return 0L;
     }
 
     @Override
@@ -1306,8 +1325,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
         ScanOptions scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
         try (Cursor<DefaultTypedTuple<String>> curosr =
-                     redisTemplate.opsForZSet().
-                             scan(setName, scanOptions)) {
+                     redisTemplate.opsForZSet().scan(setName, scanOptions)) {
 
             List<String> valueList = new ArrayList<>();
             while (curosr.hasNext()) {
@@ -1419,7 +1437,8 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         }
 
         try {
-            return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+            Long ret = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+            return ret == null ? -1L : ret;
         } catch (Exception e) {
             LOGGER.error("Expire key error, error info(" + e.getMessage() + ").");
         }
@@ -1452,12 +1471,13 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
      * @return : long
      */
     public long getCurrentTime() {
-        return (Long) redisTemplate.execute(new RedisCallback<Long>() {
+        Long ret = (Long) redisTemplate.execute(new RedisCallback<Long>() {
             @Override
             public Long doInRedis(RedisConnection redisConnection) throws DataAccessException {
                 return redisConnection.time();
             }
         });
+        return ret == null ? 0L : ret;
     }
 
     /**
