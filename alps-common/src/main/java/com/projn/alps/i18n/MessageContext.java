@@ -107,7 +107,7 @@ public final class MessageContext {
             ResourceBundle resourceBundle = null;
             BufferedInputStream inputStream = null;
             try {
-                inputStream = new BufferedInputStream(new FileInputStream(subFile.getAbsolutePath()));
+                inputStream = new BufferedInputStream(new FileInputStream(subFile.getCanonicalPath()));
                 resourceBundle = new PropertyResourceBundle(inputStream);
                 inputStream.close();
 
