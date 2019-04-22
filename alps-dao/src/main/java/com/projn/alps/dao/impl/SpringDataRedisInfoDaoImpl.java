@@ -490,7 +490,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
-            if (index >= totalSize || totalSize == null) {
+            if (totalSize == null || index >= totalSize ) {
                 LOGGER.error("Invaild param.");
                 return null;
             }
@@ -517,7 +517,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
             if (index >= 0) {
-                if (index >= totalSize || totalSize == null) {
+                if ( totalSize == null || index >= totalSize ) {
                     LOGGER.error("Invaild param.");
                     return false;
                 }
