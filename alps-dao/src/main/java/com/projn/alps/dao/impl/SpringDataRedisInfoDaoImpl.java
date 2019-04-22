@@ -220,8 +220,10 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                     } catch (Exception e) {
                         LOGGER.debug(e.getMessage());
                     }
-                    return redisConnection.getRange(keyByte, offset, offset + size);
-
+                    if( keyByte == null) {
+                        return redisConnection.getRange(keyByte, offset, offset + size);
+                    }
+                    return null;
                 }
             });
         } catch (Exception e) {
