@@ -371,7 +371,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                 return -1;
             }
             Boolean ret = redisTemplate.opsForValue().getBit(key.getBytes(DEFAULT_ENCODING), offset);
-            return ret == null ? 0 : (ret==true? 1 : 0);
+            return ret == null ? 0 : (ret ? 1 : 0);
         } catch (Exception e) {
             LOGGER.error("Get bitmap bit info error, error info(" + e.getMessage() + ").");
         }
@@ -490,7 +490,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
-            if (index >= totalSize || totalSize == null) {
+            if (totalSize == null || index >= totalSize ) {
                 LOGGER.error("Invaild param.");
                 return null;
             }
@@ -517,7 +517,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
             if (index >= 0) {
-                if (index >= totalSize || totalSize == null) {
+                if ( totalSize == null || index >= totalSize ) {
                     LOGGER.error("Invaild param.");
                     return false;
                 }
