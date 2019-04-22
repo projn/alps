@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
 import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.dao.impl.AgentMasterInfoDaoImpl;
 import com.projn.alps.domain.AgentMasterInfo;
 import com.projn.alps.initialize.InitializeBean;
 import com.projn.alps.initialize.ServiceData;
