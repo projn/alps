@@ -2,7 +2,7 @@ package com.projn.alps.alpsmicroservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
+import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.msg.response.HttpSendMsgResponseMsgInfo;

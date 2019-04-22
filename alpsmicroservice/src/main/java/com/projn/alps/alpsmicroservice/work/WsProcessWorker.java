@@ -2,7 +2,7 @@ package com.projn.alps.alpsmicroservice.work;
 
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
-import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
+import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.dao.impl.AgentMasterInfoDaoImpl;
 import com.projn.alps.domain.AgentMasterInfo;
@@ -35,6 +35,7 @@ public class WsProcessWorker implements Runnable {
     private String serviceName = null;
     private WsRequestInfo wsRequestInfo = null;
     private WebSocketSession session = null;
+    private IAgentMasterInfoDao agentMasterInfoDao;
 
     /**
      * ws process worker
@@ -42,11 +43,14 @@ public class WsProcessWorker implements Runnable {
      * @param serviceName   :
      * @param wsRequestInfo :
      * @param session       :
+     * @param agentMasterInfoDao       :
      */
-    public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo, WebSocketSession session) {
+    public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo,
+                           WebSocketSession session, IAgentMasterInfoDao agentMasterInfoDao) {
         this.serviceName = serviceName;
         this.wsRequestInfo = wsRequestInfo;
         this.session = session;
+        this.agentMasterInfoDao = agentMasterInfoDao;
     }
 
     /**
@@ -54,7 +58,8 @@ public class WsProcessWorker implements Runnable {
      */
     @Override
     public void run() {
-        if (StringUtils.isEmpty(serviceName) || wsRequestInfo == null || session == null) {
+        if (StringUtils.isEmpty(serviceName) || wsRequestInfo == null
+                || session == null || agentMasterInfoDao == null) {
             LOGGER.error("Invaild request info error,service name({}), request info({}).",
                     serviceName, JSON.toJSONString(wsRequestInfo));
             return;
@@ -114,6 +119,18 @@ public class WsProcessWorker implements Runnable {
                 LOGGER.error("Analyse response info error,service name({}), response info({}), error info({}).",
                         serviceName, JSON.toJSONString(wsResponseInfo), formatExceptionInfo(e));
                 return;
+            }
+        } else {
+            try {
+                String agentId = (String) session.getAttributes().get(AGENT_ID_KEY);
+                if (!StringUtils.isEmpty(agentId)) {
+                    WsSessionInfoMap.getInstance().removeWebSocketSessionInfo(agentId);
+                    agentMasterInfoDao.deleteAgentMasterInfo(agentId);
+                } else {
+                    session.close();
+                }
+            } catch (Exception e) {
+                LOGGER.error("Close web socket connection error,error info({}).", formatExceptionInfo(e));
             }
         }
     }

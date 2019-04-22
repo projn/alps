@@ -2,7 +2,7 @@ package com.projn.alps.alpsmicroservice.job;
 
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
-import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
+import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMessageInfoDao;
 import com.projn.alps.domain.AgentMessageInfo;
 import com.projn.alps.msg.response.WsResponseMsgInfo;

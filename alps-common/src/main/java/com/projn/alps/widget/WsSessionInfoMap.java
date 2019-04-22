@@ -1,4 +1,4 @@
-package com.projn.alps.alpsmicroservice.widget;
+package com.projn.alps.widget;
 
 import com.projn.alps.struct.WebSocketSessionInfo;
 import org.apache.commons.lang3.StringUtils;

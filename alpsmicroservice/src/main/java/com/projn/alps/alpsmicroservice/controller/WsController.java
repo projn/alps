@@ -1,7 +1,7 @@
 package com.projn.alps.alpsmicroservice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.alpsmicroservice.widget.WsSessionInfoMap;
+import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.alpsmicroservice.work.WsProcessWorker;
 import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.initialize.ServiceData;
@@ -127,7 +127,7 @@ public class WsController extends TextWebSocketHandler {
 
             if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
                 taskExecutor.execute(new WsProcessWorker(requestServiceInfo.getServiceName(),
-                        wsRequestInfo, session));
+                        wsRequestInfo, session, agentMasterInfoDao));
             } else {
                 LOGGER.debug("System is busy.");
             }

@@ -511,7 +511,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
                             : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
-                    if (mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
+                    if (!mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
                         throw new Exception("Invaild module service method info error,uri("
                                 + uri + "), method(" + method + "), topic(" + topic + ").");
                     }
