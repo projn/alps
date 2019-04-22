@@ -104,15 +104,12 @@ public class WsProcessWorker implements Runnable {
                             return;
                         }
 
-                        IAgentMasterInfoDao agentMasterInfoDao = InitializeBean.getBean(AgentMasterInfoDaoImpl.class);
-                        if(agentMasterInfoDao!=null) {
-                            String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
-                                    + ServiceData.getMasterInfo().getServerIp() + ":"
-                                    + ServiceData.getMasterInfo().getServerPort() + "/" + HTTP_API_SERVICE_SEND_MSG_URI;
-                            agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
-                                    ServiceData.getMasterInfo().getServerIp(),
-                                    ServiceData.getMasterInfo().getServerPort(),url));
-                        }
+                        String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
+                                + ServiceData.getMasterInfo().getServerIp() + ":"
+                                + ServiceData.getMasterInfo().getServerPort() + "/" + HTTP_API_SERVICE_SEND_MSG_URI;
+                        agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
+                                ServiceData.getMasterInfo().getServerIp(),
+                                ServiceData.getMasterInfo().getServerPort(),url));
                     }
                 }
             } catch (Exception e) {
