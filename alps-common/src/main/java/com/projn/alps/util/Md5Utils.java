@@ -1,5 +1,7 @@
 package com.projn.alps.util;
 
+import org.apache.commons.codec.binary.Hex;
+
 import java.security.MessageDigest;
 
 import static com.projn.alps.define.CommonDefine.DEFAULT_ENCODING;
@@ -11,10 +13,9 @@ import static com.projn.alps.define.CommonDefine.DEFAULT_ENCODING;
  */
 public final class Md5Utils {
 
-    /**
-     * md 5
-     */
     private static final String MD5 = "MD5";
+
+    private static final String SHA256 = "SHA-256";
 
     /**
      * make md5
@@ -44,6 +45,24 @@ public final class Md5Utils {
             strBuf.append(Integer.toHexString(i));
         }
         return strBuf.toString();
+    }
+
+    /**
+     * make sha256
+     *
+     * @param data :
+     * @return String :
+     * @throws Exception :
+     */
+    public static String makeSha256(String data) throws Exception {
+        if (data == null) {
+            return null;
+        }
+        MessageDigest md = MessageDigest.getInstance(SHA256);
+        md.update(data.getBytes(DEFAULT_ENCODING));
+        byte[] buffer = md.digest();
+
+        return Hex.encodeHexString(buffer);
     }
 
     private Md5Utils() {
