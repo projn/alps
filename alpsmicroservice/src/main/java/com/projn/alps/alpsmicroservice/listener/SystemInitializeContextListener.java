@@ -421,6 +421,11 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 String jobClassName = jobElement.element(XML_ELEMENT_CLASS_NAME).getText();
                 String jobName = jobElement.element(XML_ELEMENT_NAME).getText();
                 String cronExpression = jobElement.element(XML_ELEMENT_CRON_EXPRESSION).getText();
+                String enable = jobElement.elementText(XML_ELEMENT_ENABLE);
+
+                if (!StringUtils.isEmpty(enable) && enable.equals(Boolean.FALSE.toString())) {
+                    continue;
+                }
 
                 if (StringUtils.isEmpty(jobClassName) || StringUtils.isEmpty(jobName)
                         || StringUtils.isEmpty(cronExpression)) {
