@@ -52,7 +52,7 @@ public final class HttpDefine {
     /**
      * header language
      */
-    public static final String HEADER_LANGUAGE = "Language";
+    public static final String HEADER_LANGUAGE = "Accept-Language";
 
     /**
      * header algorithm
