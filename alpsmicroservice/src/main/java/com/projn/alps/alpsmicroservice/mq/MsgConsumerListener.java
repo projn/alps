@@ -101,7 +101,7 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                     }
 
                     if (targetMsgRequestInfo != null) {
-                        targetMsgRequestInfo.setId(msgRequestInfo.getId());
+                        targetMsgRequestInfo.setId(Integer.parseInt(msg.getTags()));
                         targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                     }
                 }

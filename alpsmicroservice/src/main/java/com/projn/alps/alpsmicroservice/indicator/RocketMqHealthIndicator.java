@@ -85,14 +85,16 @@ public class RocketMqHealthIndicator implements HealthIndicator {
                         try {
                             consumeStats = defaultMQAdminExt.examineConsumeStats(consumerGroup);
                         } catch (Exception e) {
-                            LOGGER.warn("examineConsumeStats exception, " + consumerGroup, e);
+                            LOGGER.debug("examineConsumeStats exception, " + consumerGroup, e);
+                            continue;
                         }
 
                         ConsumerConnection cc = null;
                         try {
                             cc = defaultMQAdminExt.examineConsumerConnectionInfo(consumerGroup);
                         } catch (Exception e) {
-                            LOGGER.warn("examineConsumerConnectionInfo exception, " + consumerGroup, e);
+                            LOGGER.debug("examineConsumerConnectionInfo exception, " + consumerGroup, e);
+                            continue;
                         }
 
                         GroupConsumeInfo groupConsumeInfo = new GroupConsumeInfo();

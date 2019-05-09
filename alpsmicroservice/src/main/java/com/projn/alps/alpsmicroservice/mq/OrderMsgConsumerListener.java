@@ -106,7 +106,7 @@ public class OrderMsgConsumerListener implements MessageListenerOrderly {
                         }
                     }
                     if (targetMsgRequestInfo != null) {
-                        targetMsgRequestInfo.setId(msgRequestInfo.getId());
+                        targetMsgRequestInfo.setId(Integer.parseInt(msg.getTags()));
                         targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                     }
                 }
