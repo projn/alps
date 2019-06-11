@@ -30,7 +30,7 @@ ws -- WebSocket、msg -- RocketMQ Msg）；
 1. 提供了常用的三方组件的访问方法。
 
 ### 单元测试包 alps-test
-1. 集成了java单元测试常用模块。 
+1. 集成了java单元测试常用模块。
 
 ## 使用方法
 
