@@ -67,7 +67,7 @@ public class WsController extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        if(!wsControllerTools.deal(session, message)) {
+        if (!wsControllerTools.deal(session, message)) {
             removeWebSocketSessionInfo(session);
         }
     }

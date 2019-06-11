@@ -1,6 +1,5 @@
 package com.projn.alps.third.mongodb.config;
 
-import com.mongodb.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,14 +30,14 @@ public class SpringMongoDbConfig {
     @Value("${mongo.applicationName}")
     private String applicationName;
     @Value("${mongo.writeConcern}")
-    private String writeConcern="ACKNOWLEDGED";
+    private String writeConcern = "ACKNOWLEDGED";
     @Value("${mongo.readConcern}")
-    private String readConcern="DEFAULT";
+    private String readConcern = "DEFAULT";
 
     @Value("${mongo.minConnectionsPerHost}")
     private int minConnectionsPerHost;
     @Value("${mongo.maxConnectionsPerHost}")
-    private int maxConnectionsPerHost= 100;
+    private int maxConnectionsPerHost = 100;
     @Value("${mongo.threadsAllowedToBlockForConnectionMultiplier}")
     private int threadsAllowedToBlockForConnectionMultiplier = 5;
     @Value("${mongo.serverSelectionTimeout}")
@@ -102,7 +101,7 @@ public class SpringMongoDbConfig {
 
     @Bean
     public MongoClient mongoClient() {
-        ServerAddress serverAddress = new ServerAddress(host,port);
+        ServerAddress serverAddress = new ServerAddress(host, port);
         List<ServerAddress> serverAddressList = new ArrayList<ServerAddress>();
         serverAddressList.add(serverAddress);
 
@@ -110,13 +109,13 @@ public class SpringMongoDbConfig {
         List<MongoCredential> mongoCredentialList = new ArrayList<MongoCredential>();
         mongoCredentialList.add(credential);
 
-        MongoClient mongoClient =new MongoClient(serverAddressList, mongoCredentialList);
+        MongoClient mongoClient = new MongoClient(serverAddressList, mongoCredentialList);
         return mongoClient;
     }
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClient(),dbName);
+        SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClient(), dbName);
         MongoTemplate mongoTemplate = new MongoTemplate(simpleMongoDbFactory);
         return mongoTemplate;
     }

@@ -3,17 +3,23 @@
 
 package com.projn.alps.rpc;
 
+/**
+ * grpc response msg info or builder
+ *
+ * @author : sunyuecheng
+ */
 public interface GrpcResponseMsgInfoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.projn.alps.rpc.GrpcResponseMsgInfo)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:com.projn.alps.rpc.GrpcResponseMsgInfo)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string responseBody = 1;</code>
-   */
-  String getResponseBody();
-  /**
-   * <code>string responseBody = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getResponseBodyBytes();
+    /**
+     * <code>string responseBody = 1;</code>
+     */
+    String getResponseBody();
+
+    /**
+     * <code>string responseBody = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getResponseBodyBytes();
 }

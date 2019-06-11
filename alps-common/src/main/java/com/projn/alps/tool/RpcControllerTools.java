@@ -13,11 +13,11 @@ import com.projn.alps.struct.RpcResponseInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
 import io.grpc.stub.StreamObserver;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
@@ -52,20 +52,11 @@ public class RpcControllerTools {
 
         String uri = rpcRequestMsgInfo.getServiceName();
 
-        LOGGER.info("Request url({}).", uri);
+        LOGGER.info("Request uri({}).", uri);
 
-        String serviceName = null;
-        Map<String, RequestServiceInfo> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
-        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
+        RequestServiceInfo requestServiceInfo = getRequestServiceInfo(uri, HTTP_METHOD_POST.toLowerCase());
+        if (requestServiceInfo == null) {
             LOGGER.error("Invaild request service info, service name (" + uri + ").");
-            responseObserver.onError(new Exception("Invaild request service info."));
-            responseObserver.onCompleted();
-            return;
-        }
-        RequestServiceInfo requestServiceInfo
-                = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
-        if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_RPC)) {
-            LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
             responseObserver.onError(new Exception("Invaild request service info."));
             responseObserver.onCompleted();
             return;
@@ -96,18 +87,10 @@ public class RpcControllerTools {
             }
         }
 
-        if (StringUtils.isEmpty(serviceName) || rpcRequestInfo == null) {
-            LOGGER.error("Invaild request info error,service name({}), request info({}).",
-                    serviceName, JSON.toJSONString(rpcRequestInfo));
-            responseObserver.onError(new Exception("Invaild request info error."));
-            responseObserver.onCompleted();
-            return;
-        }
-
         try {
-            IComponentsRpcService bean = InitializeBean.getBean(serviceName);
+            IComponentsRpcService bean = InitializeBean.getBean(requestServiceInfo.getServiceName());
             if (bean == null) {
-                LOGGER.error("Invaild service name error,service name({}).", serviceName);
+                LOGGER.error("Invaild service name error,service name({}).", requestServiceInfo.getServiceName());
                 responseObserver.onError(new Exception("Invaild service name error."));
                 responseObserver.onCompleted();
                 return;
@@ -129,6 +112,31 @@ public class RpcControllerTools {
             return;
         }
 
+    }
+
+    private RequestServiceInfo getRequestServiceInfo(String uri, String method) {
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
+                = ServiceData.getRequestServiceInfoMap().get(uri);
+
+        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
+                || requestServiceInfoMap.get(method) == null) {
+            LOGGER.error("Invaild request service info, uri({}), method({}).", uri, method);
+            return null;
+        }
+        List<RequestServiceInfo> requestServiceInfoList = requestServiceInfoMap.get(method);
+        if (requestServiceInfoList.size() != 1) {
+            LOGGER.error("Invaild request service info, uri({}), method({}).", uri, method);
+            return null;
+        }
+        RequestServiceInfo requestServiceInfo = requestServiceInfoList.get(0);
+
+        if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_RPC)) {
+            LOGGER.error("Invaild request service type info, uri({}), method({}), type({}).",
+                    uri, method, requestServiceInfo.getType() + ").");
+            return null;
+        }
+
+        return requestServiceInfo;
     }
 
 }

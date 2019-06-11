@@ -15,6 +15,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * kafka producer info dao impl
+ *
+ * @author : sunyuecheng
+ */
 @Repository("KafkaProducerInfoDao")
 public class KafkaProducerInfoDaoImpl implements IKafkaProducerInfoDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducerInfoDaoImpl.class);
@@ -34,7 +39,8 @@ public class KafkaProducerInfoDaoImpl implements IKafkaProducerInfoDao {
     public void sendAsyncMessageInfo(String topic, Object msg) {
         ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(topic, msg);
 
-        SuccessCallback<SendResult<String, String>> successCallback = new SuccessCallback<SendResult<String, String>>() {
+        SuccessCallback<SendResult<String, String>> successCallback
+                = new SuccessCallback<SendResult<String, String>>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
                 LOGGER.info("Send message to kafka successfully.");
@@ -54,7 +60,8 @@ public class KafkaProducerInfoDaoImpl implements IKafkaProducerInfoDao {
     public void sendAsyncMessageInfo(String topic, int partition, Object msg) {
         ListenableFuture<SendResult<String, String>> listenableFuture = kafkaTemplate.send(topic, partition, msg);
 
-        SuccessCallback<SendResult<String, String>> successCallback = new SuccessCallback<SendResult<String, String>>() {
+        SuccessCallback<SendResult<String, String>> successCallback
+                = new SuccessCallback<SendResult<String, String>>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
                 LOGGER.info("Send message to kafka successfully.");

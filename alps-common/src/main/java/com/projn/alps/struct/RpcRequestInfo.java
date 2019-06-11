@@ -33,7 +33,7 @@ public class RpcRequestInfo {
     /**
      * rpc request info
      *
-     * @param paramObj :
+     * @param paramObj      :
      * @param extendInfoMap :
      */
     public RpcRequestInfo(Object paramObj, Map<String, Object> extendInfoMap) {

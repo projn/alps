@@ -30,11 +30,15 @@ public interface IKafkaProducerInfoDao {
     /**
      * send sync message info
      *
-     * @param topic :
-     * @param msg   :
-     * @param timeout   :
+     * @param topic   :
+     * @param msg     :
+     * @param timeout :
+     * @throws InterruptedException :
+     * @throws ExecutionException :
+     * @throws TimeoutException :
      */
-    void sendSyncMessageInfo(String topic, Object msg, long timeout) throws InterruptedException, ExecutionException, TimeoutException;
+    void sendSyncMessageInfo(String topic, Object msg, long timeout)
+            throws InterruptedException, ExecutionException, TimeoutException;
 
     /**
      * send sync message info
@@ -43,6 +47,10 @@ public interface IKafkaProducerInfoDao {
      * @param partition :
      * @param msg       :
      * @param timeout   :
+     * @throws InterruptedException :
+     * @throws ExecutionException :
+     * @throws TimeoutException :
      */
-    void sendSyncMessageInfo(String topic, int partition, Object msg, long timeout) throws InterruptedException, ExecutionException, TimeoutException;
+    void sendSyncMessageInfo(String topic, int partition, Object msg, long timeout)
+            throws InterruptedException, ExecutionException, TimeoutException;
 }

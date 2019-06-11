@@ -16,6 +16,7 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -36,13 +37,13 @@ public class MsgControllerTools {
     /**
      * deal
      *
-     * @param msg          :
-     * @param acknowledgment      :
+     * @param msg            :
+     * @param acknowledgment :
      */
     public void deal(ConsumerRecord<String, String> msg, Acknowledgment acknowledgment) {
-        if (msg == null ) {
+        if (msg == null) {
             LOGGER.error("Invaild param.");
-            if(acknowledgment!=null) {
+            if (acknowledgment != null) {
                 acknowledgment.acknowledge();
             }
             return;
@@ -54,13 +55,13 @@ public class MsgControllerTools {
             msgRequestInfo = (MsgRequestInfo) JSONObject.parseObject(body, MsgRequestInfo.class);
         } catch (Exception e) {
             LOGGER.error("Convert object error,error info({}).", formatExceptionInfo(e));
-            if(acknowledgment!=null) {
+            if (acknowledgment != null) {
                 acknowledgment.acknowledge();
             }
             return;
         }
         if (msgRequestInfo == null) {
-            if(acknowledgment!=null) {
+            if (acknowledgment != null) {
                 acknowledgment.acknowledge();
             }
             return;
@@ -68,69 +69,71 @@ public class MsgControllerTools {
 
         String uri = msg.topic() + "/" + msgRequestInfo.getId();
 
-        LOGGER.info("Request url({}).", uri);
+        LOGGER.info("Request uri({}).", uri);
 
-        Map<String, RequestServiceInfo> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
+                = ServiceData.getRequestServiceInfoMap().get(uri);
         if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
             LOGGER.error("Invaild request service info, msg id (" + msgRequestInfo.getId() + ").");
 
-            if(acknowledgment!=null) {
+            if (acknowledgment != null) {
                 acknowledgment.acknowledge();
             }
             return;
         }
 
-        for (Map.Entry<String, RequestServiceInfo> item : requestServiceInfoMap.entrySet()) {
-            RequestServiceInfo requestServiceInfo = item.getValue();
-            if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_MSG)) {
-                LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
-                continue;
-            }
-
-            MsgRequestInfo targetMsgRequestInfo = null;
-            if (requestServiceInfo.getParamClass() != null) {
-
-                try {
-                    String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
-                    targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
-                            msgText, requestServiceInfo.getParamClass());
-                } catch (Exception e) {
-                    LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
+        for (Map.Entry<String, List<RequestServiceInfo>> item : requestServiceInfoMap.entrySet()) {
+            List<RequestServiceInfo> requestServiceInfoList = item.getValue();
+            for (RequestServiceInfo requestServiceInfo : requestServiceInfoList) {
+                if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_MSG)) {
+                    LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
                     continue;
                 }
 
-                if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
+                MsgRequestInfo targetMsgRequestInfo = null;
+                if (requestServiceInfo.getParamClass() != null) {
                     try {
-                        ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
+                        String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
+                        targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
+                                msgText, requestServiceInfo.getParamClass());
                     } catch (Exception e) {
-                        LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                        LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
                         continue;
+                    }
+
+                    if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
+                        try {
+                            ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
+                        } catch (Exception e) {
+                            LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                            continue;
+                        }
+                    }
+
+                    if (targetMsgRequestInfo != null) {
+                        targetMsgRequestInfo.setId(msgRequestInfo.getId());
+                        targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                     }
                 }
 
-                if (targetMsgRequestInfo != null) {
-                    targetMsgRequestInfo.setId(msgRequestInfo.getId());
-                    targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
-                }
-            }
-
-            try {
-                if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
-                    Future<?> future = taskExecutor.submit(
-                            new MsgProcessWorker(requestServiceInfo.getServiceName(),
-                                    targetMsgRequestInfo, msg.timestamp()));
-                    future.isDone();
-                } else {
-                    LOGGER.debug("System is busy.");
+                try {
+                    if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
+                        Future<?> future = taskExecutor.submit(
+                                new MsgProcessWorker(requestServiceInfo.getServiceName(),
+                                        targetMsgRequestInfo, msg.timestamp()));
+                        future.isDone();
+                    } else {
+                        LOGGER.debug("System is busy.");
+                        return;
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("Analyse request info error,msg info({}),error info({}).",
+                            JSON.toJSONString(msg), formatExceptionInfo(e));
                     return;
                 }
-            } catch (Exception e) {
-                LOGGER.error("Analyse request info error,msg info({}),error info({}).",
-                        JSON.toJSONString(msg), formatExceptionInfo(e));
-                return;
             }
         }
-        if(acknowledgment!=null) {
+        if (acknowledgment != null) {
             acknowledgment.acknowledge();
         }
     }

@@ -122,20 +122,19 @@ public final class CommonDefine {
     public static final String AGENT_ID_KEY = "AGENT_ID";
 
     /**
-     * api header
+     * http api service send msg
      */
-    public static final String API_URL_HEADER = "api/";
+    public static final String HTTP_API_SERVICE_SEND_MSG = "sendMsg";
 
     /**
-     * http api service send ws msg
+     * http api service send msg uri
      */
-    public static final String HTTP_API_SERVICE_SEND_WS_MSG = "sendWsMsg";
+    public static final String HTTP_API_SERVICE_SEND_MSG_URI = "/api/sendMsg";
 
     /**
      * read buffer size
      */
     public static final int READ_BUFFER_SIZE = 1024 * 32;
-
 
 
     private CommonDefine() {

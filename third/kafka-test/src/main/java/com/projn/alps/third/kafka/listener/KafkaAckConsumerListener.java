@@ -6,7 +6,7 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaAckConsumerListener implements AcknowledgingMessageListener<String,String> {
+public class KafkaAckConsumerListener implements AcknowledgingMessageListener<String, String> {
 
     @Override
     public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {

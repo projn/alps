@@ -3,27 +3,31 @@
 
 package com.projn.alps.rpc;
 
+/**
+ * grpc request msg info or builder
+ * @author : sunyuecheng
+ */
 public interface GrpcRequestMsgInfoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.projn.alps.rpc.GrpcRequestMsgInfo)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:com.projn.alps.rpc.GrpcRequestMsgInfo)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>string serviceName = 1;</code>
-   */
-  String getServiceName();
-  /**
-   * <code>string serviceName = 1;</code>
-   */
-  com.google.protobuf.ByteString
-      getServiceNameBytes();
+    /**
+     * <code>string serviceName = 1;</code>
+     */
+    String getServiceName();
 
-  /**
-   * <code>string requestBody = 2;</code>
-   */
-  String getRequestBody();
-  /**
-   * <code>string requestBody = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getRequestBodyBytes();
+    /**
+     * <code>string serviceName = 1;</code>
+     */
+    com.google.protobuf.ByteString getServiceNameBytes();
+
+    /**
+     * <code>string requestBody = 2;</code>
+     */
+    String getRequestBody();
+
+    /**
+     * <code>string requestBody = 2;</code>
+     */
+    com.google.protobuf.ByteString getRequestBodyBytes();
 }

@@ -2,7 +2,6 @@ package com.projn.alps.work;
 
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.dao.IAgentMasterInfoDao;
-import com.projn.alps.dao.impl.AgentMasterInfoDaoImpl;
 import com.projn.alps.domain.AgentMasterInfo;
 import com.projn.alps.initialize.InitializeBean;
 import com.projn.alps.initialize.ServiceData;
@@ -103,13 +102,13 @@ public class WsProcessWorker implements Runnable {
                             return;
                         }
 
-                        String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
+                        String url = ServiceData.getMasterInfo().isServerSsl() ? HTTP_URL_HEADER : HTTPS_URL_HEADER
                                 + ServiceData.getMasterInfo().getServerIp() + ":"
                                 + ServiceData.getMasterInfo().getServerPort() + "/"
-                                + API_URL_HEADER + HTTP_API_SERVICE_SEND_WS_MSG;
+                                + HTTP_API_SERVICE_SEND_MSG_URI;
                         agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
                                 ServiceData.getMasterInfo().getServerIp(),
-                                ServiceData.getMasterInfo().getServerPort(),url));
+                                ServiceData.getMasterInfo().getServerPort(), url));
                     }
                 }
             } catch (Exception e) {

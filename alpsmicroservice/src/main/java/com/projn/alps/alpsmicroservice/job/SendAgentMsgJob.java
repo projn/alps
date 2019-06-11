@@ -48,42 +48,42 @@ public class SendAgentMsgJob implements Job {
             throws JobExecutionException {
 
         Set<String> agentIdList = WsSessionInfoMap.getInstance().getWebSocketSessionAgentIdList();
+        if (agentIdList == null) {
+            return;
+        }
+        for (String agentId : agentIdList) {
+            AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
+            if (agentMessageInfo == null || agentMessageInfo.getExpireTime() == null
+                    || agentMessageInfo.getExpireTime() > System.currentTimeMillis()) {
+                continue;
+            }
 
-        if (agentIdList != null) {
-            for (String agentId : agentIdList) {
-                AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
-                if (agentMessageInfo != null) {
-                    if (agentMessageInfo.getExpireTime() == null
-                            || agentMessageInfo.getExpireTime() > System.currentTimeMillis()) {
+            WsResponseMsgInfo wsResponseMsgInfo =
+                    new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+            try {
+                WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
+                        JSON.toJSONString(wsResponseMsgInfo));
+            } catch (Exception e) {
+                LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+            }
 
-                        WsResponseMsgInfo wsResponseMsgInfo =
-                                new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
-                        try {
-                            WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                                    JSON.toJSONString(wsResponseMsgInfo));
-                        } catch (Exception e) {
-                            LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
-                        }
+            if (runTimeProperties.getWsMsgIdList() != null) {
+                for (String msgId : runTimeProperties.getWsMsgIdList()) {
+                    agentMessageInfo = agentMessageInfoDao.getAgentCoverMessageInfo(agentId, msgId);
+                    if (agentMessageInfo == null) {
+                        continue;
                     }
-                }
-
-                if(runTimeProperties.getWsMsgIdList() != null) {
-                    for (String msgId : runTimeProperties.getWsMsgIdList()) {
-                        agentMessageInfo = agentMessageInfoDao.getAgentCoverMessageInfo(agentId, msgId);
-                        if (agentMessageInfo != null) {
-                            WsResponseMsgInfo webSocketResponseMessage =
-                                    new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
-                            try {
-                                WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                                        JSON.toJSONString(webSocketResponseMessage));
-                                agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, msgId);
-                            } catch (Exception e) {
-                                LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
-                                continue;
-                            }
-                            break;
-                        }
+                    WsResponseMsgInfo webSocketResponseMessage =
+                            new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                    try {
+                        WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
+                                JSON.toJSONString(webSocketResponseMessage));
+                        agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, msgId);
+                    } catch (Exception e) {
+                        LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+                        continue;
                     }
+                    break;
                 }
             }
         }

@@ -26,14 +26,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
-import static com.projn.alps.define.HttpDefine.*;
+import static com.projn.alps.define.HttpDefine.HEADER_JWT_TOKEN;
+import static com.projn.alps.define.HttpDefine.JWT_TOKEN_PREFIX;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 /**
  * Use a {@link ServerInterceptor} to capture metadata and retrieve any JWT token.
- *
+ * <p>
  * This interceptor only captures the JWT token and prints it out.
  * Normally the token will need to be validated against an identity provider.
  */
@@ -71,7 +73,7 @@ public class GrpcJwtServerAuthFilter implements ServerInterceptor {
 
         ServerCall.Listener<ReqT> listener = serverCallHandler.startCall(serverCall, metadata);
 
-        if(authToken==null) {
+        if (authToken == null) {
             return listener;
         } else {
             Claims claims = JwtTokenUtils.parseToken(authToken, ServiceData.getJwtSecretKey());
@@ -86,22 +88,34 @@ public class GrpcJwtServerAuthFilter implements ServerInterceptor {
                         GrpcRequestMsgInfo grpcRequestMsgInfo = (GrpcRequestMsgInfo) message;
 
                         String serviceName = grpcRequestMsgInfo.getServiceName();
-                        Map<String, RequestServiceInfo> requestServiceInfoMap
+
+                        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
                                 = ServiceData.getRequestServiceInfoMap().get(serviceName);
-                        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
+
+                        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
+                                || requestServiceInfoMap.get(RequestServiceInfo.SERVICE_TYPE_RPC) == null) {
                             LOGGER.error("Invaild request service info, service name (" + serviceName + ").");
                             this.onCancel();
                             return;
                         }
-                        RequestServiceInfo requestServiceInfo
-                                = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
+
+                        List<RequestServiceInfo> requestServiceInfoList
+                                = requestServiceInfoMap.get(RequestServiceInfo.SERVICE_TYPE_RPC);
+                        if (requestServiceInfoList.size() != 1) {
+                            LOGGER.error("Invaild request service info, service name (" + serviceName + ").");
+                            this.onCancel();
+                            return;
+                        }
+                        RequestServiceInfo requestServiceInfo = requestServiceInfoList.get(0);
+
                         if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_RPC)) {
-                            LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
+                            LOGGER.error("Invaild request service type info, type("
+                                    + requestServiceInfo.getType() + ").");
                             this.onCancel();
                             return;
                         }
 
-                        if(requestServiceInfo.getUserRoleNameList()!=null
+                        if (requestServiceInfo.getUserRoleNameList() != null
                                 && !StringUtils.isEmpty(role)
                                 && !requestServiceInfo.getUserRoleNameList().contains(role)) {
                             LOGGER.error("This role has no access rights.");

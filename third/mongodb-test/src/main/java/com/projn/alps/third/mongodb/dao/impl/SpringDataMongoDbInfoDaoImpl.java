@@ -29,8 +29,8 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
     }
 
     @Override
-    public <T>boolean saveObjInfo(T obj) {
-        if(obj==null) {
+    public <T> boolean saveObjInfo(T obj) {
+        if (obj == null) {
             LOGGER.error("Invaild param!");
             return false;
         }
@@ -38,14 +38,14 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             mongoTemplate.insert(obj);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Save obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Save obj info error, error info(" + e.getMessage() + ")!");
         }
         return false;
     }
 
     @Override
     public <T> T getObjInfo(String id, Class<T> cls) {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             LOGGER.error("Invaild param!");
             return null;
         }
@@ -54,14 +54,14 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             T entityInfo = mongoTemplate.findOne(query, cls);
             return entityInfo;
         } catch (Exception e) {
-            LOGGER.error("Get obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info error, error info(" + e.getMessage() + ")!");
         }
         return null;
     }
 
     @Override
     public <T> Long getObjInfoCount(String itemName, Object item, Class<T> cls) {
-        if(StringUtils.isEmpty(itemName) || itemName ==null) {
+        if (StringUtils.isEmpty(itemName) || itemName == null) {
             LOGGER.error("Invaild param!");
             return null;
         }
@@ -71,14 +71,14 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             query.addCriteria(Criteria.where(itemName).is(item));
             return mongoTemplate.count(query, cls);
         } catch (Exception e) {
-            LOGGER.error("Get obj info count error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info count error, error info(" + e.getMessage() + ")!");
         }
         return null;
     }
 
     @Override
     public <T> List<T> getObjInfoList(String itemName, Object item, int beginIndex, int size, Class<T> cls) {
-        if(StringUtils.isEmpty(itemName) || beginIndex<=0 || size<0) {
+        if (StringUtils.isEmpty(itemName) || beginIndex <= 0 || size < 0) {
             LOGGER.error("Invaild param!");
             return null;
         }
@@ -90,7 +90,7 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             query.limit(size);
             return mongoTemplate.find(query, cls);
         } catch (Exception e) {
-            LOGGER.error("Get obj info list error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Get obj info list error, error info(" + e.getMessage() + ")!");
         }
 
         return null;
@@ -98,7 +98,7 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
 
     @Override
     public <T> boolean updateObjItemInfo(String id, String itemName, Object newItem, Class<T> cls) {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             LOGGER.error("Invaild param!");
             return false;
         }
@@ -110,14 +110,14 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             mongoTemplate.updateFirst(query, update, cls);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Update obj item info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Update obj item info error, error info(" + e.getMessage() + ")!");
         }
         return false;
     }
 
     @Override
     public <T> boolean deleteObjInfo(String id, Class<T> cls) {
-        if(StringUtils.isEmpty(id)) {
+        if (StringUtils.isEmpty(id)) {
             LOGGER.error("Invaild param!");
             return false;
         }
@@ -127,7 +127,7 @@ public class SpringDataMongoDbInfoDaoImpl implements IMongoDbInfoDao {
             mongoTemplate.remove(query, cls);
             return true;
         } catch (Exception e) {
-            LOGGER.error("Delete obj info error, error info("+ e.getMessage() +")!");
+            LOGGER.error("Delete obj info error, error info(" + e.getMessage() + ")!");
         }
         return false;
     }

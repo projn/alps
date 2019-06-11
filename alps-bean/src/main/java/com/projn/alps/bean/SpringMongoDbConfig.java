@@ -33,14 +33,14 @@ public class SpringMongoDbConfig {
     @Value("${mongo.applicationName}")
     private String applicationName;
     @Value("${mongo.writeConcern}")
-    private String writeConcern="ACKNOWLEDGED";
+    private String writeConcern = "ACKNOWLEDGED";
     @Value("${mongo.readConcern}")
-    private String readConcern="DEFAULT";
+    private String readConcern = "DEFAULT";
 
     @Value("${mongo.minConnectionsPerHost}")
     private int minConnectionsPerHost;
     @Value("${mongo.maxConnectionsPerHost}")
-    private int maxConnectionsPerHost= 100;
+    private int maxConnectionsPerHost = 100;
     @Value("${mongo.threadsAllowedToBlockForConnectionMultiplier}")
     private int threadsAllowedToBlockForConnectionMultiplier = 5;
     @Value("${mongo.serverSelectionTimeout}")
@@ -98,19 +98,19 @@ public class SpringMongoDbConfig {
 
     @Bean
     public MongoClient mongoClient() {
-        ServerAddress serverAddress = new ServerAddress(host,port);
+        ServerAddress serverAddress = new ServerAddress(host, port);
         List<ServerAddress> serverAddressList = new ArrayList<ServerAddress>();
         serverAddressList.add(serverAddress);
 
         MongoCredential credential = MongoCredential.createScramSha1Credential(username, dbName, password.toCharArray());
 
-        MongoClient mongoClient =new MongoClient(serverAddressList, credential, mongoClientOptions() );
+        MongoClient mongoClient = new MongoClient(serverAddressList, credential, mongoClientOptions());
         return mongoClient;
     }
 
     @Bean
     public MongoTemplate mongoTemplate() {
-        SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClient(),dbName);
+        SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClient(), dbName);
         MongoTemplate mongoTemplate = new MongoTemplate(simpleMongoDbFactory);
         return mongoTemplate;
     }

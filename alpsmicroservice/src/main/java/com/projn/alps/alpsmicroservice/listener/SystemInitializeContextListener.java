@@ -138,7 +138,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
         loadServiceMonitorAopInfo(contextRefreshedEvent.getApplicationContext());
 
-        Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap = null;
+        Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap = null;
         try {
             requestServiceInfoMap = loadModuleConfigInfo(contextRefreshedEvent.getApplicationContext());
             ServiceData.setRequestServiceInfoMap(requestServiceInfoMap);
@@ -229,9 +229,9 @@ public final class SystemInitializeContextListener implements ApplicationListene
         return;
     }
 
-    private Map<String, Map<String, RequestServiceInfo>> loadModuleConfigInfo(ApplicationContext applicationContext)
-            throws Exception {
-        Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+    private Map<String, Map<String, List<RequestServiceInfo>>> loadModuleConfigInfo(
+            ApplicationContext applicationContext) throws Exception {
+        Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
         Map<String, String> requestServiceInitMethodMap = new HashMap<>(COLLECTION_INIT_SIZE);
 
         List<ModuleJobInfo> moduleJobInfoList = new ArrayList<>();
@@ -267,6 +267,9 @@ public final class SystemInitializeContextListener implements ApplicationListene
             if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
                 throw new Exception("Register http api service info error.");
             }
+        }
+
+        if (runTimeProperties.isBeanSwitchWebsocket()) {
             registerHttpApiJob(moduleJobInfoList);
         }
 
@@ -340,7 +343,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
     }
 
     private void loadModuleServiceInfo(ApplicationContext applicationContext, Element servicesRootElement,
-                                       Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap,
+                                       Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap,
                                        Map<String, String> requestServiceInitMethodMap) throws Exception {
         if (servicesRootElement != null) {
             for (Iterator iter = servicesRootElement.elementIterator(); iter.hasNext(); ) {
@@ -393,13 +396,17 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     requestServiceInitMethodMap.put(name, initMethod);
                 }
 
-                Map<String, RequestServiceInfo> subRequestServiceInfoMap = null;
-                if (requestServiceInfoMap.get(uri) != null) {
-                    subRequestServiceInfoMap = requestServiceInfoMap.get(uri);
-                } else {
+                Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = requestServiceInfoMap.get(uri);
+                if (subRequestServiceInfoMap == null) {
                     subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
                 }
-                subRequestServiceInfoMap.put(method, requestServiceInfo);
+
+                List<RequestServiceInfo> requestServiceInfoList = subRequestServiceInfoMap.get(method);
+                if (requestServiceInfoList == null) {
+                    requestServiceInfoList = new ArrayList<>();
+                }
+                requestServiceInfoList.add(requestServiceInfo);
+                subRequestServiceInfoMap.put(method, requestServiceInfoList);
                 requestServiceInfoMap.put(uri, subRequestServiceInfoMap);
 
                 Element servicePropertiesRootElement = serviceElement.element(XML_ELEMENT_PROPERTIES);
@@ -461,53 +468,54 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
 
     private Map<String, MqConsumerInfo> initializeMq(
-            Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap) throws Exception {
+            Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap) throws Exception {
         Map<String, MqConsumerInfo> mqConsumerInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        for (Map.Entry<String, Map<String, RequestServiceInfo>> requestServiceInfoMapEntry
+        for (Map.Entry<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMapEntry
                 : requestServiceInfoMap.entrySet()) {
             String uri = requestServiceInfoMapEntry.getKey();
-            Map<String, RequestServiceInfo> subRequestServiceInfoMap = requestServiceInfoMapEntry.getValue();
-
-            for (Map.Entry<String, RequestServiceInfo> subRequestServiceInfoMapEntry
+            Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = requestServiceInfoMapEntry.getValue();
+            for (Map.Entry<String, List<RequestServiceInfo>> subRequestServiceInfoMapEntry
                     : subRequestServiceInfoMap.entrySet()) {
                 String method = subRequestServiceInfoMapEntry.getKey();
-                RequestServiceInfo requestServiceInfo = subRequestServiceInfoMapEntry.getValue();
-                String type = requestServiceInfo.getType();
-                if (!RequestServiceInfo.SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
-                    continue;
-                }
-                String[] topicTags = uri.split("/");
-                if (topicTags.length != MSG_URI_PART_NUM) {
-                    continue;
-                }
+                List<RequestServiceInfo> requestServiceInfoList = subRequestServiceInfoMapEntry.getValue();
+                for (RequestServiceInfo requestServiceInfo : requestServiceInfoList) {
+                    String type = requestServiceInfo.getType();
+                    if (!RequestServiceInfo.SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
+                        continue;
+                    }
+                    String[] topicTags = uri.split("/");
+                    if (topicTags.length != MSG_URI_PART_NUM) {
+                        continue;
+                    }
 
-                String topic = topicTags[0];
-                if (mqConsumerInfoMap.get(topic) == null) {
-                    MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
-                    mqConsumerInfo.setTopic(topic);
-                    mqConsumerInfo.setMethod(method);
+                    String topic = topicTags[0];
+                    if (mqConsumerInfoMap.get(topic) == null) {
+                        MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
+                        mqConsumerInfo.setTopic(topic);
+                        mqConsumerInfo.setMethod(method);
 
-                    ContainerProperties properties = new ContainerProperties(topic);
+                        ContainerProperties properties = new ContainerProperties(topic);
 
-                    if(!springKafkaConsumerConfig.getEnableAutoCommit()) {
-                        properties.setMessageListener(new KafkaAckConsumerListener());
-                    } else {
-                        if(springKafkaConsumerConfig.getMaxPollRecords()>1) {
-                            properties.setMessageListener(new KafkaBatchConsumerListener());
+                        if (!springKafkaConsumerConfig.getEnableAutoCommit()) {
+                            properties.setMessageListener(new KafkaAckConsumerListener());
                         } else {
-                            properties.setMessageListener(new KafkaConsumerListener());
+                            if (springKafkaConsumerConfig.getMaxPollRecords() > 1) {
+                                properties.setMessageListener(new KafkaBatchConsumerListener());
+                            } else {
+                                properties.setMessageListener(new KafkaConsumerListener());
+                            }
                         }
+
+                        if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
+                            properties.setGroupId(springKafkaConsumerConfig.getGroupId() + UUID.randomUUID().toString());
+                        }
+
+                        KafkaMessageListenerContainer kafkaMessageListenerContainer
+                                = new KafkaMessageListenerContainer(consumerFactory, properties);
+                        mqConsumerInfo.setKafkaMessageListenerContainer(kafkaMessageListenerContainer);
+                        mqConsumerInfoMap.put(topic, mqConsumerInfo);
+
                     }
-
-                    if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
-                        properties.setGroupId(springKafkaConsumerConfig.getGroupId()+UUID.randomUUID().toString());
-                    }
-
-                    KafkaMessageListenerContainer kafkaMessageListenerContainer
-                            = new KafkaMessageListenerContainer(consumerFactory, properties);
-                    mqConsumerInfo.setKafkaMessageListenerContainer(kafkaMessageListenerContainer);
-                    mqConsumerInfoMap.put(topic, mqConsumerInfo);
-
                 }
             }
         }
@@ -576,7 +584,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
     }
 
     private boolean registerHttpApiService(ApplicationContext applicationContext,
-                                           Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap) {
+                                           Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap) {
         IAuthorizationFilter authorizationFilter = applicationContext.getBean(HttpJwtAuthFilterImpl.class);
         if (authorizationFilter == null) {
             LOGGER.error("Load jwt authentication filter bean error.");
@@ -590,16 +598,18 @@ public final class SystemInitializeContextListener implements ApplicationListene
         }
 
         RequestServiceInfo sendMsgServiceInfo = new RequestServiceInfo();
-        sendMsgServiceInfo.setServiceName(HTTP_API_SERVICE_SEND_WS_MSG);
+        sendMsgServiceInfo.setServiceName(HTTP_API_SERVICE_SEND_MSG);
         sendMsgServiceInfo.setMethod(HTTP_METHOD_POST);
         sendMsgServiceInfo.setType(SERVICE_TYPE_HTTP);
         sendMsgServiceInfo.setParamClass(HttpSendMsgRequestMsgInfo.class);
         sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
         sendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
 
-        Map<String, RequestServiceInfo> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        subRequestServiceInfoMap.put(HTTP_METHOD_POST, sendMsgServiceInfo);
-        requestServiceInfoMap.put(API_URL_HEADER+HTTP_API_SERVICE_SEND_WS_MSG, subRequestServiceInfoMap);
+        Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        List<RequestServiceInfo> requestServiceInfoList = new ArrayList<>();
+        requestServiceInfoList.add(sendMsgServiceInfo);
+        subRequestServiceInfoMap.put(HTTP_METHOD_POST, requestServiceInfoList);
+        requestServiceInfoMap.put(HTTP_API_SERVICE_SEND_MSG_URI, subRequestServiceInfoMap);
 
         return true;
     }
