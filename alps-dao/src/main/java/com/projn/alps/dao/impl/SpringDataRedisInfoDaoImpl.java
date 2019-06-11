@@ -781,7 +781,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     /**
      * get map info
      * @param key :
-     * @return java.util.Map<java.lang.String   ,   java.lang.String> :
+     * @return java.util.Map<java.lang.String, java.lang.String> :
      */
     public Map<String, String> getMapInfo(String key) {
         if (StringUtils.isEmpty(key)) {
@@ -1487,7 +1487,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
      *
      * @param obj :
      * @param <T> :
-     * @return Map<String   ,   String> :
+     * @return Map<String, String> :
      * @throws Exception :
      */
     public <T> Map<String, String> objectToHashMap(T obj) throws Exception {
