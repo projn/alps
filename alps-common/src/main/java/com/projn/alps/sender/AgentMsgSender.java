@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import static com.projn.alps.define.HttpDefine.HTTP_URL_HEADER;
+
 /**
  * agent msg sender
  *
@@ -34,6 +36,11 @@ public class AgentMsgSender {
     private IAgentMasterInfoDao agentMasterInfoDao;
 
     @Autowired
+    @Qualifier("sslRestTemplate")
+    private RestTemplate sslRestTemplate;
+
+    @Autowired
+    @Qualifier("restTemplate")
     private RestTemplate restTemplate;
 
     /**
@@ -124,9 +131,14 @@ public class AgentMsgSender {
             return new HttpSendMsgResponseMsgInfo(agentId, HttpSendMsgResponseMsgInfo.SEND_STATUS_AGENT_OFF_LINE);
         }
 
-        ResponseEntity<HttpSendMsgResponseMsgInfo> responseEntity
-                = restTemplate.postForEntity(agentMasterInfo.getApiUrl(),
-                new HttpSendMsgRequestMsgInfo(agentId, msgId, msg), HttpSendMsgResponseMsgInfo.class);
+        ResponseEntity<HttpSendMsgResponseMsgInfo> responseEntity = null;
+        if (agentMasterInfo.getApiUrl().startsWith(HTTP_URL_HEADER)) {
+            responseEntity = restTemplate.postForEntity(agentMasterInfo.getApiUrl(),
+                    new HttpSendMsgRequestMsgInfo(agentId, msgId, msg), HttpSendMsgResponseMsgInfo.class);
+        } else {
+            responseEntity = sslRestTemplate.postForEntity(agentMasterInfo.getApiUrl(),
+                    new HttpSendMsgRequestMsgInfo(agentId, msgId, msg), HttpSendMsgResponseMsgInfo.class);
+        }
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return responseEntity.getBody();

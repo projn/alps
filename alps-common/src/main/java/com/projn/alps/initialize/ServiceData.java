@@ -4,6 +4,7 @@ import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,7 +16,7 @@ public final class ServiceData {
 
     private static MasterInfo masterInfo;
 
-    private static Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap = null;
+    private static Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap = null;
 
     private static Map<String, MqConsumerInfo> mqConsumerInfoMap = null;
 
@@ -29,11 +30,12 @@ public final class ServiceData {
         ServiceData.masterInfo = masterInfo;
     }
 
-    public static Map<String, Map<String, RequestServiceInfo>> getRequestServiceInfoMap() {
+    public static Map<String, Map<String, List<RequestServiceInfo>>> getRequestServiceInfoMap() {
         return requestServiceInfoMap;
     }
 
-    public static void setRequestServiceInfoMap(Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap) {
+    public static void setRequestServiceInfoMap(
+            Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap) {
         ServiceData.requestServiceInfoMap = requestServiceInfoMap;
     }
 

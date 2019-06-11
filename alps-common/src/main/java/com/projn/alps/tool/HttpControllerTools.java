@@ -21,10 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.projn.alps.define.CommonDefine.MAX_HTTP_RESPONSE_WAIT_SECONDS;
-import static com.projn.alps.define.CommonDefine.MILLI_SECOND_1000;
+import static com.projn.alps.define.CommonDefine.*;
 import static com.projn.alps.exception.code.CommonErrorCode.*;
 
 /**
@@ -63,20 +64,7 @@ public class HttpControllerTools {
         LOGGER.info("Request url({}).", request.getRequestURI());
 
         String method = request.getMethod().toLowerCase();
-        Map<String, RequestServiceInfo> requestServiceInfoMap
-                = ServiceData.getRequestServiceInfoMap().get(url);
-
-        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
-                || requestServiceInfoMap.get(method) == null) {
-            LOGGER.error("Invaild request service info, uri({}), method({}).",
-                    request.getRequestURI(), request.getMethod());
-            throw new HttpException(HttpStatus.NOT_FOUND.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
-        }
-        RequestServiceInfo requestServiceInfo = requestServiceInfoMap.get(method);
-        if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_HTTP)) {
-            LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
-            throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
-        }
+        RequestServiceInfo requestServiceInfo = getRequestServiceInfo(url, method);
 
         if (requestServiceInfo.getAuthorizationFilter() != null) {
             try {
@@ -117,6 +105,7 @@ public class HttpControllerTools {
 
         if (httpRequestInfo != null) {
             LocaleContext.set(httpRequestInfo.getLocale());
+            httpRequestInfo.setExtendInfoMap(makeExtendInfoMap(request));
         }
 
         if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
@@ -130,4 +119,33 @@ public class HttpControllerTools {
         return deferredResult;
     }
 
+    private RequestServiceInfo getRequestServiceInfo(String uri, String method) throws HttpException {
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
+                = ServiceData.getRequestServiceInfoMap().get(uri);
+
+        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
+                || requestServiceInfoMap.get(method) == null) {
+            LOGGER.error("Invaild request service info, uri({}), method({}).", uri, method);
+            throw new HttpException(HttpStatus.NOT_FOUND.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
+        }
+        List<RequestServiceInfo> requestServiceInfoList = requestServiceInfoMap.get(method);
+        if (requestServiceInfoList.size() != 1) {
+            LOGGER.error("Invaild request service info, uri({}), method({}).", uri, method);
+            throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
+        }
+        RequestServiceInfo requestServiceInfo = requestServiceInfoList.get(0);
+
+        if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_HTTP)) {
+            LOGGER.error("Invaild request service type info, uri({}), method({}), type({}).",
+                    uri, method, requestServiceInfo.getType() + ").");
+            throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
+        }
+
+        return requestServiceInfo;
+    }
+
+    private Map<String, Object> makeExtendInfoMap(HttpServletRequest request) {
+        Map<String, Object> extendInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        return extendInfoMap;
+    }
 }

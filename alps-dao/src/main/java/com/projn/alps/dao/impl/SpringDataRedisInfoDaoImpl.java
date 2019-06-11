@@ -173,7 +173,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                     } catch (Exception e) {
                         LOGGER.debug(e.getMessage());
                     }
-                    if( keyByte != null ) {
+                    if (keyByte != null) {
                         redisConnection.setRange(keyByte, value, offset);
                     }
                     return null;
@@ -220,7 +220,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
                     } catch (Exception e) {
                         LOGGER.debug(e.getMessage());
                     }
-                    if( keyByte == null) {
+                    if (keyByte != null) {
                         return redisConnection.getRange(keyByte, offset, offset + size);
                     }
                     return null;
@@ -461,7 +461,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             if (size == -1L) {
                 Long totalSize = redisTemplate.opsForList().size(listName);
-                if( totalSize == null) {
+                if (totalSize == null) {
                     LOGGER.error("Invaild param.");
                     return null;
                 }
@@ -492,7 +492,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
 
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
-            if (totalSize == null || index >= totalSize ) {
+            if (totalSize == null || index >= totalSize) {
                 LOGGER.error("Invaild param.");
                 return null;
             }
@@ -519,7 +519,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             Long totalSize = redisTemplate.opsForList().size(listName);
             if (index >= 0) {
-                if ( totalSize == null || index >= totalSize ) {
+                if (totalSize == null || index >= totalSize) {
                     LOGGER.error("Invaild param.");
                     return false;
                 }
@@ -781,7 +781,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
     /**
      * get map info
      * @param key :
-     * @return java.util.Map<java.lang.String , java.lang.String> :
+     * @return java.util.Map<java.lang.String, java.lang.String> :
      */
     public Map<String, String> getMapInfo(String key) {
         if (StringUtils.isEmpty(key)) {
@@ -1158,7 +1158,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             if (size == -1) {
                 Long totalSize = redisTemplate.opsForZSet().size(setName);
-                if(totalSize == null) {
+                if (totalSize == null) {
                     LOGGER.error("Invaild param.");
                     return null;
                 }
@@ -1203,7 +1203,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
         try {
             if (size == -1) {
                 Long totalSize = redisTemplate.opsForZSet().size(setName);
-                if(totalSize == null) {
+                if (totalSize == null) {
                     LOGGER.error("Invaild param.");
                     return null;
                 }
@@ -1487,7 +1487,7 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
      *
      * @param obj :
      * @param <T> :
-     * @return Map<String , String> :
+     * @return Map<String, String> :
      * @throws Exception :
      */
     public <T> Map<String, String> objectToHashMap(T obj) throws Exception {

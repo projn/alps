@@ -240,9 +240,9 @@ function install_single()
     dst=${SOFTWARE_REDIS_CLUSTER_PORT_6}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/redis-cluster.properties
 
-    src=SOFTWARE_ROCKETMQ_SERVER_ADDRESS
-    dst=${SOFTWARE_ROCKETMQ_SERVER_ADDRESS}
-    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/rocketmq.properties
+    src=SOFTWARE_KAFKA_SERVER_ADDRESS
+    dst=${SOFTWARE_KAFKA_SERVER_ADDRESS}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/KAFKA.properties
 
     cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-single /etc/init.d/${SOFTWARE_SERVICE_NAME}
 

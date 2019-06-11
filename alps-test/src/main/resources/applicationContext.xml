@@ -9,9 +9,20 @@
 
     <context:annotation-config/>
 
-    <context:component-scan base-package="com.projn.alps"/>
+    <context:component-scan base-package="com.projn.alps">
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.MybatisConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.RestConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.RocketMqConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringDataRedisConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringDataRedisClusterConfig"/>
+    </context:component-scan>
 
-    <import resource="classpath:bootstrap/spring-*.xml"/>
+    <context:property-placeholder location="classpath*:config/*.properties"/>
 
-    <context:property-placeholder location="classpath:config/*.properties"/>
+    <import resource="classpath:bootstrap/spring-data-redis.xml"/>
+    <import resource="classpath:bootstrap/spring-druid.xml"/>
+    <import resource="classpath:bootstrap/spring-quartz.xml"/>
+    <import resource="classpath:bootstrap/spring-rest.xml"/>
+    <import resource="classpath:bootstrap/spring-threadpool.xml"/>
+    <import resource="classpath:bootstrap/spring-mybatis-test.xml"/>
 </beans>

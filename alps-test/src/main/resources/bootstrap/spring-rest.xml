@@ -5,5 +5,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"/>
+    <bean name="messageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" />
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg name="messageConverters" >
+            <array>
+                <ref bean="messageConverter"/>
+            </array>
+        </constructor-arg>
+    </bean>
+
+    <bean id="sslRestTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg name="messageConverters" >
+            <array>
+                <ref bean="messageConverter"/>
+            </array>
+        </constructor-arg>
+    </bean>
 </beans>

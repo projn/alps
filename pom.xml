@@ -205,19 +205,36 @@
                         <linkXRef>true</linkXRef>
                         <minimumTokens>100</minimumTokens>
                         <targetJdk>1.8</targetJdk>
-                        <!--<excludes>-->
-                            <!--<exclude>**/*Bean.java</exclude>-->
-                            <!--<exclude>**/generated/*.java</exclude>-->
-                        <!--</excludes>-->
+                        <excludes>
+                            <exclude>**/InitializationBlock.java</exclude>
+                            <exclude>**/Method.java</exclude>
+                            <exclude>**/JavaBeanGenerator.java</exclude>
+                            <exclude>**/GeneratorTools.java</exclude>
+                            <exclude>**/RestConfig.java</exclude>
+                            <exclude>**/RunTimeProperties.java</exclude>
+                            <exclude>**/HttpServiceMonitorAop.java</exclude>
+                            <exclude>**/MsgServiceMonitorAop.java</exclude>
+                            <exclude>**/SpringDataRedisInfoDaoImpl.java</exclude>
+                            <exclude>**/SpringDataRedisClusterConfig.java</exclude>
+                            <exclude>**/SpringDataRedisConfig.java</exclude>
+                            <exclude>**/WsServiceMonitorAop.java</exclude>
+                            <exclude>**/WsSessionInfoMap.java</exclude>
+                            <exclude>**/WsProcessWorker.java</exclude>
+                            <exclude>**/HttpProcessWorker.java</exclude>
+                            <exclude>**/SendAgentMsgJob.java</exclude>
+                            <exclude>**/SystemInitializeContextListener.java</exclude>
+                            <exclude>**/AgentMasterInfo.java</exclude>
+                            <exclude>**/util/**.java</exclude>
+                        </excludes>
                         <!--<excludeRoots>-->
                             <!--<excludeRoot>target/generated-sources/stubs</excludeRoot>-->
                         <!--</excludeRoots>-->
                     </configuration>
                 </plugin>
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-jar-plugin</artifactId>-->
-                    <!--<version>${maven.jar.version}</version>-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.version}</version>
                     <!--<configuration>-->
                         <!--<archive>-->
                             <!--<manifest>-->
@@ -226,7 +243,7 @@
                             <!--</manifest>-->
                         <!--</archive>-->
                     <!--</configuration>-->
-                <!--</plugin>-->
+                </plugin>
                 <!--<plugin>-->
                     <!--<groupId>org.apache.maven.plugins</groupId>-->
                     <!--<artifactId>maven-dependency-plugin</artifactId>-->

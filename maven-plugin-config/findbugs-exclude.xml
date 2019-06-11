@@ -3,4 +3,13 @@
     <Match>
         <Class name="com.projn.alps.initialize.InitializeBean"/>
     </Match>
+    <Match>
+        <Class name="com.projn.alps.alpsmicroservice.listener.SystemInitializeContextListener"/>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.dao.impl.SpringDataRedisInfoDaoImpl"/>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.work.HttpProcessWorker"/>
+    </Match>
 </FindBugsFilter>

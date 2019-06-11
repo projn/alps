@@ -20,8 +20,15 @@ import java.util.List;
  * @author : sunyuecheng
  */
 public final class RsaUtils {
+
+    /**
+     * rsakey bit 1024
+     */
     public static final int RSAKEY_BIT_1024 = 1024;
 
+    /**
+     * rsakey bit 2048
+     */
     public static final int RSAKEY_BIT_2048 = 2048;
 
     private static final int RSAKEY_TYPE_UNKNOWN = -1;

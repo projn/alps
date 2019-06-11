@@ -56,10 +56,10 @@ public final class ParamCheckUtils {
 
             if (field.isAnnotationPresent(ParamLocation.class)) {
                 ParamLocation paramLocation = (ParamLocation) field.getAnnotation(ParamLocation.class);
-                if (paramLocation != null && paramLocation.location() == ParamLocationType.BODY) {
+                if (paramLocation != null && paramLocation.location().equals(ParamLocationType.BODY)) {
                     checkParam(fieldValue);
+                    continue;
                 }
-                continue;
             }
 
             if (!field.isAnnotationPresent(ParamLimit.class)) {
@@ -111,9 +111,9 @@ public final class ParamCheckUtils {
         } else if (Long.class.equals(type) || long.class.equals(type)) {
             checkLong(fieldValue, paramLimit, fieldName, type, valueList);
         } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
-            Boolean boolVal = (Boolean) fieldValue;
+            //Boolean boolVal = (Boolean) fieldValue;
         } else if (Date.class.equals(type)) {
-            Date date = (Date) fieldValue;
+            //Date date = (Date) fieldValue;
         } else if (Short.class.equals(type) || short.class.equals(type)) {
             checkShort(fieldValue, paramLimit, fieldName, type, valueList);
         } else if (Float.class.equals(type) || float.class.equals(type)) {

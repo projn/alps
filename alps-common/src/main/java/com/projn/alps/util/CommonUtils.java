@@ -1,7 +1,8 @@
 package com.projn.alps.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Calendar;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,25 +14,6 @@ import static com.projn.alps.define.CommonDefine.*;
  * @author : sunyuecheng
  */
 public final class CommonUtils {
-    /**
-     * check ip address format
-     *
-     * @param address :
-     * @return boolean :
-     */
-    public static boolean checkIpAddressFormat(String address) {
-        if (address == null || address.length() < MIN_IP_ADDRESS_LEN
-                || address.length() > MAX_IP_ADDRESS_LEN || address.isEmpty()) {
-            return false;
-        }
-
-        String rexp = "([1-9]|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])"
-                + "(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
-        Pattern pattern = Pattern.compile(rexp);
-        Matcher matcher = pattern.matcher(address);
-
-        return matcher.find();
-    }
 
     /**
      * format exception info
@@ -53,70 +35,6 @@ public final class CommonUtils {
             sb.append("\t").append(ele).append("\n");
         }
 
-        return sb.toString();
-    }
-
-    /**
-     * string create password
-     *
-     * @param len :
-     * @return String:
-     */
-    public static String createPassword(int len) {
-        double temp = Math.random() * 100000;
-        if (temp >= 100000) {
-            temp = 99999;
-        }
-        int random = (int) Math.ceil(temp);
-
-        Random rd = new Random(random);
-        StringBuffer sb = new StringBuffer();
-        int rdGet;
-        char[] str = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-                'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-                'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-                'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-                'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-        final int maxNum = str.length;
-        int count = 0;
-        while (count < len) {
-            rdGet = Math.abs(rd.nextInt(maxNum));
-            if (rdGet >= 0 && rdGet < str.length) {
-                sb.append(str[rdGet]);
-                count++;
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * create verification code
-     *
-     * @param len :
-     * @return String :
-     */
-    public static String createVerificationCode(int len) {
-        double temp = Math.random() * 100000;
-        if (temp >= 100000) {
-            temp = 99999;
-        }
-        int random = (int) Math.ceil(temp);
-
-        Random rd = new Random(random);
-        StringBuffer sb = new StringBuffer();
-        int rdGet;
-        char[] str = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-        final int maxNum = str.length;
-        int count = 0;
-        while (count < len) {
-            rdGet = Math.abs(rd.nextInt(maxNum));
-            if (rdGet >= 0 && rdGet < str.length) {
-                sb.append(str[rdGet]);
-                count++;
-            }
-        }
         return sb.toString();
     }
 
@@ -146,6 +64,41 @@ public final class CommonUtils {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
+    }
+
+    /**
+     * is numeric
+     *
+     * @param str :
+     * @return boolean :
+     */
+    public static boolean isNumeric(String str) {
+        final String regex = "[0-9]*";
+
+        if (!StringUtils.isEmpty(str)) {
+            return str.matches(regex);
+        }
+        return false;
+    }
+
+    /**
+     * is ip address
+     *
+     * @param address :
+     * @return boolean :
+     */
+    public static boolean isIpAddress(String address) {
+        if (address == null || address.length() < MIN_IP_ADDRESS_LEN
+                || address.length() > MAX_IP_ADDRESS_LEN || address.isEmpty()) {
+            return false;
+        }
+
+        String rexp = "([1-9]|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])"
+                + "(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}";
+        Pattern pattern = Pattern.compile(rexp);
+        Matcher matcher = pattern.matcher(address);
+
+        return matcher.find();
     }
 
     /**

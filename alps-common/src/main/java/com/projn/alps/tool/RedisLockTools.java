@@ -38,12 +38,17 @@ public class RedisLockTools {
         boolean locked = false;
         String key = String.format(LOCK_KEY_HEADER, keyTail);
         try {
-            Boolean success = redisTemplate.opsForValue().setIfAbsent(key, "1");
-            if (success != null && success) {
+            Long time = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+            if (time == null || time == -1L) {
                 redisTemplate.expire(key, ttl, TimeUnit.SECONDS);
                 locked = true;
             } else {
-                locked = false;
+                Boolean success = redisTemplate.opsForValue().setIfAbsent(key, "1", ttl, TimeUnit.SECONDS);
+                if (success != null && success) {
+                    locked = true;
+                } else {
+                    locked = false;
+                }
             }
         } catch (Exception e) {
             LOGGER.error("Create lock error, key({}), error info({}).", key, e.getMessage());
