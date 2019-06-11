@@ -12,12 +12,21 @@ public class WsRequestInfo {
 
     private Object paramObj = null;
 
-    private Map<String, Object> extendInfoMap = null;
+    private Map<String, Object> extendInfoMap;
 
     /**
      * ws request info
      */
     public WsRequestInfo() {
+    }
+
+    /**
+     * ws request info
+     *
+     * @param paramObj :
+     */
+    public WsRequestInfo(Object paramObj) {
+        this.paramObj = paramObj;
     }
 
     /**
@@ -29,15 +38,6 @@ public class WsRequestInfo {
     public WsRequestInfo(Object paramObj, Map<String, Object> extendInfoMap) {
         this.paramObj = paramObj;
         this.extendInfoMap = extendInfoMap;
-    }
-
-    /**
-     * ws request info
-     *
-     * @param paramObj :
-     */
-    public WsRequestInfo(Object paramObj) {
-        this.paramObj = paramObj;
     }
 
     public Object getParamObj() {

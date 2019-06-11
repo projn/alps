@@ -364,8 +364,8 @@ public class GeneratorTools {
         if (StringUtils.isEmpty(driverClass) || StringUtils.isEmpty(connectionUrl)
                 || StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
             LOGGER.error("Analyse jdbc config info error, driver class({}), "
-                            + "connection url({}), user name({}), password({}).",
-                    driverClass, connectionUrl, userName, password);
+                            + "connection url({}), user name({}).",
+                    driverClass, connectionUrl, userName);
             return false;
         }
 
@@ -427,8 +427,8 @@ public class GeneratorTools {
         if (!mybatisConfigurationGenerator.setJdbcConfiguration(driverClass,
                 connectionUrl, userName, password)) {
             LOGGER.error("Set mybatis jdbc config info error, driver class({}), "
-                            + "connection url({}), user name({}), password({}).",
-                    driverClass, connectionUrl, userName, password);
+                            + "connection url({}), user name({}).",
+                    driverClass, connectionUrl, userName);
             return false;
         }
 

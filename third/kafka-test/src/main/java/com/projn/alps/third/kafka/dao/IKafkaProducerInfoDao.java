@@ -30,9 +30,9 @@ public interface IKafkaProducerInfoDao {
     /**
      * send sync message info
      *
-     * @param topic :
-     * @param msg   :
-     * @param timeout   :
+     * @param topic   :
+     * @param msg     :
+     * @param timeout :
      */
     void sendSyncMessageInfo(String topic, Object msg, long timeout) throws InterruptedException, ExecutionException, TimeoutException;
 

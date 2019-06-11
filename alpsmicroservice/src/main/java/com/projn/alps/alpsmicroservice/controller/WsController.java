@@ -1,21 +1,23 @@
 package com.projn.alps.alpsmicroservice.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.alpsmicroservice.work.WsProcessWorker;
 import com.projn.alps.dao.IAgentMasterInfoDao;
+import com.projn.alps.exception.HttpException;
 import com.projn.alps.initialize.ServiceData;
 import com.projn.alps.msg.request.WsRequestMsgInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -23,10 +25,13 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.List;
 import java.util.Map;
 
-import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.AGENT_ID_KEY;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.WEBSOCKET_DEFAULT_BUFFER_SIZE;
 import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
+import static com.projn.alps.exception.code.CommonErrorCode.RESULT_INVALID_REQUEST_INFO_ERROR;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
@@ -86,18 +91,7 @@ public class WsController extends TextWebSocketHandler {
                 throw new Exception("Invaild web socket request msg,msg info(" + message + ").");
             }
 
-            Map<String, RequestServiceInfo> requestServiceInfoMap
-                    = ServiceData.getRequestServiceInfoMap().get(wsRequestMsgInfo.getMsgId().toString());
-            if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
-                    || requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase()) == null) {
-                throw new Exception("Invaild request service info, msg id("
-                        + wsRequestMsgInfo.getMsgId() + "), method(" + HTTP_METHOD_POST + ").");
-            }
-            RequestServiceInfo requestServiceInfo
-                    = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
-            if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
-                throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
-            }
+            RequestServiceInfo requestServiceInfo = getRequestServiceInfo(wsRequestMsgInfo.getMsgId().toString());
 
             if (requestServiceInfo.getAuthorizationFilter() != null) {
                 requestServiceInfo.getAuthorizationFilter().auth(session, requestServiceInfo.getUserRoleNameList());
@@ -133,6 +127,30 @@ public class WsController extends TextWebSocketHandler {
                     message, formatExceptionInfo(e));
             removeWebSocketSessionInfo(session);
         }
+    }
+
+    private RequestServiceInfo getRequestServiceInfo(String uri) throws Exception {
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
+                = ServiceData.getRequestServiceInfoMap().get(uri);
+        if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
+                || requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase()) == null) {
+            throw new Exception("Invaild request service info, msg id("
+                    + uri + "), method(" + HTTP_METHOD_POST + ").");
+        }
+
+        List<RequestServiceInfo> requestServiceInfoList = requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase());
+        if (requestServiceInfoList.size() != 1) {
+            LOGGER.error("Invaild request service info, msg id({}), method({}).",
+                    uri, HTTP_METHOD_POST);
+            throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
+        }
+        RequestServiceInfo requestServiceInfo = requestServiceInfoList.get(0);
+
+        if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_WS)) {
+            throw new Exception("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
+        }
+
+        return requestServiceInfo;
     }
 
     /**

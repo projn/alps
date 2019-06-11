@@ -2,7 +2,6 @@ package com.projn.alps.alpsmicroservice.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.msg.response.HttpSendMsgResponseMsgInfo;
@@ -11,6 +10,7 @@ import com.projn.alps.service.IComponentsHttpService;
 import com.projn.alps.struct.HttpRequestInfo;
 import com.projn.alps.struct.HttpResponseInfo;
 import com.projn.alps.util.ParamCheckUtils;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

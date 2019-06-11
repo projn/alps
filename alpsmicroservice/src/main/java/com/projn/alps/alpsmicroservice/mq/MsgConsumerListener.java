@@ -61,72 +61,69 @@ public class MsgConsumerListener implements MessageListenerConcurrently {
                 LOGGER.error("Convert object error,error info({}).", formatExceptionInfo(e));
                 continue;
             }
-            if (msgRequestInfo == null) {
-                continue;
-            }
 
             String uri = msg.getTopic() + "/" + msg.getTags();
-            Map<String, RequestServiceInfo> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
+            Map<String, List<RequestServiceInfo>> requestServiceInfoMap
+                    = ServiceData.getRequestServiceInfoMap().get(uri);
             if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
                 LOGGER.error("Invaild request service info, msg id (" + msg.getTags() + ").");
                 continue;
             }
 
-            for (Map.Entry<String, RequestServiceInfo> item : requestServiceInfoMap.entrySet()) {
-                RequestServiceInfo requestServiceInfo = item.getValue();
-                if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_MSG)) {
-                    LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
-                    continue;
-                }
-
-                MsgRequestInfo targetMsgRequestInfo = msgRequestInfo;
-                if (requestServiceInfo.getParamClass() != null) {
-
-                    try {
-                        String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
-                        targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
-                                msgText, requestServiceInfo.getParamClass());
-                    } catch (Exception e) {
-                        LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
+            for (Map.Entry<String, List<RequestServiceInfo>> item : requestServiceInfoMap.entrySet()) {
+                List<RequestServiceInfo> requestServiceInfoList = item.getValue();
+                for (RequestServiceInfo requestServiceInfo : requestServiceInfoList) {
+                    if (!requestServiceInfo.getType().equalsIgnoreCase(RequestServiceInfo.SERVICE_TYPE_MSG)) {
+                        LOGGER.error("Invaild request service type info, type(" + requestServiceInfo.getType() + ").");
                         continue;
                     }
 
-                    if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
+                    MsgRequestInfo targetMsgRequestInfo = msgRequestInfo;
+                    if (requestServiceInfo.getParamClass() != null) {
                         try {
-                            ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
+                            String msgText = JSON.toJSONString(msgRequestInfo.getMsg());
+                            targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
+                                    msgText, requestServiceInfo.getParamClass());
                         } catch (Exception e) {
-                            LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                            LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
                             continue;
+                        }
+
+                        if (targetMsgRequestInfo != null && targetMsgRequestInfo.getMsg() != null) {
+                            try {
+                                ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
+                            } catch (Exception e) {
+                                LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                                continue;
+                            }
+                        }
+
+                        if (targetMsgRequestInfo != null) {
+                            targetMsgRequestInfo.setId(Integer.parseInt(msg.getTags()));
+                            targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
                         }
                     }
 
-                    if (targetMsgRequestInfo != null) {
-                        targetMsgRequestInfo.setId(Integer.parseInt(msg.getTags()));
-                        targetMsgRequestInfo.setExtendInfoMap(msgRequestInfo.getExtendInfoMap());
-                    }
-                }
-
-                try {
-                    if (threadPoolTaskExecutor.getActiveCount() < threadPoolTaskExecutor.getMaxPoolSize()) {
-                        Future<?> future = threadPoolTaskExecutor.submit(
-                                new MsgProcessWorker(requestServiceInfo.getServiceName(),
-                                        targetMsgRequestInfo, msg.getBornTimestamp()));
-                        future.isDone();
-                    } else {
-                        LOGGER.debug("System is busy.");
+                    try {
+                        if (threadPoolTaskExecutor.getActiveCount() < threadPoolTaskExecutor.getMaxPoolSize()) {
+                            Future<?> future = threadPoolTaskExecutor.submit(
+                                    new MsgProcessWorker(requestServiceInfo.getServiceName(),
+                                            targetMsgRequestInfo, msg.getBornTimestamp()));
+                            future.isDone();
+                        } else {
+                            LOGGER.debug("System is busy.");
+                            return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Analyse request info error,msg info({}),error info({}).",
+                                JSON.toJSONString(msg), formatExceptionInfo(e));
 
                         return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                     }
-                } catch (Exception e) {
-                    LOGGER.error("Analyse request info error,msg info({}),error info({}).",
-                            JSON.toJSONString(msg), formatExceptionInfo(e));
-
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
             }
         }
 
         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-
     }
 }

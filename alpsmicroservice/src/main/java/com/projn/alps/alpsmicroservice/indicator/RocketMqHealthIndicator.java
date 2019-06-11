@@ -78,54 +78,50 @@ public class RocketMqHealthIndicator implements HealthIndicator {
 
             TopicList topicList = defaultMQAdminExt.fetchAllTopicList();
             for (String topic : topicList.getTopicList()) {
-                if (topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
-                    String consumerGroup = topic.substring(MixAll.RETRY_GROUP_TOPIC_PREFIX.length());
-                    try {
-                        ConsumeStats consumeStats = null;
-                        try {
-                            consumeStats = defaultMQAdminExt.examineConsumeStats(consumerGroup);
-                        } catch (Exception e) {
-                            LOGGER.debug("examineConsumeStats exception, " + consumerGroup, e);
-                            continue;
-                        }
-
-                        ConsumerConnection cc = null;
-                        try {
-                            cc = defaultMQAdminExt.examineConsumerConnectionInfo(consumerGroup);
-                        } catch (Exception e) {
-                            LOGGER.debug("examineConsumerConnectionInfo exception, " + consumerGroup, e);
-                            continue;
-                        }
-
-                        GroupConsumeInfo groupConsumeInfo = new GroupConsumeInfo();
-                        groupConsumeInfo.setGroup(consumerGroup);
-
-                        if (consumeStats != null) {
-                            groupConsumeInfo.setConsumeTps((int) consumeStats.getConsumeTps());
-                            groupConsumeInfo.setDiffTotal(consumeStats.computeTotalDiff());
-                        }
-
-                        if (cc != null) {
-                            groupConsumeInfo.setCount(cc.getConnectionSet().size());
-                            groupConsumeInfo.setMessageModel(cc.getMessageModel());
-                            groupConsumeInfo.setConsumeType(cc.getConsumeType());
-                            groupConsumeInfo.setVersion(cc.computeMinVersion());
-                        }
-
-                        RocketMqGroupConsumeInfo rocketMqGroupConsumeInfo = new RocketMqGroupConsumeInfo();
-                        rocketMqGroupConsumeInfo.setGroup(groupConsumeInfo.getGroup());
-                        rocketMqGroupConsumeInfo.setCount(groupConsumeInfo.getCount());
-                        rocketMqGroupConsumeInfo.setConsumeTypeDesc(groupConsumeInfo.consumeTypeDesc());
-                        rocketMqGroupConsumeInfo.setMessageModelDesc(groupConsumeInfo.messageModelDesc());
-                        rocketMqGroupConsumeInfo.setConsumeTps(groupConsumeInfo.getConsumeTps());
-                        rocketMqGroupConsumeInfo.setDiffTotal(groupConsumeInfo.getDiffTotal());
-
-                        groupConsumeInfoList.add(rocketMqGroupConsumeInfo);
-                    } catch (Exception e) {
-                        LOGGER.warn("examineConsumeStats or examineConsumerConnectionInfo exception, "
-                                + consumerGroup, e);
-                    }
+                if (!topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
+                    continue;
                 }
+                String consumerGroup = topic.substring(MixAll.RETRY_GROUP_TOPIC_PREFIX.length());
+                ConsumeStats consumeStats = null;
+                try {
+                    consumeStats = defaultMQAdminExt.examineConsumeStats(consumerGroup);
+                } catch (Exception e) {
+                    LOGGER.debug("examineConsumeStats exception, " + consumerGroup, e);
+                    continue;
+                }
+
+                ConsumerConnection cc = null;
+                try {
+                    cc = defaultMQAdminExt.examineConsumerConnectionInfo(consumerGroup);
+                } catch (Exception e) {
+                    LOGGER.debug("examineConsumerConnectionInfo exception, " + consumerGroup, e);
+                    continue;
+                }
+
+                GroupConsumeInfo groupConsumeInfo = new GroupConsumeInfo();
+                groupConsumeInfo.setGroup(consumerGroup);
+
+                if (consumeStats != null) {
+                    groupConsumeInfo.setConsumeTps((int) consumeStats.getConsumeTps());
+                    groupConsumeInfo.setDiffTotal(consumeStats.computeTotalDiff());
+                }
+
+                if (cc != null) {
+                    groupConsumeInfo.setCount(cc.getConnectionSet().size());
+                    groupConsumeInfo.setMessageModel(cc.getMessageModel());
+                    groupConsumeInfo.setConsumeType(cc.getConsumeType());
+                    groupConsumeInfo.setVersion(cc.computeMinVersion());
+                }
+
+                RocketMqGroupConsumeInfo rocketMqGroupConsumeInfo = new RocketMqGroupConsumeInfo();
+                rocketMqGroupConsumeInfo.setGroup(groupConsumeInfo.getGroup());
+                rocketMqGroupConsumeInfo.setCount(groupConsumeInfo.getCount());
+                rocketMqGroupConsumeInfo.setConsumeTypeDesc(groupConsumeInfo.consumeTypeDesc());
+                rocketMqGroupConsumeInfo.setMessageModelDesc(groupConsumeInfo.messageModelDesc());
+                rocketMqGroupConsumeInfo.setConsumeTps(groupConsumeInfo.getConsumeTps());
+                rocketMqGroupConsumeInfo.setDiffTotal(groupConsumeInfo.getDiffTotal());
+
+                groupConsumeInfoList.add(rocketMqGroupConsumeInfo);
             }
         } catch (RuntimeException e) {
             throw e;

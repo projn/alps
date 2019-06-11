@@ -1,8 +1,6 @@
 package com.projn.alps.alpsmicroservice.work;
 
 import com.alibaba.fastjson.JSON;
-import com.projn.alps.alpsmicroservice.define.MicroServiceDefine;
-import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.domain.AgentMasterInfo;
 import com.projn.alps.initialize.InitializeBean;
@@ -11,6 +9,7 @@ import com.projn.alps.service.IComponentsWsService;
 import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.struct.WsResponseInfo;
 import com.projn.alps.util.CounterUtils;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +18,11 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.Map;
 
-import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.*;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.AGENT_ID_KEY;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.HTTP_API_SERVICE_SEND_MSG_URI;
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
+import static com.projn.alps.define.HttpDefine.HTTPS_URL_HEADER;
+import static com.projn.alps.define.HttpDefine.HTTP_URL_HEADER;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
@@ -34,15 +36,15 @@ public class WsProcessWorker implements Runnable {
     private String serviceName = null;
     private WsRequestInfo wsRequestInfo = null;
     private WebSocketSession session = null;
-    private IAgentMasterInfoDao agentMasterInfoDao;
+    private IAgentMasterInfoDao agentMasterInfoDao = null;
 
     /**
      * ws process worker
      *
-     * @param serviceName   :
-     * @param wsRequestInfo :
-     * @param session       :
-     * @param agentMasterInfoDao       :
+     * @param serviceName        :
+     * @param wsRequestInfo      :
+     * @param session            :
+     * @param agentMasterInfoDao :
      */
     public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo,
                            WebSocketSession session, IAgentMasterInfoDao agentMasterInfoDao) {
@@ -95,7 +97,7 @@ public class WsProcessWorker implements Runnable {
                         session.getAttributes().put(item.getKey(), item.getValue());
                     }
 
-                    String agentId = (String) wsResponseInfo.getExtendInfoMap().get(MicroServiceDefine.AGENT_ID_KEY);
+                    String agentId = (String) wsResponseInfo.getExtendInfoMap().get(AGENT_ID_KEY);
                     if (!StringUtils.isEmpty(agentId)) {
                         if (!WsSessionInfoMap.getInstance().addWebSocketSessionInfo(agentId, session)) {
                             LOGGER.error("Add web socket session to pool error, pool size({}).",
@@ -103,12 +105,12 @@ public class WsProcessWorker implements Runnable {
                             return;
                         }
 
-                        String url = ServiceData.getMasterInfo().isServerSsl()? HTTP_URL_HEADER: HTTPS_URL_HEADER
+                        String url = ServiceData.getMasterInfo().isServerSsl() ? HTTP_URL_HEADER : HTTPS_URL_HEADER
                                 + ServiceData.getMasterInfo().getServerIp() + ":"
                                 + ServiceData.getMasterInfo().getServerPort() + "/" + HTTP_API_SERVICE_SEND_MSG_URI;
                         agentMasterInfoDao.setAgentMasterInfo(new AgentMasterInfo(agentId,
                                 ServiceData.getMasterInfo().getServerIp(),
-                                ServiceData.getMasterInfo().getServerPort(),url));
+                                ServiceData.getMasterInfo().getServerPort(), url));
                     }
                 }
             } catch (Exception e) {

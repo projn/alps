@@ -201,19 +201,15 @@ public class WsSessionInfoMap {
         List<String> agentIdList = new ArrayList<String>();
         for (Map.Entry<String, WebSocketSessionInfo> entry : webSocketSessionInfoMap.entrySet()) {
             WebSocketSessionInfo webSocketSessionInfo = entry.getValue();
-            if (webSocketSessionInfo != null) {
-                if (webSocketSessionInfo.getSession() == null) {
-                    agentIdList.add(entry.getKey());
-                } else {
-                    if (currentDateTime - webSocketSessionInfo.getLastReceiveDataTime()
-                            >= waitTimeOutMinutes * ONE_MINUTE_SECOND * MILLI_SECOND_1000) {
-                        if (webSocketSessionInfo.getSession() != null && webSocketSessionInfo.getSession().isOpen()) {
-                            webSocketSessionInfo.getSession().close();
-                        }
-                        agentIdList.add(entry.getKey());
-                    }
+            if (webSocketSessionInfo == null || webSocketSessionInfo.getSession() == null) {
+                agentIdList.add(entry.getKey());
+                continue;
+            }
+            if (currentDateTime - webSocketSessionInfo.getLastReceiveDataTime()
+                    >= waitTimeOutMinutes * ONE_MINUTE_SECOND * MILLI_SECOND_1000) {
+                if (webSocketSessionInfo.getSession() != null && webSocketSessionInfo.getSession().isOpen()) {
+                    webSocketSessionInfo.getSession().close();
                 }
-            } else {
                 agentIdList.add(entry.getKey());
             }
         }

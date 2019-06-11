@@ -5,15 +5,11 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
             http://www.springframework.org/schema/beans/spring-beans.xsd
-
-
-
-
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder
-            location="classpath*:config/*.properties, file:${config.dir}/config/mybatis.properties"/>
+            location="classpath*:config/*.properties"/>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="druidDataSource"/>
@@ -21,7 +17,6 @@
         <property name="mapperLocations">
             <array>
                 <value>${mybatis.mapperLocations.module}</value>
-                <value>${mybatis.mapperLocations.local}</value>
             </array>
         </property>
     </bean>
@@ -61,7 +56,7 @@
 
     <!--<aop:config>-->
     <!--<aop:pointcut id="transactionPointcut"-->
-    <!--expression="execution(* com.projn.alpsdao.*Dao.*(..))" />-->
+    <!--expression="execution(* com.projn.alps.dao.*Dao.*(..))" />-->
     <!--<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />-->
     <!--</aop:config>-->
 

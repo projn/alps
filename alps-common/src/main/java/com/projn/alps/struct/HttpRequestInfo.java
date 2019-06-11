@@ -15,7 +15,7 @@ public class HttpRequestInfo implements Serializable {
 
     private Object paramObj = null;
 
-    private Map<String, Object> extendInfoMap = null;
+    private Map<String, Object> extendInfoMap;
 
     /**
      * http request info
@@ -46,8 +46,8 @@ public class HttpRequestInfo implements Serializable {
     /**
      * http request info
      *
-     * @param locale   :
-     * @param paramObj :
+     * @param locale        :
+     * @param paramObj      :
      * @param extendInfoMap :
      */
     public HttpRequestInfo(Locale locale, Object paramObj, Map<String, Object> extendInfoMap) {

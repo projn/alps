@@ -260,7 +260,7 @@ public interface IRedisInfoDao {
      * get map info
      *
      * @param key :
-     * @return Map<String       ,               String> :
+     * @return Map<String               ,                               String> :
      */
     Map<String, String> getMapInfo(String key);
 

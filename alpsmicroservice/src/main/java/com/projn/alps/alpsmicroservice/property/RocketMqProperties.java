@@ -2,7 +2,6 @@ package com.projn.alps.alpsmicroservice.property;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +13,11 @@ import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.ROCKET_M
  * @author : sunyuecheng
  */
 @Component
-@ConfigurationProperties
 @PropertySource(value = "file:${config.dir}/config/rocketmq.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.rocketmq", havingValue = "true", matchIfMissing = true)
 public class RocketMqProperties {
+    @Value("${rocketmq.consumeGroupName}")
+    private String consumeGroupName = null;
 
     @Value("${rocketmq.queueServerAddress}")
     private String queueServerAddress = null;
@@ -30,6 +30,14 @@ public class RocketMqProperties {
 
     @Value("${rocketmq.consumeMessageMaxDiffSize}")
     private long consumeMessageMaxDiffSize = ROCKET_MQ_CONSUME_MAX_DIFF_SIZE;
+
+    public String getConsumeGroupName() {
+        return consumeGroupName;
+    }
+
+    public void setConsumeGroupName(String consumeGroupName) {
+        this.consumeGroupName = consumeGroupName;
+    }
 
     public String getQueueServerAddress() {
         return queueServerAddress;

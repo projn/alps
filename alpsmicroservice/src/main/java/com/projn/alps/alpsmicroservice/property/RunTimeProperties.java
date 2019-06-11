@@ -76,9 +76,9 @@ public class RunTimeProperties implements InitializingBean {
     private boolean beanSwitchWebsocket = false;
 
     @Value("${system.ws.msg.ids}")
-    private String wsMsgIds=null;
+    private String wsMsgIds = null;
 
-    private List<String> wsMsgIdList=null;
+    private List<String> wsMsgIdList = null;
 
     /**
      * run time properties
@@ -237,8 +237,8 @@ public class RunTimeProperties implements InitializingBean {
             Configurator.initialize(null, logConfigPath);
         }
 
-        if(!StringUtils.isEmpty(wsMsgIds)) {
-            wsMsgIdList= Arrays.asList(wsMsgIds.split(","));
+        if (!StringUtils.isEmpty(wsMsgIds)) {
+            wsMsgIdList = Arrays.asList(wsMsgIds.split(","));
         }
     }
 }

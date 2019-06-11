@@ -8,6 +8,18 @@ package com.projn.alps.define;
 public final class HttpDefine {
 
     /**
+     * http url header
+     */
+    public static final String HTTP_URL_HEADER = "http://";
+
+
+    /**
+     * https url header
+     */
+    public static final String HTTPS_URL_HEADER = "https://";
+
+
+    /**
      * http method get
      */
     public static final String HTTP_METHOD_GET = "GET";

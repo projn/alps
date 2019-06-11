@@ -131,7 +131,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
         loadServiceMonitorAopInfo(contextRefreshedEvent.getApplicationContext());
 
-        Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap = null;
+        Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap = null;
         try {
             requestServiceInfoMap = loadModuleConfigInfo(contextRefreshedEvent.getApplicationContext());
             ServiceData.setRequestServiceInfoMap(requestServiceInfoMap);
@@ -222,9 +222,9 @@ public final class SystemInitializeContextListener implements ApplicationListene
         return;
     }
 
-    private Map<String, Map<String, RequestServiceInfo>> loadModuleConfigInfo(ApplicationContext applicationContext)
-            throws Exception {
-        Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+    private Map<String, Map<String, List<RequestServiceInfo>>> loadModuleConfigInfo(
+            ApplicationContext applicationContext) throws Exception {
+        Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
         Map<String, String> requestServiceInitMethodMap = new HashMap<>(COLLECTION_INIT_SIZE);
 
         List<ModuleJobInfo> moduleJobInfoList = new ArrayList<>();
@@ -336,7 +336,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
     }
 
     private void loadModuleServiceInfo(ApplicationContext applicationContext, Element servicesRootElement,
-                                       Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap,
+                                       Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap,
                                        Map<String, String> requestServiceInitMethodMap) throws Exception {
         if (servicesRootElement != null) {
             for (Iterator iter = servicesRootElement.elementIterator(); iter.hasNext(); ) {
@@ -389,13 +389,17 @@ public final class SystemInitializeContextListener implements ApplicationListene
                     requestServiceInitMethodMap.put(name, initMethod);
                 }
 
-                Map<String, RequestServiceInfo> subRequestServiceInfoMap = null;
-                if (requestServiceInfoMap.get(uri) != null) {
-                    subRequestServiceInfoMap = requestServiceInfoMap.get(uri);
-                } else {
+                Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = requestServiceInfoMap.get(uri);
+                if (subRequestServiceInfoMap == null) {
                     subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
                 }
-                subRequestServiceInfoMap.put(method, requestServiceInfo);
+
+                List<RequestServiceInfo> requestServiceInfoList = subRequestServiceInfoMap.get(method);
+                if (requestServiceInfoList == null) {
+                    requestServiceInfoList = new ArrayList<>();
+                }
+                requestServiceInfoList.add(requestServiceInfo);
+                subRequestServiceInfoMap.put(method, requestServiceInfoList);
                 requestServiceInfoMap.put(uri, subRequestServiceInfoMap);
 
                 Element servicePropertiesRootElement = serviceElement.element(XML_ELEMENT_PROPERTIES);
@@ -455,70 +459,69 @@ public final class SystemInitializeContextListener implements ApplicationListene
         }
     }
 
-
     private Map<String, MqConsumerInfo> initializeRocketMq(
-            Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap) throws Exception {
+            Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap) throws Exception {
         Map<String, MqConsumerInfo> mqConsumerInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        for (Map.Entry<String, Map<String, RequestServiceInfo>> requestServiceInfoMapEntry
+        for (Map.Entry<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMapEntry
                 : requestServiceInfoMap.entrySet()) {
             String uri = requestServiceInfoMapEntry.getKey();
-            Map<String, RequestServiceInfo> subRequestServiceInfoMap = requestServiceInfoMapEntry.getValue();
-
-            for (Map.Entry<String, RequestServiceInfo> subRequestServiceInfoMapEntry
+            Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = requestServiceInfoMapEntry.getValue();
+            for (Map.Entry<String, List<RequestServiceInfo>> subRequestServiceInfoMapEntry
                     : subRequestServiceInfoMap.entrySet()) {
                 String method = subRequestServiceInfoMapEntry.getKey();
-                RequestServiceInfo requestServiceInfo = subRequestServiceInfoMapEntry.getValue();
-                String type = requestServiceInfo.getType();
-                if (!RequestServiceInfo.SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
-                    continue;
-                }
-                String[] topicTags = uri.split("/");
-                if (topicTags.length != MSG_URI_PART_NUM) {
-                    continue;
-                }
-
-                String topic = topicTags[0];
-                if (mqConsumerInfoMap.get(topic) == null) {
-                    MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
-                    mqConsumerInfo.setTopic(topic);
-                    mqConsumerInfo.setMethod(method);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
-                            : mqConsumerInfo.getTags() + "||" + topicTags[1]);
-
-                    DefaultMQPushConsumer consumer
-                            = new DefaultMQPushConsumer(ServiceData.getMasterInfo().getRoleName());
-                    consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-                    consumer.setNamesrvAddr(rocketMqProperties.getQueueServerAddress());
-                    consumer.setConsumeMessageBatchMaxSize(rocketMqProperties.getConsumeMessageBatchMaxSize());
-                    consumer.setMaxReconsumeTimes(rocketMqProperties.getMaxReconsumeTimes());
-
-                    if (RequestServiceInfo.SERVICE_METHOD_MSG_NORMAL.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
-                        consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
-                    } else if (RequestServiceInfo.SERVICE_METHOD_MSG_ORDER.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(
-                                new OrderMsgConsumerListener(consumer, threadPoolTaskExecutor));
-                        consumer.registerMessageListener(
-                                (OrderMsgConsumerListener) mqConsumerInfo.getMessageListener());
-                    } else if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
-                        mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
-                        consumer.setMessageModel(MessageModel.BROADCASTING);
-                        consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
-                    } else {
-                        throw new Exception("Invaild module service method info error,uri("
-                                + uri + "), method(" + method + "), topic(" + topic + ").");
+                List<RequestServiceInfo> requestServiceInfoList = subRequestServiceInfoMapEntry.getValue();
+                for (RequestServiceInfo requestServiceInfo : requestServiceInfoList) {
+                    String type = requestServiceInfo.getType();
+                    if (!RequestServiceInfo.SERVICE_TYPE_MSG.equalsIgnoreCase(type)) {
+                        continue;
                     }
-                    mqConsumerInfo.setMqPushConsumer(consumer);
-                    mqConsumerInfoMap.put(topic, mqConsumerInfo);
+                    String[] topicTags = uri.split("/");
+                    if (topicTags.length != MSG_URI_PART_NUM) {
+                        continue;
+                    }
 
-                } else {
-                    MqConsumerInfo mqConsumerInfo = mqConsumerInfoMap.get(topic);
-                    mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
-                            : mqConsumerInfo.getTags() + "||" + topicTags[1]);
+                    String topic = topicTags[0];
+                    if (mqConsumerInfoMap.get(topic) == null) {
+                        MqConsumerInfo mqConsumerInfo = new MqConsumerInfo();
+                        mqConsumerInfo.setTopic(topic);
+                        mqConsumerInfo.setMethod(method);
+                        mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
+                                : mqConsumerInfo.getTags() + "||" + topicTags[1]);
 
-                    if (!mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
-                        throw new Exception("Invaild module service method info error,uri("
-                                + uri + "), method(" + method + "), topic(" + topic + ").");
+                        DefaultMQPushConsumer consumer
+                                = new DefaultMQPushConsumer(ServiceData.getMasterInfo().getRoleName());
+                        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+                        consumer.setNamesrvAddr(rocketMqProperties.getQueueServerAddress());
+                        consumer.setConsumeMessageBatchMaxSize(rocketMqProperties.getConsumeMessageBatchMaxSize());
+                        consumer.setMaxReconsumeTimes(rocketMqProperties.getMaxReconsumeTimes());
+
+                        if (RequestServiceInfo.SERVICE_METHOD_MSG_NORMAL.equalsIgnoreCase(method)) {
+                            mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
+                            consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
+                        } else if (RequestServiceInfo.SERVICE_METHOD_MSG_ORDER.equalsIgnoreCase(method)) {
+                            mqConsumerInfo.setMessageListener(
+                                    new OrderMsgConsumerListener(consumer, threadPoolTaskExecutor));
+                            consumer.registerMessageListener(
+                                    (OrderMsgConsumerListener) mqConsumerInfo.getMessageListener());
+                        } else if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
+                            mqConsumerInfo.setMessageListener(new MsgConsumerListener(threadPoolTaskExecutor));
+                            consumer.setMessageModel(MessageModel.BROADCASTING);
+                            consumer.registerMessageListener((MsgConsumerListener) mqConsumerInfo.getMessageListener());
+                        } else {
+                            throw new Exception("Invaild module service method info error,uri("
+                                    + uri + "), method(" + method + "), topic(" + topic + ").");
+                        }
+                        mqConsumerInfo.setMqPushConsumer(consumer);
+                        mqConsumerInfoMap.put(topic, mqConsumerInfo);
+                    } else {
+                        MqConsumerInfo mqConsumerInfo = mqConsumerInfoMap.get(topic);
+                        mqConsumerInfo.setTags(mqConsumerInfo.getTags() == null ? topicTags[1]
+                                : mqConsumerInfo.getTags() + "||" + topicTags[1]);
+
+                        if (!mqConsumerInfo.getMethod().equalsIgnoreCase(method)) {
+                            throw new Exception("Invaild module service method info error,uri("
+                                    + uri + "), method(" + method + "), topic(" + topic + ").");
+                        }
                     }
                 }
             }
@@ -528,7 +531,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
             MqConsumerInfo mqConsumerInfo = mqConsumerInfoEntry.getValue();
             DefaultMQPushConsumer consumer = mqConsumerInfo.getMqPushConsumer();
             try {
-                consumer.setConsumerGroup(mqConsumerInfoEntry.getKey());
+                consumer.setConsumerGroup(rocketMqProperties.getConsumeGroupName());
                 consumer.subscribe(mqConsumerInfo.getTopic(), mqConsumerInfo.getTags());
                 consumer.start();
             } catch (Exception e) {
@@ -600,7 +603,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
     }
 
     private boolean registerHttpApiService(ApplicationContext applicationContext,
-                                           Map<String, Map<String, RequestServiceInfo>> requestServiceInfoMap) {
+                                           Map<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoMap) {
         IAuthorizationFilter authorizationFilter = applicationContext.getBean(JwtAuthenticationFilterImpl.class);
         if (authorizationFilter == null) {
             LOGGER.error("Load jwt authentication filter bean error.");
@@ -621,8 +624,10 @@ public final class SystemInitializeContextListener implements ApplicationListene
         sendMsgServiceInfo.setUserRoleNameList(userRoleNameList);
         sendMsgServiceInfo.setAuthorizationFilter(authorizationFilter);
 
-        Map<String, RequestServiceInfo> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        subRequestServiceInfoMap.put(HTTP_METHOD_POST, sendMsgServiceInfo);
+        Map<String, List<RequestServiceInfo>> subRequestServiceInfoMap = new HashMap<>(COLLECTION_INIT_SIZE);
+        List<RequestServiceInfo> requestServiceInfoList = new ArrayList<>();
+        requestServiceInfoList.add(sendMsgServiceInfo);
+        subRequestServiceInfoMap.put(HTTP_METHOD_POST, requestServiceInfoList);
         requestServiceInfoMap.put(HTTP_API_SERVICE_SEND_MSG_URI, subRequestServiceInfoMap);
 
         return true;

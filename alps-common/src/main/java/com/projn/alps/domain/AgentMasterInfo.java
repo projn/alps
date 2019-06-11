@@ -25,7 +25,7 @@ public class AgentMasterInfo {
      * @param agentId    :
      * @param serverIp   :
      * @param serverPort :
-     * @param apiUrl :
+     * @param apiUrl     :
      */
     public AgentMasterInfo(String agentId, String serverIp, Integer serverPort, String apiUrl) {
         this.agentId = agentId;

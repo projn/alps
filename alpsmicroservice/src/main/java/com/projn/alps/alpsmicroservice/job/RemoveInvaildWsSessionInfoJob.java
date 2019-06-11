@@ -1,8 +1,8 @@
 package com.projn.alps.alpsmicroservice.job;
 
 import com.projn.alps.alpsmicroservice.property.RunTimeProperties;
-import com.projn.alps.widget.WsSessionInfoMap;
 import com.projn.alps.dao.IAgentMasterInfoDao;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

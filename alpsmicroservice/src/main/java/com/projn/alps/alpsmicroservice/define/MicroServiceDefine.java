@@ -15,17 +15,6 @@ public final class MicroServiceDefine {
     public static final int DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES = 30;
 
     /**
-     * http url header
-     */
-    public static final String HTTP_URL_HEADER = "http://";
-
-
-    /**
-     * https url header
-     */
-    public static final String HTTPS_URL_HEADER = "https://";
-
-    /**
      * http api service send msg
      */
     public static final String HTTP_API_SERVICE_SEND_MSG = "sendMsg";

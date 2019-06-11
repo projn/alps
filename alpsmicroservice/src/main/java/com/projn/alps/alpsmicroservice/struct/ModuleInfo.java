@@ -20,8 +20,8 @@ public class ModuleInfo {
     /**
      * module info
      *
-     * @param jarPathList    :
-     * @param configPath :
+     * @param jarPathList :
+     * @param configPath  :
      */
     public ModuleInfo(List<String> jarPathList, String configPath) {
         this.jarPathList = jarPathList;

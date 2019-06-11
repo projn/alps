@@ -39,7 +39,7 @@ public class MasterInfo {
      * @param roleName   :
      * @param serverIp   :
      * @param serverPort :
-     * @param serverSsl :
+     * @param serverSsl  :
      */
     public MasterInfo(String roleName, String serverIp, Integer serverPort, boolean serverSsl) {
         this.roleName = roleName;
