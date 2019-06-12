@@ -54,11 +54,11 @@ public class RunTimeProperties implements InitializingBean {
     @Value("${system.i18n.dir}")
     private String i18nDir = null;
 
-    @Value("${system.waitResponseSeconds}")
-    private long waitResponseSeconds = 1;
-
     @Value("${system.wsSessionTimeOutMinutes}")
     private int wsSessionTimeOutMinutes = MicroServiceDefine.DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES;
+
+    @Value("${system.maxWsSessionCount}")
+    private int maxWsSessionCount = MicroServiceDefine.DEFAULT_MAX_WEBSOCKET_SESSION_COUNT;
 
     @Value("${system.tokenSecretKey}")
     private String tokenSecretKey = null;
@@ -151,20 +151,20 @@ public class RunTimeProperties implements InitializingBean {
         this.i18nDir = i18nDir;
     }
 
-    public long getWaitResponseSeconds() {
-        return waitResponseSeconds;
-    }
-
-    public void setWaitResponseSeconds(long waitResponseSeconds) {
-        this.waitResponseSeconds = waitResponseSeconds;
-    }
-
     public int getWsSessionTimeOutMinutes() {
         return wsSessionTimeOutMinutes;
     }
 
     public void setWsSessionTimeOutMinutes(int wsSessionTimeOutMinutes) {
         this.wsSessionTimeOutMinutes = wsSessionTimeOutMinutes;
+    }
+
+    public int getMaxWsSessionCount() {
+        return maxWsSessionCount;
+    }
+
+    public void setMaxWsSessionCount(int maxWsSessionCount) {
+        this.maxWsSessionCount = maxWsSessionCount;
     }
 
     public String getTokenSecretKey() {

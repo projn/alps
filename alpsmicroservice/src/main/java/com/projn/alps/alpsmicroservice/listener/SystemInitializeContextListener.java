@@ -23,6 +23,7 @@ import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
 import com.projn.alps.tool.QuartzJobTools;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -260,10 +261,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
             if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
                 throw new Exception("Register http api service info error.");
             }
-        }
-
-        if (runTimeProperties.isBeanSwitchWebsocket()) {
             registerHttpApiJob(moduleJobInfoList);
+            WsSessionInfoMap.getInstance().setMaxPoolSize(runTimeProperties.getMaxWsSessionCount());
         }
 
         for (Map.Entry<String, String> serviceEntry : requestServiceInitMethodMap.entrySet()) {

@@ -15,6 +15,11 @@ public final class MicroServiceDefine {
     public static final int DEFAULT_WEBSOCKET_SESSION_TIMEOUT_INTERVAL_MINUTES = 30;
 
     /**
+     * default max websocket session count
+     */
+    public static final int DEFAULT_MAX_WEBSOCKET_SESSION_COUNT = 1000;
+
+    /**
      * http api service send msg
      */
     public static final String HTTP_API_SERVICE_SEND_MSG = "sendMsg";
