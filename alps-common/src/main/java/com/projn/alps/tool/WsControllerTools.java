@@ -1,5 +1,6 @@
 package com.projn.alps.tool;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.dao.IAgentMasterInfoDao;
 import com.projn.alps.exception.HttpException;
@@ -76,9 +77,9 @@ public class WsControllerTools {
 
             WsRequestInfo wsRequestInfo = null;
             if (requestServiceInfo.getParamClass() != null) {
-
+                String msgBodyText = JSON.toJSONString(wsRequestMsgInfo.getMsg());
                 try {
-                    wsRequestInfo = RequestInfoUtils.convertWsRequestInfo(session, textMsg,
+                    wsRequestInfo = RequestInfoUtils.convertWsRequestInfo(session, msgBodyText,
                             requestServiceInfo.getParamClass());
                 } catch (Exception e) {
                     throw new Exception("Convert request info error,error info(" + e.getMessage() + ").");
