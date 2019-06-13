@@ -53,18 +53,17 @@ public class SendAgentMsgJob implements Job {
         }
         for (String agentId : agentIdList) {
             AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
-            if (agentMessageInfo == null || agentMessageInfo.getExpireTime() == null
-                    || agentMessageInfo.getExpireTime() > System.currentTimeMillis()) {
-                continue;
-            }
+            if (agentMessageInfo != null && (agentMessageInfo.getExpireTime() == null
+                    || agentMessageInfo.getExpireTime() > System.currentTimeMillis())) {
 
-            WsResponseMsgInfo wsResponseMsgInfo =
-                    new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
-            try {
-                WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                        JSON.toJSONString(wsResponseMsgInfo));
-            } catch (Exception e) {
-                LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+                WsResponseMsgInfo wsResponseMsgInfo =
+                        new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                try {
+                    WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
+                            JSON.toJSONString(wsResponseMsgInfo));
+                } catch (Exception e) {
+                    LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+                }
             }
 
             if (runTimeProperties.getWsMsgIdList() != null) {
@@ -73,11 +72,11 @@ public class SendAgentMsgJob implements Job {
                     if (agentMessageInfo == null) {
                         continue;
                     }
-                    WsResponseMsgInfo webSocketResponseMessage =
+                    WsResponseMsgInfo wsResponseMsgInfo =
                             new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
                     try {
                         WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                                JSON.toJSONString(webSocketResponseMessage));
+                                JSON.toJSONString(wsResponseMsgInfo));
                         agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, msgId);
                     } catch (Exception e) {
                         LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
