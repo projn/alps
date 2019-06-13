@@ -636,12 +636,13 @@ public final class SystemInitializeContextListener implements ApplicationListene
         Map<String, String> jobPropertiesMap = new HashMap<>(COLLECTION_INIT_SIZE);
         ModuleJobInfo sendAgentMsgJobInfo
                 = new ModuleJobInfo(SendAgentMsgJob.class.getTypeName(),
-                SendAgentMsgJob.class.getName(), HTTP_API_JOB_CRON_EXPRESSION, jobPropertiesMap);
+                SendAgentMsgJob.class.getName(), SEND_MSG_JOB_CRON_EXPRESSION, jobPropertiesMap);
         moduleJobInfoList.add(sendAgentMsgJobInfo);
 
         ModuleJobInfo removeInvaildWsSessionInfoJobInfo
                 = new ModuleJobInfo(RemoveInvaildWsSessionInfoJob.class.getTypeName(),
-                RemoveInvaildWsSessionInfoJob.class.getName(), HTTP_API_JOB_CRON_EXPRESSION, jobPropertiesMap);
+                RemoveInvaildWsSessionInfoJob.class.getName(),
+                REMOVE_INVAILD_WS_SESSION_JOB_CRON_EXPRESSION, jobPropertiesMap);
         moduleJobInfoList.add(removeInvaildWsSessionInfoJobInfo);
     }
 

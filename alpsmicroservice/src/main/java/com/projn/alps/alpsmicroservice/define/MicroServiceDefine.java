@@ -30,9 +30,14 @@ public final class MicroServiceDefine {
     public static final String HTTP_API_SERVICE_SEND_MSG_URI = "/api/sendMsg";
 
     /**
-     * http api job cron expression
+     * send msg job cron expression
      */
-    public static final String HTTP_API_JOB_CRON_EXPRESSION = "0 0/1 * * * ?";
+    public static final String SEND_MSG_JOB_CRON_EXPRESSION = "0/5 * * * * ?";
+
+    /**
+     * remove invaild ws session job cron expression
+     */
+    public static final String REMOVE_INVAILD_WS_SESSION_JOB_CRON_EXPRESSION = "0 0/1 * * * ?";
 
     /**
      * websocket default buffer size
