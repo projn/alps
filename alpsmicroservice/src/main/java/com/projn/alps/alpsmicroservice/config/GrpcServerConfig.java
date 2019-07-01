@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
  * @author : sunyuecheng
  */
 @Configuration
-@PropertySource("file:${config.dir}/onfig/grpc-server.properties")
+@PropertySource(value = "file:${config.dir}/onfig/grpc-server.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.grpc", havingValue = "true", matchIfMissing = true)
 public class GrpcServerConfig {
 

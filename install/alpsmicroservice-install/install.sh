@@ -408,6 +408,10 @@ function create_cloud_git_config()
     dst=${SOFTWARE_SERVER_PORT}
     sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
 
+    src=SOFTWARE_KAFKA_PRODUCER_SERVERS
+    dst=${SOFTWARE_KAFKA_PRODUCER_SERVERS}
+    sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/alpsmicroservice.properties
+
     src=SOFTWARE_MYSQL_URL
     dst=${SOFTWARE_MYSQL_URL}
     sed -i "s#$src#$dst#g" ${CURRENT_WORK_DIR}/git-repo/druid.properties
