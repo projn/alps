@@ -13,5 +13,5 @@
 # mkdir -p ~/release/configserver
 # mkdir -p ~/release/generator
 
-ALPS_MODULE_VERSION=2.0
+ALPS_MODULE_VERSION=2.1
 ALPS_GENERATOR_VERSION=1.0.1
