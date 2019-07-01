@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.projn.alps.define.CommonDefine.JWT_CLAIM_ROLE_INFO_KEY;
 import static com.projn.alps.define.HttpDefine.HEADER_JWT_TOKEN;
 import static com.projn.alps.define.HttpDefine.JWT_TOKEN_PREFIX;
 
@@ -41,7 +42,7 @@ public class HttpJwtAuthFilterImpl implements IAuthorizationFilter {
             final String authToken = authHeader.substring(JWT_TOKEN_PREFIX.length());
 
             Claims claims = JwtTokenUtils.parseToken(authToken, ServiceData.getJwtSecretKey());
-            String role = (String) claims.get("ROLE");
+            String role = (String) claims.get(JWT_CLAIM_ROLE_INFO_KEY);
             if (!StringUtils.isEmpty(role) && !userRoleNameList.contains(role)) {
                 throw new Exception("This role has no access rights.");
             }

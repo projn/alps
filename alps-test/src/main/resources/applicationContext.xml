@@ -12,9 +12,10 @@
     <context:component-scan base-package="com.projn.alps">
         <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.MybatisConfig"/>
         <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.RestConfig"/>
-        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.RocketMqConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringKafkaProducerConfig"/>
         <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringDataRedisConfig"/>
         <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringDataRedisClusterConfig"/>
+        <context:exclude-filter type="aspectj" expression="com.projn.alps.bean.SpringMongoDbConfig"/>
     </context:component-scan>
 
     <context:property-placeholder location="classpath*:config/*.properties"/>

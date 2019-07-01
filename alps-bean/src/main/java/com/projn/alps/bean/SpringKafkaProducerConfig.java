@@ -1,6 +1,7 @@
 package com.projn.alps.bean;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,14 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * spring kafka producer config
+ *
+ * @author : sunyuecheng
+ */
 @Configuration
 @EnableKafka
-@PropertySource("classpath:config/kafka-producer.properties")
+@PropertySource(value = "file:${config.dir}/config/kafka-producer.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.mq.producer", havingValue = "true", matchIfMissing = true)
 public class SpringKafkaProducerConfig {
 
@@ -35,14 +41,14 @@ public class SpringKafkaProducerConfig {
     @Value("${kafka.producer.retries}")
     private Integer retries = 0;
 
-    @Value("${kafka.producer.ssl.key.password}")
-    private String sslKeyPassword = null;
-
-    @Value("${kafka.producer.ssl.keystore.location}")
-    private String sslKeystoreLocation = null;
-
-    @Value("${kafka.producer.ssl.keystore.password}")
-    private String sslKeystorePassword = null;
+//    @Value("${kafka.producer.ssl.key.password}")
+//    private String sslKeyPassword = null;
+//
+//    @Value("${kafka.producer.ssl.keystore.location}")
+//    private String sslKeystoreLocation = null;
+//
+//    @Value("${kafka.producer.ssl.keystore.password}")
+//    private String sslKeystorePassword = null;
 
     @Value("${kafka.producer.batch.size}")
     private Long batchSize = 16384L;
@@ -97,6 +103,9 @@ public class SpringKafkaProducerConfig {
         notNullAdd(properties, ProducerConfig.MAX_BLOCK_MS_CONFIG, this.maxBlockMs);
         notNullAdd(properties, ProducerConfig.MAX_REQUEST_SIZE_CONFIG, this.maxRequestSize);
         notNullAdd(properties, ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, this.requestTimeoutMs);
+
+        notNullAdd(properties, ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        notNullAdd(properties, ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         return properties;
     }
 
@@ -106,11 +115,21 @@ public class SpringKafkaProducerConfig {
         }
     }
 
+    /**
+     * producer factory
+     *
+     * @return PProducerFactory<String       ,               String> :
+     */
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<String, String>(toProperties());
     }
 
+    /**
+     * kafka template
+     *
+     * @return KafkaTemplate<String       ,               String> :
+     */
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<String, String>(producerFactory(), autoFlush);

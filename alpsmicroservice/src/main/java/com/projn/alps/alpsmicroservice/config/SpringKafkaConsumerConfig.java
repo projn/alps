@@ -1,6 +1,7 @@
 package com.projn.alps.alpsmicroservice.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +15,14 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * spring kafka consumer config
+ *
+ * @author : sunyuecheng
+ */
 @Configuration
 @EnableKafka
-@PropertySource("classpath:config/kafka-consumer.properties")
+@PropertySource(value = "file:${config.dir}/config/kafka-consumer.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.mq.consumer", havingValue = "true", matchIfMissing = true)
 public class SpringKafkaConsumerConfig {
 
@@ -89,6 +95,9 @@ public class SpringKafkaConsumerConfig {
         notNullAdd(properties, ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, this.maxPollIntervalMs);
         notNullAdd(properties, ConsumerConfig.MAX_POLL_RECORDS_CONFIG, this.maxPollRecords);
         notNullAdd(properties, ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, this.requestTimeoutMs);
+
+        notNullAdd(properties, ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        notNullAdd(properties, ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         return properties;
     }
 
@@ -98,9 +107,13 @@ public class SpringKafkaConsumerConfig {
         }
     }
 
+    /**
+     * kafka listener container factory
+     *
+     * @return ConcurrentKafkaListenerContainerFactory<String   ,       String> :
+     */
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, String>
-    kafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
@@ -110,6 +123,11 @@ public class SpringKafkaConsumerConfig {
         return factory;
     }
 
+    /**
+     * consumer factory
+     *
+     * @return ConsumerFactory<String   ,       String> :
+     */
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(toProperties());

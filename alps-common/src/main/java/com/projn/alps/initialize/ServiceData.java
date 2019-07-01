@@ -20,11 +20,11 @@ public final class ServiceData {
 
     private static Map<String, MqConsumerInfo> mqConsumerInfoMap = null;
 
+    private static String jwtSecretKey;
+
     public static MasterInfo getMasterInfo() {
         return masterInfo;
     }
-
-    public static String jwtSecretKey;
 
     public static void setMasterInfo(MasterInfo masterInfo) {
         ServiceData.masterInfo = masterInfo;

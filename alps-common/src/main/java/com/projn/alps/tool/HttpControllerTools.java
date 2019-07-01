@@ -61,7 +61,8 @@ public class HttpControllerTools {
         final DeferredResult<Object> deferredResult = new DeferredResult<Object>(
                 MAX_HTTP_RESPONSE_WAIT_SECONDS * MILLI_SECOND_1000);
 
-        LOGGER.info("Request uri({}).", request.getRequestURI());
+        String uri = request.getRequestURI();
+        LOGGER.info("Request uri({}).", uri);
 
         String method = request.getMethod().toLowerCase();
         RequestServiceInfo requestServiceInfo = getRequestServiceInfo(url, method);

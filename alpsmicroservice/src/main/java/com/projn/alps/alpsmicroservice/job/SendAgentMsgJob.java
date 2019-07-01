@@ -53,8 +53,8 @@ public class SendAgentMsgJob implements Job {
         }
         for (String agentId : agentIdList) {
             AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
-            if (agentMessageInfo == null || agentMessageInfo.getExpireTime() == null
-                    || agentMessageInfo.getExpireTime() > System.currentTimeMillis()) {
+            if (agentMessageInfo == null || agentMessageInfo.getExpireTime() != null
+                    && agentMessageInfo.getExpireTime() < System.currentTimeMillis()) {
                 continue;
             }
 
@@ -63,6 +63,7 @@ public class SendAgentMsgJob implements Job {
             try {
                 WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
                         JSON.toJSONString(wsResponseMsgInfo));
+                LOGGER.info("SEND MSG TO AGENT:" + agentId + "---" + JSON.toJSONString(wsResponseMsgInfo));
             } catch (Exception e) {
                 LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
             }
@@ -73,17 +74,16 @@ public class SendAgentMsgJob implements Job {
                     if (agentMessageInfo == null) {
                         continue;
                     }
-                    WsResponseMsgInfo webSocketResponseMessage =
-                            new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                    wsResponseMsgInfo = new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
                     try {
                         WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                                JSON.toJSONString(webSocketResponseMessage));
+                                JSON.toJSONString(wsResponseMsgInfo));
                         agentMessageInfoDao.deleteAgentCoverMessageInfo(agentId, msgId);
+                        LOGGER.info("SEND MSG TO AGENT:" + agentId + "---" + JSON.toJSONString(wsResponseMsgInfo));
+                        break;
                     } catch (Exception e) {
                         LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
-                        continue;
                     }
-                    break;
                 }
             }
         }

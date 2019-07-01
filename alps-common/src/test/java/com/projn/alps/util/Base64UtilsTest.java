@@ -7,9 +7,4 @@ public class Base64UtilsTest {
     public void encodeData() throws Exception {
         Base64Utils.encodeData("test".getBytes());
     }
-
-    @Test
-    public void decodeData() throws Exception {
-    }
-
 }

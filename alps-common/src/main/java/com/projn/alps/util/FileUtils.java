@@ -78,10 +78,8 @@ public final class FileUtils {
         File file = new File(filePath);
         if (!file.exists()) {
             File parentFile = file.getParentFile();
-            if (!parentFile.exists()) {
-                if (!parentFile.mkdirs()) {
-                    throw new Exception("Make file dir error.");
-                }
+            if (!parentFile.exists() && !parentFile.mkdirs()) {
+                throw new Exception("Make file dir error.");
             }
             if (!file.createNewFile()) {
                 throw new Exception("Create file error.");
@@ -112,10 +110,8 @@ public final class FileUtils {
         File file = new File(filePath);
         if (!file.exists()) {
             File parentFile = file.getParentFile();
-            if (!parentFile.exists()) {
-                if (!parentFile.mkdirs()) {
-                    throw new Exception("Make file dir error.");
-                }
+            if (!parentFile.exists() && !parentFile.mkdirs()) {
+                throw new Exception("Make file dir error.");
             }
             if (!file.createNewFile()) {
                 throw new Exception("Create file error.");

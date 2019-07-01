@@ -31,6 +31,11 @@ public class GrpcJwtClientAuthFilter implements ClientInterceptor {
 
     private String token;
 
+    /**
+     * grpc jwt client auth filter
+     *
+     * @param token :
+     */
     public GrpcJwtClientAuthFilter(String token) {
         this.token = token;
     }

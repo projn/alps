@@ -25,20 +25,24 @@ import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.projn.alps.define.CommonDefine.JWT_CLAIM_ROLE_INFO_KEY;
 import static com.projn.alps.define.HttpDefine.HEADER_JWT_TOKEN;
 import static com.projn.alps.define.HttpDefine.JWT_TOKEN_PREFIX;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 /**
- * Use a {@link ServerInterceptor} to capture metadata and retrieve any JWT token.
- * <p>
- * This interceptor only captures the JWT token and prints it out.
- * Normally the token will need to be validated against an identity provider.
+ * grpc jwt server auth filter
+ *
+ * @author : sunyuecheng
  */
+@Component
+@ConditionalOnProperty(name = "system.bean.switch.rpc.auth", havingValue = "true", matchIfMissing = true)
 public class GrpcJwtServerAuthFilter implements ServerInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(GrpcJwtServerAuthFilter.class);
 
@@ -46,11 +50,25 @@ public class GrpcJwtServerAuthFilter implements ServerInterceptor {
 
     private boolean jwtAuth = false;
 
+    /**
+     * grpc jwt server auth filter
+     *
+     * @param compression :
+     * @param jwtAuth     :
+     */
     public GrpcJwtServerAuthFilter(String compression, boolean jwtAuth) {
         this.compression = compression;
         this.jwtAuth = jwtAuth;
     }
 
+    /**
+     * intercept call
+     *
+     * @param serverCall        :
+     * @param metadata          :
+     * @param serverCallHandler :
+     * @return ServerCall.Listener<ReqT> :
+     */
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall,
                                                                  Metadata metadata,
@@ -77,7 +95,7 @@ public class GrpcJwtServerAuthFilter implements ServerInterceptor {
             return listener;
         } else {
             Claims claims = JwtTokenUtils.parseToken(authToken, ServiceData.getJwtSecretKey());
-            String role = (String) claims.get("ROLE");
+            String role = (String) claims.get(JWT_CLAIM_ROLE_INFO_KEY);
 
             return new ForwardingServerCallListener.SimpleForwardingServerCallListener<ReqT>(listener) {
                 @Override

@@ -31,6 +31,7 @@ public class AgentMasterInfo {
         this.agentId = agentId;
         this.serverIp = serverIp;
         this.serverPort = serverPort;
+        this.apiUrl = apiUrl;
     }
 
     public String getAgentId() {

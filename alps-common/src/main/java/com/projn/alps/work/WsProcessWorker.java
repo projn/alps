@@ -39,9 +39,10 @@ public class WsProcessWorker implements Runnable {
     /**
      * ws process worker
      *
-     * @param serviceName   :
-     * @param wsRequestInfo :
-     * @param session       :
+     * @param serviceName        :
+     * @param wsRequestInfo      :
+     * @param session            :
+     * @param agentMasterInfoDao :
      */
     public WsProcessWorker(String serviceName, WsRequestInfo wsRequestInfo,
                            WebSocketSession session, IAgentMasterInfoDao agentMasterInfoDao) {
@@ -65,18 +66,13 @@ public class WsProcessWorker implements Runnable {
         WsResponseInfo wsResponseInfo = null;
         try {
             IComponentsWsService bean = InitializeBean.getBean(serviceName);
-            if (bean == null) {
-                LOGGER.error("Invaild service name error,service name({}).", serviceName);
-                return;
-            } else {
-                long start = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
 
-                wsResponseInfo = bean.execute(wsRequestInfo);
+            wsResponseInfo = bean.execute(wsRequestInfo);
 
-                long end = System.currentTimeMillis();
-                CounterUtils.recordMaxNum(String.format(MSG_RESPONSE_MAX_TIME_HEADER,
-                        serviceName), (double) (end - start));
-            }
+            long end = System.currentTimeMillis();
+            CounterUtils.recordMaxNum(String.format(MSG_RESPONSE_MAX_TIME_HEADER,
+                    serviceName), (double) (end - start));
         } catch (Exception e) {
             LOGGER.error("Deal request info error ,error info({}).", formatExceptionInfo(e));
             return;

@@ -33,7 +33,7 @@ public class HttpServiceMonitorAop {
      * user operation
      */
     @Pointcut("execution(* com.projn.alps.service.IComponentsHttpService.*(..))")
-    private void userOperation() {
+    public void userOperation() {
 
     }
 

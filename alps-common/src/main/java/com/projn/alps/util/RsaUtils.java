@@ -298,6 +298,9 @@ public final class RsaUtils {
         } finally {
             if (!ok) {
                 boolean ret = outFile.delete();
+                if(ret) {
+                    throw new Exception("Delete file error.");
+                }
             }
         }
 

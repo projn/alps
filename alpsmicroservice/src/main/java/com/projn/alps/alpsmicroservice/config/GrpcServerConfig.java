@@ -10,8 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+/**
+ * grpc server config
+ *
+ * @author : sunyuecheng
+ */
 @Configuration
-@PropertySource("classpath:config/grpc-server.properties")
+@PropertySource("file:${config.dir}/onfig/grpc-server.properties")
 @ConditionalOnProperty(name = "system.bean.switch.grpc", havingValue = "true", matchIfMissing = true)
 public class GrpcServerConfig {
 
@@ -27,8 +32,14 @@ public class GrpcServerConfig {
     @Value("${grpc.server.jwt.auth}")
     private boolean jwtAuth = false;
 
+    /**
+     * grpc server
+     *
+     * @return Server :
+     * @throws Exception :
+     */
     @Bean("grpcServer")
-    Server grpcServer() throws Exception {
+    public Server grpcServer() throws Exception {
         ServerBuilder builder = ServerBuilder.forPort(port)
                 .addService(new RpcController());
 

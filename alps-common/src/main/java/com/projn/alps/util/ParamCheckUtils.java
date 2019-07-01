@@ -3,13 +3,11 @@ package com.projn.alps.util;
 import com.alibaba.fastjson.JSON;
 import com.projn.alps.msg.filter.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,10 +68,8 @@ public final class ParamCheckUtils {
                 continue;
             }
 
-            if (!paramLimit.nullable()) {
-                if (fieldValue == null) {
-                    throw new Exception("Field is null, field name(" + fieldName + "),type(" + type.getName() + ").");
-                }
+            if (!paramLimit.nullable() && fieldValue == null) {
+                throw new Exception("Field is null, field name(" + fieldName + "),type(" + type.getName() + ").");
             }
             if (fieldValue == null) {
                 continue;
@@ -88,10 +84,9 @@ public final class ParamCheckUtils {
         StringBuilder sb = new StringBuilder();
 
         sb.append(name);
-        if (Character.isLowerCase(sb.charAt(0))) {
-            if (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1))) {
-                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-            }
+        if (Character.isLowerCase(sb.charAt(0))
+                && (sb.length() == 1 || !Character.isUpperCase(sb.charAt(1)))) {
+            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         }
 
         sb.insert(0, "get");
@@ -110,9 +105,9 @@ public final class ParamCheckUtils {
             checkInt(fieldValue, paramLimit, fieldName, type, valueList);
         } else if (Long.class.equals(type) || long.class.equals(type)) {
             checkLong(fieldValue, paramLimit, fieldName, type, valueList);
-        } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
+        //} else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
             //Boolean boolVal = (Boolean) fieldValue;
-        } else if (Date.class.equals(type)) {
+        //} else if (Date.class.equals(type)) {
             //Date date = (Date) fieldValue;
         } else if (Short.class.equals(type) || short.class.equals(type)) {
             checkShort(fieldValue, paramLimit, fieldName, type, valueList);
@@ -131,7 +126,7 @@ public final class ParamCheckUtils {
                     throw e;
                 }
             }
-        } else if (MultipartFile.class.equals(type)) {
+        //} else if (MultipartFile.class.equals(type)) {
         } else {
             throw new Exception("Unsupport value type,field name(" + fieldName + "),type(" + type.getName() + ").");
         }
@@ -157,12 +152,9 @@ public final class ParamCheckUtils {
             }
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(integerVal.toString())) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + integerVal + ").");
-            }
+        if (valueList != null && !valueList.contains(integerVal.toString())) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + integerVal + ").");
         }
     }
 
@@ -186,12 +178,9 @@ public final class ParamCheckUtils {
             }
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(longVal.toString())) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + longVal + ").");
-            }
+        if (valueList != null && !valueList.contains(longVal.toString())) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + longVal + ").");
         }
     }
 
@@ -215,12 +204,9 @@ public final class ParamCheckUtils {
             }
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(shortVal.toString())) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + shortVal + ").");
-            }
+        if (valueList != null && !valueList.contains(shortVal.toString())) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + shortVal + ").");
         }
     }
 
@@ -253,12 +239,9 @@ public final class ParamCheckUtils {
             }
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(floatVal.toString())) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + floatVal + ").");
-            }
+        if (valueList != null && !valueList.contains(floatVal.toString())) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + floatVal + ").");
         }
     }
 
@@ -291,39 +274,27 @@ public final class ParamCheckUtils {
             }
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(doubleVal.toString())) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + doubleVal + ").");
-            }
+        if (valueList != null && !valueList.contains(doubleVal.toString())) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + doubleVal + ").");
         }
     }
 
     private static void checkString(Object fieldValue, ParamLimit paramLimit, String fieldName,
                                     Class type, List<String> valueList) throws Exception {
         String strVal = (String) fieldValue;
-        if (paramLimit.maxLength() != -1) {
-            if (strVal.length() > paramLimit.maxLength()) {
-                throw new Exception("Field length is larger than " + paramLimit.maxLength()
-                        + ", field name(" + fieldName + "),type(" + type.getName()
-                        + "), value(" + strVal + ").");
-            }
+        if (paramLimit.maxLength() != -1 && strVal.length() > paramLimit.maxLength()) {
+            throw new Exception("Field length is larger than " + paramLimit.maxLength()
+                    + ", field name(" + fieldName + "),type(" + type.getName() + "), value(" + strVal + ").");
         }
-        if (paramLimit.minLength() != -1) {
-            if (strVal.length() < paramLimit.minLength()) {
-                throw new Exception("Field length is larger than " + paramLimit.minLength()
-                        + ", field name(" + fieldName + "),type(" + type.getName()
-                        + "), value(" + strVal + ").");
-            }
+        if (paramLimit.minLength() != -1 && strVal.length() < paramLimit.minLength()) {
+            throw new Exception("Field length is larger than " + paramLimit.minLength()
+                    + ", field name(" + fieldName + "),type(" + type.getName() + "), value(" + strVal + ").");
         }
 
-        if (valueList != null) {
-            if (!valueList.contains(strVal)) {
-                throw new Exception("Field is invaild value, field name("
-                        + fieldName + "),type(" + type.getName()
-                        + "), value(" + strVal + ").");
-            }
+        if (valueList != null && !valueList.contains(strVal)) {
+            throw new Exception("Field is invaild value, field name("
+                    + fieldName + "),type(" + type.getName() + "), value(" + strVal + ").");
         }
 
         if (paramLimit.type() != ParamCheckType.NULL) {
@@ -347,11 +318,9 @@ public final class ParamCheckUtils {
                     }
                     break;
                 case REGEX:
-                    if (!StringUtils.isEmpty(paramLimit.regex())) {
-                        if (!strVal.matches(paramLimit.regex())) {
-                            throw new Exception("Field is not match regex, field name(" + fieldName
-                                    + "),type(" + type.getName() + "), value(" + strVal + ").");
-                        }
+                    if (!StringUtils.isEmpty(paramLimit.regex()) && !strVal.matches(paramLimit.regex())) {
+                        throw new Exception("Field is not match regex, field name(" + fieldName
+                                + "),type(" + type.getName() + "), value(" + strVal + ").");
                     }
                     break;
                 default:

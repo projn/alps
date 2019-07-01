@@ -12,13 +12,15 @@ import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
 import io.netty.handler.ssl.SslContext;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * grpc client bean
+ *
+ * @author : sunyuecheng
+ */
 public class GrpcClientBean {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GrpcClientBean.class);
 
     private static final int DEFAULT_TIMEOUT_SENCONDS = 10;
 
@@ -34,6 +36,15 @@ public class GrpcClientBean {
 
     private String compression;
 
+    /**
+     * grpc client bean
+     *
+     * @param host           :
+     * @param port           :
+     * @param timeoutSeconds :
+     * @param sslContext     :
+     * @param compression    :
+     */
     public GrpcClientBean(String host, int port, int timeoutSeconds,
                           SslContext sslContext, String compression) {
         this.host = host;
@@ -42,7 +53,7 @@ public class GrpcClientBean {
         this.compression = compression;
 
 
-        this.channel = NettyChannelBuilder.forAddress(host, port)
+        this.channel = NettyChannelBuilder.forAddress(this.host, this.port)
                 .negotiationType(NegotiationType.TLS)
                 .sslContext(sslContext)
                 .build();
@@ -50,6 +61,16 @@ public class GrpcClientBean {
         this.blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * grpc client bean
+     *
+     * @param host              :
+     * @param port              :
+     * @param timeoutSeconds    :
+     * @param clientInterceptor :
+     * @param compression       :
+     * @throws Exception :
+     */
     public GrpcClientBean(String host, int port, int timeoutSeconds,
                           ClientInterceptor clientInterceptor, String compression) throws Exception {
         this.host = host;
@@ -57,7 +78,7 @@ public class GrpcClientBean {
         this.timeoutSeconds = timeoutSeconds;
         this.compression = compression;
 
-        ManagedChannelBuilder builder = ManagedChannelBuilder.forAddress(host, port)
+        ManagedChannelBuilder builder = ManagedChannelBuilder.forAddress(this.host, this.port)
                 .keepAliveWithoutCalls(false);
 
         this.channel = clientInterceptor == null
@@ -67,10 +88,23 @@ public class GrpcClientBean {
         this.blockingStub = GrpcServiceGrpc.newBlockingStub(channel);
     }
 
+    /**
+     * shutdown
+     *
+     * @param :
+     * @throws InterruptedException :
+     */
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
+    /**
+     * execute
+     *
+     * @param rpcRequestMsgInfo :
+     * @return RpcResponseMsgInfo :
+     * @throws Exception :
+     */
     public RpcResponseMsgInfo execute(RpcRequestMsgInfo rpcRequestMsgInfo) throws Exception {
         GrpcRequestMsgInfo grpcRequestMsgInfo =
                 GrpcRequestMsgInfo.newBuilder()

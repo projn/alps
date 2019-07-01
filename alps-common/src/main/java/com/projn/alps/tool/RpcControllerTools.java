@@ -41,8 +41,10 @@ public class RpcControllerTools {
     public void deal(GrpcRequestMsgInfo request, StreamObserver<GrpcResponseMsgInfo> responseObserver) {
         if (request == null || responseObserver == null) {
             LOGGER.error("Invaild param.");
-            responseObserver.onError(new Exception("Invaild param."));
-            responseObserver.onCompleted();
+            if(responseObserver!=null) {
+                responseObserver.onError(new Exception("Invaild param."));
+                responseObserver.onCompleted();
+            }
             return;
         }
 
@@ -51,7 +53,6 @@ public class RpcControllerTools {
         rpcRequestMsgInfo.setRequestBody(request.getRequestBody());
 
         String uri = rpcRequestMsgInfo.getServiceName();
-
         LOGGER.info("Request uri({}).", uri);
 
         RequestServiceInfo requestServiceInfo = getRequestServiceInfo(uri, HTTP_METHOD_POST.toLowerCase());

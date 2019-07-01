@@ -96,7 +96,7 @@ public final class MessageContext {
 
             String fileName = subFile.getName();
             String[] subNameList = fileName.split("_");
-            if (subNameList.length != PROPERTIES_FILE_NAME_PART_LEN || subNameList[COUNTRY_INDEX].indexOf(".") == -1) {
+            if (subNameList.length != PROPERTIES_FILE_NAME_PART_LEN || !subNameList[COUNTRY_INDEX].contains(".")) {
                 continue;
             }
             String moduleName = subNameList[MODULE_NAME_INDEX];

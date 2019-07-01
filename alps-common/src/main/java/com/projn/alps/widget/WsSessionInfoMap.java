@@ -80,10 +80,9 @@ public class WsSessionInfoMap {
         }
         if (webSocketSessionInfoMap.containsKey(agentId)) {
             WebSocketSessionInfo webSocketSessionInfo = webSocketSessionInfoMap.get(agentId);
-            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null) {
-                if (webSocketSessionInfo.getSession().isOpen()) {
-                    webSocketSessionInfo.getSession().close();
-                }
+            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null
+                    && webSocketSessionInfo.getSession().isOpen()) {
+                webSocketSessionInfo.getSession().close();
             }
         }
         webSocketSessionInfoMap.put(agentId, new WebSocketSessionInfo(session));
@@ -146,7 +145,6 @@ public class WsSessionInfoMap {
             return;
         }
         webSocketSessionInfo.setLastReceiveDataTime(System.currentTimeMillis());
-        return;
     }
 
     /**
@@ -159,7 +157,6 @@ public class WsSessionInfoMap {
             return;
         }
         webSocketSessionInfoMap.get(agentId).setLastSendDataTime(System.currentTimeMillis());
-        return;
     }
 
     /**
@@ -231,10 +228,9 @@ public class WsSessionInfoMap {
         List<String> agentIdList = new ArrayList<String>();
         for (Map.Entry<String, WebSocketSessionInfo> entry : webSocketSessionInfoMap.entrySet()) {
             WebSocketSessionInfo webSocketSessionInfo = entry.getValue();
-            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null) {
-                if (webSocketSessionInfo.getSession().isOpen()) {
-                    webSocketSessionInfo.getSession().close();
-                }
+            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null
+                    && webSocketSessionInfo.getSession().isOpen()) {
+                webSocketSessionInfo.getSession().close();
             }
             agentIdList.add(entry.getKey());
         }
@@ -276,13 +272,12 @@ public class WsSessionInfoMap {
         }
         for (Map.Entry<String, WebSocketSessionInfo> entry : webSocketSessionInfoMap.entrySet()) {
             WebSocketSessionInfo webSocketSessionInfo = entry.getValue();
-            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null) {
-                if (webSocketSessionInfo.getSession().isOpen()) {
-                    TextMessage message = new TextMessage(msg);
-                    webSocketSessionInfo.getSession().sendMessage(message);
-                    updateWebSocketSessionLastSendDataTimeInfo(entry.getKey());
-                    Thread.sleep(interval);
-                }
+            if (webSocketSessionInfo != null && webSocketSessionInfo.getSession() != null
+                    && webSocketSessionInfo.getSession().isOpen()) {
+                TextMessage message = new TextMessage(msg);
+                webSocketSessionInfo.getSession().sendMessage(message);
+                updateWebSocketSessionLastSendDataTimeInfo(entry.getKey());
+                Thread.sleep(interval);
             }
         }
     }

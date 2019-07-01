@@ -15,7 +15,7 @@ public class HttpRequestInfo implements Serializable {
 
     private Object paramObj = null;
 
-    private Map<String, Object> extendInfoMap = null;
+    private Map<String, Object> extendInfoMap;
 
     /**
      * http request info

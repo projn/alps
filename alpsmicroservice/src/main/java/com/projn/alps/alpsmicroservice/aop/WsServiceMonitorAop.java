@@ -34,7 +34,7 @@ public class WsServiceMonitorAop {
      * user operation
      */
     @Pointcut("execution(* com.projn.alps.service.IComponentsWsService.*(..))")
-    private void userOperation() {
+    public void userOperation() {
 
     }
 

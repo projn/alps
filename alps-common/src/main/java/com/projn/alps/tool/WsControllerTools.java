@@ -11,6 +11,7 @@ import com.projn.alps.struct.WsRequestInfo;
 import com.projn.alps.util.ParamCheckUtils;
 import com.projn.alps.util.RequestInfoUtils;
 import com.projn.alps.work.WsProcessWorker;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.List;
 import java.util.Map;
 
+import static com.projn.alps.define.CommonDefine.MSG_ID_KEY;
 import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
 import static com.projn.alps.exception.code.CommonErrorCode.RESULT_INVALID_REQUEST_INFO_ERROR;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
@@ -52,12 +54,8 @@ public class WsControllerTools {
      * @return boolean :
      */
     public boolean deal(WebSocketSession session, TextMessage message) {
-        if (session == null || message == null) {
+        if (session == null || message == null || StringUtils.isEmpty(message.getPayload())) {
             LOGGER.error("Invaild param.");
-            return false;
-        }
-
-        if (message.getPayload() == null) {
             return false;
         }
 
@@ -78,19 +76,12 @@ public class WsControllerTools {
             WsRequestInfo wsRequestInfo = null;
             if (requestServiceInfo.getParamClass() != null) {
                 String msgBodyText = JSON.toJSONString(wsRequestMsgInfo.getMsg());
-                try {
-                    wsRequestInfo = RequestInfoUtils.convertWsRequestInfo(session, msgBodyText,
-                            requestServiceInfo.getParamClass());
-                } catch (Exception e) {
-                    throw new Exception("Convert request info error,error info(" + e.getMessage() + ").");
-                }
+                wsRequestInfo = RequestInfoUtils.convertWsRequestInfo(session, msgBodyText,
+                        requestServiceInfo.getParamClass());
+                wsRequestInfo.getExtendInfoMap().put(MSG_ID_KEY, wsRequestMsgInfo.getMsgId());
 
                 if (wsRequestInfo != null && wsRequestInfo.getParamObj() != null) {
-                    try {
-                        ParamCheckUtils.checkParam(wsRequestInfo.getParamObj());
-                    } catch (Exception e) {
-                        throw new Exception("Check param error,error info(" + e.getMessage() + ").");
-                    }
+                    ParamCheckUtils.checkParam(wsRequestInfo.getParamObj());
                 }
             }
 
@@ -102,17 +93,25 @@ public class WsControllerTools {
             }
         } catch (Exception e) {
             LOGGER.error("Analyse request info error,msg info({}),error info({}).",
-                    message, formatExceptionInfo(e));
+                    message.toString(), formatExceptionInfo(e));
             return false;
         }
 
         return true;
     }
 
-
     private RequestServiceInfo getRequestServiceInfo(String uri) throws Exception {
-        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
-                = ServiceData.getRequestServiceInfoMap().get(uri);
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap = null;
+
+        for(Map.Entry<String, Map<String, List<RequestServiceInfo>>> requestServiceInfoEntry
+                : ServiceData.getRequestServiceInfoMap().entrySet()) {
+            String key = requestServiceInfoEntry.getKey();
+            if(key.equals(uri) || key.contains("||" + uri + "||")) {
+                requestServiceInfoMap = requestServiceInfoEntry.getValue();
+                break;
+            }
+        }
+
         if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()
                 || requestServiceInfoMap.get(HTTP_METHOD_POST.toLowerCase()) == null) {
             throw new Exception("Invaild request service info, msg id("

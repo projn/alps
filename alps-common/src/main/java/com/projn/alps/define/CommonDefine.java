@@ -132,9 +132,29 @@ public final class CommonDefine {
     public static final String HTTP_API_SERVICE_SEND_MSG_URI = "/api/sendMsg";
 
     /**
+     * websocket default buffer size
+     */
+    public static final int WEBSOCKET_DEFAULT_BUFFER_SIZE = 64 * 1024;
+
+    /**
+     * websocket max buffer size
+     */
+    public static final int WEBSOCKET_MAX_BUFFER_SIZE = 250 * 1024;
+
+    /**
      * read buffer size
      */
     public static final int READ_BUFFER_SIZE = 1024 * 32;
+
+    /**
+     * msg id key
+     */
+    public static final String MSG_ID_KEY = "msgId";
+
+    /**
+     * jwt claim role info key
+     */
+    public static final String JWT_CLAIM_ROLE_INFO_KEY="ROLE";
 
 
     private CommonDefine() {

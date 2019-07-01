@@ -23,7 +23,9 @@ import com.projn.alps.msg.request.HttpSendMsgRequestMsgInfo;
 import com.projn.alps.struct.MasterInfo;
 import com.projn.alps.struct.MqConsumerInfo;
 import com.projn.alps.struct.RequestServiceInfo;
+import com.projn.alps.tool.MsgControllerTools;
 import com.projn.alps.tool.QuartzJobTools;
+import com.projn.alps.widget.WsSessionInfoMap;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -36,7 +38,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.beans.PropertyDescriptor;
 import java.io.File;
@@ -45,7 +46,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.HTTP_API_JOB_CRON_EXPRESSION;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.REMOVE_INVAILD_WS_SESSION_JOB_CRON_EXPRESSION;
+import static com.projn.alps.alpsmicroservice.define.MicroServiceDefine.SEND_MSG_JOB_CRON_EXPRESSION;
 import static com.projn.alps.define.CommonDefine.*;
 import static com.projn.alps.define.HttpDefine.HTTP_METHOD_POST;
 import static com.projn.alps.struct.RequestServiceInfo.SERVICE_TYPE_HTTP;
@@ -65,9 +67,9 @@ public final class SystemInitializeContextListener implements ApplicationListene
 
     private SpringKafkaConsumerConfig springKafkaConsumerConfig;
 
-    private ConsumerFactory<String, String> consumerFactory;
+    private MsgControllerTools msgControllerTools;
 
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    private ConsumerFactory<String, String> consumerFactory;
 
     private List<ModuleInfo> moduleInfoList;
 
@@ -116,10 +118,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
                         contextRefreshedEvent.getApplicationContext().getBean("springKafkaConsumerConfig");
                 consumerFactory = (ConsumerFactory<String, String>)
                         contextRefreshedEvent.getApplicationContext().getBean("consumerFactory");
+                msgControllerTools = contextRefreshedEvent.getApplicationContext().getBean(MsgControllerTools.class);
             }
-
-            threadPoolTaskExecutor = (ThreadPoolTaskExecutor) contextRefreshedEvent.getApplicationContext().
-                    getBean("threadPoolTaskExecutor");
 
             ServiceData.setMasterInfo(
                     new MasterInfo(runTimeProperties.getAppName(), runTimeProperties.getServerAddress(),
@@ -153,7 +153,7 @@ public final class SystemInitializeContextListener implements ApplicationListene
                 mqConsumerInfoMap = initializeMq(requestServiceInfoMap);
                 ServiceData.setMqConsumerInfoMap(mqConsumerInfoMap);
             } catch (Exception e) {
-                LOGGER.error("Initialize rocket mq error,error info({}).", formatExceptionInfo(e));
+                LOGGER.error("Initialize mq error,error info({}).", formatExceptionInfo(e));
                 return;
             }
         }
@@ -225,8 +225,6 @@ public final class SystemInitializeContextListener implements ApplicationListene
         if (moduleInfoList.isEmpty()) {
             throw new Exception("There is no available module info error,modules dir(" + modulesDir + ").");
         }
-
-        return;
     }
 
     private Map<String, Map<String, List<RequestServiceInfo>>> loadModuleConfigInfo(
@@ -267,10 +265,8 @@ public final class SystemInitializeContextListener implements ApplicationListene
             if (!registerHttpApiService(applicationContext, requestServiceInfoMap)) {
                 throw new Exception("Register http api service info error.");
             }
-        }
-
-        if (runTimeProperties.isBeanSwitchWebsocket()) {
             registerHttpApiJob(moduleJobInfoList);
+            WsSessionInfoMap.getInstance().setMaxPoolSize(runTimeProperties.getMaxWsSessionCount());
         }
 
         for (Map.Entry<String, String> serviceEntry : requestServiceInitMethodMap.entrySet()) {
@@ -497,23 +493,25 @@ public final class SystemInitializeContextListener implements ApplicationListene
                         ContainerProperties properties = new ContainerProperties(topic);
 
                         if (!springKafkaConsumerConfig.getEnableAutoCommit()) {
-                            properties.setMessageListener(new KafkaAckConsumerListener());
+                            properties.setMessageListener(new KafkaAckConsumerListener(msgControllerTools));
                         } else {
                             if (springKafkaConsumerConfig.getMaxPollRecords() > 1) {
-                                properties.setMessageListener(new KafkaBatchConsumerListener());
+                                properties.setMessageListener(new KafkaBatchConsumerListener(msgControllerTools));
                             } else {
-                                properties.setMessageListener(new KafkaConsumerListener());
+                                properties.setMessageListener(new KafkaConsumerListener(msgControllerTools));
                             }
                         }
 
                         if (RequestServiceInfo.SERVICE_METHOD_MSG_BROADCAST.equalsIgnoreCase(method)) {
-                            properties.setGroupId(springKafkaConsumerConfig.getGroupId() + UUID.randomUUID().toString());
+                            properties.setGroupId(springKafkaConsumerConfig.getGroupId()
+                                    + UUID.randomUUID().toString());
                         }
 
                         KafkaMessageListenerContainer kafkaMessageListenerContainer
                                 = new KafkaMessageListenerContainer(consumerFactory, properties);
                         mqConsumerInfo.setKafkaMessageListenerContainer(kafkaMessageListenerContainer);
                         mqConsumerInfoMap.put(topic, mqConsumerInfo);
+                        kafkaMessageListenerContainer.start();
 
                     }
                 }
@@ -618,12 +616,13 @@ public final class SystemInitializeContextListener implements ApplicationListene
         Map<String, String> jobPropertiesMap = new HashMap<>(COLLECTION_INIT_SIZE);
         ModuleJobInfo sendAgentMsgJobInfo
                 = new ModuleJobInfo(SendAgentMsgJob.class.getTypeName(),
-                SendAgentMsgJob.class.getName(), HTTP_API_JOB_CRON_EXPRESSION, jobPropertiesMap);
+                SendAgentMsgJob.class.getName(), SEND_MSG_JOB_CRON_EXPRESSION, jobPropertiesMap);
         moduleJobInfoList.add(sendAgentMsgJobInfo);
 
         ModuleJobInfo removeInvaildWsSessionInfoJobInfo
                 = new ModuleJobInfo(RemoveInvaildWsSessionInfoJob.class.getTypeName(),
-                RemoveInvaildWsSessionInfoJob.class.getName(), HTTP_API_JOB_CRON_EXPRESSION, jobPropertiesMap);
+                RemoveInvaildWsSessionInfoJob.class.getName(),
+                REMOVE_INVAILD_WS_SESSION_JOB_CRON_EXPRESSION, jobPropertiesMap);
         moduleJobInfoList.add(removeInvaildWsSessionInfoJobInfo);
     }
 

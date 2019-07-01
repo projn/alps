@@ -41,25 +41,7 @@ public class MsgControllerTools {
      * @param acknowledgment :
      */
     public void deal(ConsumerRecord<String, String> msg, Acknowledgment acknowledgment) {
-        if (msg == null) {
-            LOGGER.error("Invaild param.");
-            if (acknowledgment != null) {
-                acknowledgment.acknowledge();
-            }
-            return;
-        }
-
-        MsgRequestInfo msgRequestInfo = null;
-        try {
-            String body = msg.value();
-            msgRequestInfo = (MsgRequestInfo) JSONObject.parseObject(body, MsgRequestInfo.class);
-        } catch (Exception e) {
-            LOGGER.error("Convert object error,error info({}).", formatExceptionInfo(e));
-            if (acknowledgment != null) {
-                acknowledgment.acknowledge();
-            }
-            return;
-        }
+        MsgRequestInfo msgRequestInfo = getMsgRequestInfo(msg);
         if (msgRequestInfo == null) {
             if (acknowledgment != null) {
                 acknowledgment.acknowledge();
@@ -67,12 +49,10 @@ public class MsgControllerTools {
             return;
         }
 
-        String uri = msg.topic() + "/" + msgRequestInfo.getId();
+        String uri = msg.topic() + "/" + msg.key();
+        LOGGER.debug("Request uri({}).", uri);
 
-        LOGGER.info("Request uri({}).", uri);
-
-        Map<String, List<RequestServiceInfo>> requestServiceInfoMap
-                = ServiceData.getRequestServiceInfoMap().get(uri);
+        Map<String, List<RequestServiceInfo>> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
         if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {
             LOGGER.error("Invaild request service info, msg id (" + msgRequestInfo.getId() + ").");
 
@@ -118,8 +98,7 @@ public class MsgControllerTools {
 
                 try {
                     if (taskExecutor.getActiveCount() < taskExecutor.getMaxPoolSize()) {
-                        Future<?> future = taskExecutor.submit(
-                                new MsgProcessWorker(requestServiceInfo.getServiceName(),
+                        Future<?> future = taskExecutor.submit(new MsgProcessWorker(requestServiceInfo.getServiceName(),
                                         targetMsgRequestInfo, msg.timestamp()));
                         future.isDone();
                     } else {
@@ -136,6 +115,26 @@ public class MsgControllerTools {
         if (acknowledgment != null) {
             acknowledgment.acknowledge();
         }
+    }
+
+    private MsgRequestInfo getMsgRequestInfo(ConsumerRecord<String, String> msg) {
+        if (msg == null) {
+            LOGGER.error("Invaild param.");
+            return null;
+        }
+
+        MsgRequestInfo msgRequestInfo = null;
+        try {
+            String body = msg.value();
+            msgRequestInfo = (MsgRequestInfo) JSONObject.parseObject(body, MsgRequestInfo.class);
+        } catch (Exception e) {
+            LOGGER.error("Convert object error,error info({}).", formatExceptionInfo(e));
+            return null;
+        }
+        if (msgRequestInfo == null) {
+            return null;
+        }
+        return msgRequestInfo;
     }
 
 }

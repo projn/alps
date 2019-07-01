@@ -12,7 +12,7 @@ public class WsRequestInfo {
 
     private Object paramObj = null;
 
-    private Map<String, Object> extendInfoMap = null;
+    private Map<String, Object> extendInfoMap;
 
     /**
      * ws request info

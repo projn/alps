@@ -12,6 +12,11 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * spring mongo db config
+ *
+ * @author : sunyuecheng
+ */
 @Configuration
 @PropertySource(value = "file:${config.dir}/config/mongodb.properties", ignoreResourceNotFound = true)
 @ConditionalOnProperty(name = "system.bean.switch.mongodb", havingValue = "true", matchIfMissing = true)
@@ -75,6 +80,11 @@ public class SpringMongoDbConfig {
     @Value("${mongo.requiredReplicaSetName}")
     private String requiredReplicaSetName;
 
+    /**
+     * mongo client options
+     *
+     * @return MongoClientOptions :
+     */
     @Bean
     public MongoClientOptions mongoClientOptions() {
         return MongoClientOptions.builder()
@@ -96,18 +106,30 @@ public class SpringMongoDbConfig {
                 .requiredReplicaSetName(requiredReplicaSetName).build();
     }
 
+    /**
+     * mongo client
+     *
+     * @return MongoClient :
+     */
     @Bean
     public MongoClient mongoClient() {
         ServerAddress serverAddress = new ServerAddress(host, port);
         List<ServerAddress> serverAddressList = new ArrayList<ServerAddress>();
         serverAddressList.add(serverAddress);
 
-        MongoCredential credential = MongoCredential.createScramSha1Credential(username, dbName, password.toCharArray());
+        MongoCredential credential
+                = MongoCredential.createScramSha1Credential(username, dbName, password.toCharArray());
 
         MongoClient mongoClient = new MongoClient(serverAddressList, credential, mongoClientOptions());
         return mongoClient;
     }
 
+    /**
+     * mongo template
+     *
+     * @param :
+     * @return MongoTemplate :
+     */
     @Bean
     public MongoTemplate mongoTemplate() {
         SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClient(), dbName);

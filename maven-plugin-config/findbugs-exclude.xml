@@ -5,11 +5,60 @@
     </Match>
     <Match>
         <Class name="com.projn.alps.alpsmicroservice.listener.SystemInitializeContextListener"/>
+        <Not>
+            <Bug code="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+        </Not>
     </Match>
     <Match>
         <Class name="com.projn.alps.dao.impl.SpringDataRedisInfoDaoImpl"/>
+        <Not>
+            <Bug code="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+        </Not>
     </Match>
     <Match>
         <Class name="com.projn.alps.work.HttpProcessWorker"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.work.MsgProcessWorker"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.work.WsProcessWorker"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.util.ParamCheckUtils"/>
+        <Not>
+            <Bug code="REC_CATCH_EXCEPTION"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.tool.MsgControllerTools"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.tool.RpcControllerTools"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+            <Bug code="NP_NULL_ON_SOME_PATH"/>
+        </Not>
+    </Match>
+    <Match>
+        <Class name="com.projn.alps.tool.WsControllerTools"/>
+        <Not>
+            <Bug code="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+        </Not>
+    </Match>
+    <Match>
+        <Package name="com.projn.alps.rpc.*" />
     </Match>
 </FindBugsFilter>

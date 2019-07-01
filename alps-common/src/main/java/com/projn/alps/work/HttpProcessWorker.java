@@ -1,6 +1,5 @@
 package com.projn.alps.work;
 
-import com.alibaba.fastjson.JSON;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.i18n.LocaleContext;
 import com.projn.alps.initialize.InitializeBean;
@@ -19,7 +18,8 @@ import java.util.Map;
 
 import static com.projn.alps.define.CommonDefine.MSG_RESPONSE_MAX_TIME_HEADER;
 import static com.projn.alps.define.HttpDefine.CONTENT_TYPE_APPLICATION_JSON_UTF_8;
-import static com.projn.alps.exception.code.CommonErrorCode.*;
+import static com.projn.alps.exception.code.CommonErrorCode.RESULT_OK;
+import static com.projn.alps.exception.code.CommonErrorCode.RESULT_SYSTEM_INTER_ERROR;
 import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 
@@ -66,22 +66,13 @@ public class HttpProcessWorker implements Runnable {
         HttpResponseInfo httpResponseInfo = null;
         try {
             IComponentsHttpService bean = InitializeBean.getBean(serviceName);
-            if (bean == null) {
-                LOGGER.error("Invaild request url error,request info({}).",
-                        JSON.toJSONString(httpRequestInfo));
+            long start = System.currentTimeMillis();
 
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                throw new HttpException(HttpStatus.NOT_FOUND.value(), RESULT_INVALID_REQUEST_INFO_ERROR);
-            } else {
-                long start = System.currentTimeMillis();
+            httpResponseInfo = bean.execute(httpRequestInfo);
 
-                httpResponseInfo = bean.execute(httpRequestInfo);
-
-                long end = System.currentTimeMillis();
-                CounterUtils.recordMaxNum(String.format(MSG_RESPONSE_MAX_TIME_HEADER,
-                        serviceName),
-                        (double) (end - start));
-            }
+            long end = System.currentTimeMillis();
+            CounterUtils.recordMaxNum(String.format(MSG_RESPONSE_MAX_TIME_HEADER,
+                    serviceName), (double) (end - start));
         } catch (HttpException e) {
             response.setStatus(e.getHttpStatus());
             httpErrorResponseMsgInfo = new HttpErrorResponseMsgInfo(e.getErrorCode(), e.getErrorDescription());
@@ -118,6 +109,5 @@ public class HttpProcessWorker implements Runnable {
         }
 
         LocaleContext.remove();
-        return;
     }
 }

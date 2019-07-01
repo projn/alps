@@ -36,7 +36,7 @@ public class MsgServiceMonitorAop {
      * user operation
      */
     @Pointcut("execution(* com.projn.alps.service.IComponentsMsgService.*(..))")
-    private void userOperation() {
+    public void userOperation() {
 
     }
 

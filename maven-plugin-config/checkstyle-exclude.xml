@@ -4,6 +4,11 @@
         "suppressions_1_1.dtd">
 <suppressions>
     <suppress checks="." files="resource[\\/]"/>
+    <suppress checks="." files="rpc[\\/]"/>
+    <suppress checks="MagicNumber" files="GrpcClientBean\.java"/>
+    <suppress checks="MagicNumber" files="SpringMongoDbConfig\.java"/>
+    <suppress checks="MagicNumber" files="SpringKafkaProducerConfig\.java"/>
+    <suppress checks="MagicNumber" files="SpringKafkaConsumerConfig\.java"/>
     <suppress checks="MagicNumber" files="Md5Utils\.java"/>
     <suppress checks="MagicNumber" files="CommonUtils\.java"/>
     <suppress checks="MagicNumber" files="RsaUtils\.java"/>

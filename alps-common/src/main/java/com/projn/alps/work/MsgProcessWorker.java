@@ -50,24 +50,19 @@ public class MsgProcessWorker implements Runnable {
 
         try {
             IComponentsMsgService bean = InitializeBean.getBean(serviceName);
-            if (bean == null) {
-                LOGGER.error("Invaild service name error,service name({}).", serviceName);
-                return;
-            } else {
-                long start = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
 
-                bean.execute(bornTimestamp, msgRequestInfo);
+            bean.execute(bornTimestamp, msgRequestInfo);
 
-                long end = System.currentTimeMillis();
-                CounterUtils.increaseNum(String.format(MSG_CONSUME_COUNT_HEADER,
-                        msgRequestInfo.getId()));
-                CounterUtils.increaseNum(String.format(MSG_CONSUME_TOTAL_TIME_HEADER,
-                        msgRequestInfo.getId()),
-                        (double) (end - start));
-                CounterUtils.recordMaxNum(String.format(MSG_CONSUME_MAX_TIME_HEADER,
-                        msgRequestInfo.getId()),
-                        (double) (end - start));
-            }
+            long end = System.currentTimeMillis();
+            CounterUtils.increaseNum(String.format(MSG_CONSUME_COUNT_HEADER,
+                    msgRequestInfo.getId()));
+            CounterUtils.increaseNum(String.format(MSG_CONSUME_TOTAL_TIME_HEADER,
+                    msgRequestInfo.getId()),
+                    (double) (end - start));
+            CounterUtils.recordMaxNum(String.format(MSG_CONSUME_MAX_TIME_HEADER,
+                    msgRequestInfo.getId()),
+                    (double) (end - start));
         } catch (Exception e) {
             LOGGER.error("Deal request info error ,error info({}).", formatExceptionInfo(e));
             return;
