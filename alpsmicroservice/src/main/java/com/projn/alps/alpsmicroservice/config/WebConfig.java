@@ -43,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
         supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
         fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
 
-        converters.add(fastJsonHttpMessageConverter);
+        converters.add(0, fastJsonHttpMessageConverter);
     }
 
 }
