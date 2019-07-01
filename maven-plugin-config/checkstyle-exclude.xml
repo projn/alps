@@ -12,7 +12,6 @@
     <suppress checks="MagicNumber" files="Md5Utils\.java"/>
     <suppress checks="MagicNumber" files="CommonUtils\.java"/>
     <suppress checks="MagicNumber" files="RsaUtils\.java"/>
-    <suppress checks="HideUtilityClassConstructor" files="AlpsConfigServerApplication\.java"/>
     <suppress checks="HideUtilityClassConstructor" files="AlpsMicroServiceApplication\.java"/>
     <suppress checks="HideUtilityClassConstructor" files="AlpsGeneratorApplication\.java"/>
     <suppress checks="FinalClass" files="RunTimeProperties\.java"/>
