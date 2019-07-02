@@ -25,6 +25,10 @@ public final class ParamCheckUtils {
      * @throws Exception :
      */
     public static boolean checkParam(Object param) throws Exception {
+        if(param == null) {
+            throw new Exception("Invaild param.");
+        }
+        
         Class clazz = param.getClass();
         if (clazz.isAnnotationPresent(ParamLimit.class)) {
             ParamFilter paramFilter = (ParamFilter) clazz.getAnnotation(ParamFilter.class);
