@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static com.projn.alps.define.CommonDefine.*;
 import static com.projn.alps.exception.code.CommonErrorCode.*;
+import static com.projn.alps.util.CommonUtils.formatExceptionInfo;
 
 /**
  * http controller tools
@@ -90,7 +91,7 @@ public class HttpControllerTools {
                             null, null, requestServiceInfo.getParamClass());
                 }
             } catch (Exception e) {
-                LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
+                LOGGER.error("Convert request info error,error info(" + formatExceptionInfo(e) + ").");
                 throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_ANALYSE_REQUEST_ERROR);
             }
 
@@ -98,7 +99,7 @@ public class HttpControllerTools {
                 try {
                     ParamCheckUtils.checkParam(httpRequestInfo.getParamObj());
                 } catch (Exception e) {
-                    LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                    LOGGER.error("Check param error,error info(" + formatExceptionInfo(e) + ").");
                     throw new HttpException(HttpStatus.BAD_REQUEST.value(), RESULT_ANALYSE_REQUEST_ERROR);
                 }
             }

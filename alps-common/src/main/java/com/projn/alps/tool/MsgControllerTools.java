@@ -77,7 +77,7 @@ public class MsgControllerTools {
                         targetMsgRequestInfo = RequestInfoUtils.convertMsgRequestInfo(
                                 msgText, requestServiceInfo.getParamClass());
                     } catch (Exception e) {
-                        LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
+                        LOGGER.error("Convert request info error,error info(" + formatExceptionInfo(e) + ").");
                         continue;
                     }
 
@@ -85,7 +85,7 @@ public class MsgControllerTools {
                         try {
                             ParamCheckUtils.checkParam(targetMsgRequestInfo.getMsg());
                         } catch (Exception e) {
-                            LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                            LOGGER.error("Check param error,error info(" + formatExceptionInfo(e) + ").");
                             continue;
                         }
                     }

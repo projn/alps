@@ -12,3 +12,7 @@ target
 install/alpsmicroservice-install/alpsmicroservice/*.jar
 install/alpsconfigserver-install/alpsconfigserver/*.jar
 install/alpsdev-init/*.jar
+install/alpsdev-init/alps-bean/pom.xml
+install/alpsdev-init/alps-common/pom.xml
+install/alpsdev-init/alps-dao/pom.xml
+install/alpsdev-init/alps-test/pom.xml

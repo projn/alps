@@ -64,7 +64,7 @@ public class WsControllerTools {
             WsRequestMsgInfo wsRequestMsgInfo =
                     JSONObject.parseObject(textMsg, WsRequestMsgInfo.class);
             if (wsRequestMsgInfo == null) {
-                throw new Exception("Invaild web socket request msg,msg info(" + message + ").");
+                throw new Exception("Invaild web socket request msg,msg info(" + message.toString() + ").");
             }
 
             RequestServiceInfo requestServiceInfo = getRequestServiceInfo(wsRequestMsgInfo.getMsgId());

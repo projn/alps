@@ -70,7 +70,7 @@ public class RpcControllerTools {
                 rpcRequestInfo = RequestInfoUtils.convertRpcRequestInfo(
                         rpcRequestMsgInfo.getRequestBody(), requestServiceInfo.getParamClass());
             } catch (Exception e) {
-                LOGGER.error("Convert request info error,error info(" + e.getMessage() + ").");
+                LOGGER.error("Convert request info error,error info(" + formatExceptionInfo(e) + ").");
                 responseObserver.onError(new Exception("Invaild request service info."));
                 responseObserver.onCompleted();
                 return;
@@ -80,7 +80,7 @@ public class RpcControllerTools {
                 try {
                     ParamCheckUtils.checkParam(rpcRequestInfo.getParamObj());
                 } catch (Exception e) {
-                    LOGGER.error("Check param error,error info(" + e.getMessage() + ").");
+                    LOGGER.error("Check param error,error info(" + formatExceptionInfo(e) + ").");
                     responseObserver.onError(new Exception("Invaild request service info."));
                     responseObserver.onCompleted();
                     return;
