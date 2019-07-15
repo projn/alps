@@ -70,8 +70,8 @@ public class DruidDataSourceConfig {
     //@Value("${druid.maxWaitThreadCount}")
     //private String maxWaitThreadCount = "-1";
 
-    //@Value("${druid.failFast}")
-    //private Boolean failFast = false;
+    @Value("${druid.failFast}")
+    private Boolean failFast = false;
 
     //@Value("${druid.phyTimeoutMillis}")
     //private String phyTimeoutMillis = "-1";
@@ -107,7 +107,10 @@ public class DruidDataSourceConfig {
     private String minIdle = "0";
 
     @Value("${druid.maxActive}")
-    private String maxActive = "8";
+    private String maxActive = "60000";
+
+    @Value("${druid.maxWait}")
+    private String maxWait = null;
 
     //@Value("${druid.killWhenSocketReadTimeout}")
     //private Boolean killWhenSocketReadTimeout = false;
@@ -137,7 +140,7 @@ public class DruidDataSourceConfig {
         //notNullAdd(properties, "druid.notFullTimeoutRetryCount", this.notFullTimeoutRetryCount);
         notNullAdd(properties, "druid.timeBetweenEvictionRunsMillis", this.timeBetweenEvictionRunsMillis);
         //notNullAdd(properties, "druid.maxWaitThreadCount", this.maxWaitThreadCount);
-        //notNullAdd(properties, "druid.failFast", this.failFast);
+        notNullAdd(properties, "druid.failFast", this.failFast);
         //notNullAdd(properties, "druid.phyTimeoutMillis", this.phyTimeoutMillis);
         notNullAdd(properties, "druid.minEvictableIdleTimeMillis", this.minEvictableIdleTimeMillis);
         notNullAdd(properties, "druid.maxEvictableIdleTimeMillis", this.maxEvictableIdleTimeMillis);
@@ -150,6 +153,7 @@ public class DruidDataSourceConfig {
         notNullAdd(properties, "druid.initialSize", this.initialSize);
         notNullAdd(properties, "druid.minIdle", this.minIdle);
         notNullAdd(properties, "druid.maxActive", this.maxActive);
+        notNullAdd(properties, "druid.maxWait", this.maxWait);
         //notNullAdd(properties, "druid.killWhenSocketReadTimeout", this.killWhenSocketReadTimeout);
         notNullAdd(properties, "druid.connectProperties", this.connectProperties);
         notNullAdd(properties, "druid.maxPoolPreparedStatementPerConnectionSize",
