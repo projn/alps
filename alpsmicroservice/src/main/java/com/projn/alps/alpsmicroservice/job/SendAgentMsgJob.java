@@ -53,19 +53,17 @@ public class SendAgentMsgJob implements Job {
         }
         for (String agentId : agentIdList) {
             AgentMessageInfo agentMessageInfo = agentMessageInfoDao.getAgentOrderMessageInfo(agentId);
-            if (agentMessageInfo == null || agentMessageInfo.getExpireTime() != null
-                    && agentMessageInfo.getExpireTime() < System.currentTimeMillis()) {
-                continue;
-            }
-
-            WsResponseMsgInfo wsResponseMsgInfo =
-                    new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
-            try {
-                WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
-                        JSON.toJSONString(wsResponseMsgInfo));
-                LOGGER.info("SEND MSG TO AGENT:" + agentId + "---" + JSON.toJSONString(wsResponseMsgInfo));
-            } catch (Exception e) {
-                LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+            if (agentMessageInfo != null && (agentMessageInfo.getExpireTime() == null
+                    || agentMessageInfo.getExpireTime() > System.currentTimeMillis())) {
+                WsResponseMsgInfo wsResponseMsgInfo =
+                        new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                try {
+                    WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
+                            JSON.toJSONString(wsResponseMsgInfo));
+                    LOGGER.info("SEND MSG TO AGENT:" + agentId + "---" + JSON.toJSONString(wsResponseMsgInfo));
+                } catch (Exception e) {
+                    LOGGER.error("Send agent msg info error,error info({}).", formatExceptionInfo(e));
+                }
             }
 
             if (runTimeProperties.getWsMsgIdList() != null) {
@@ -74,7 +72,8 @@ public class SendAgentMsgJob implements Job {
                     if (agentMessageInfo == null) {
                         continue;
                     }
-                    wsResponseMsgInfo = new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
+                    WsResponseMsgInfo wsResponseMsgInfo =
+                            new WsResponseMsgInfo(agentMessageInfo.getMsgId(), agentMessageInfo.getMsg());
                     try {
                         WsSessionInfoMap.getInstance().sendWebSocketMessageInfo(agentId,
                                 JSON.toJSONString(wsResponseMsgInfo));
