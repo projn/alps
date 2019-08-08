@@ -30,12 +30,16 @@ COPY ./docker-healthcheck.sh ./
 RUN chmod -R u=rwx,g=rx,o=r ./
 
 RUN sed -i "s#SOFTWARE_LOG_PATH#${SOFTWARE_LOG_PATH}#g" ./context/bootstrap/log4j2-config.xml
+RUN sed -i "s#<appender-ref ref=\"RunTempAppender\"/>##g" ./context/bootstrap/log4j2-config.xml
+RUN sed -i "s#<appender-ref ref=\"RunFileAppender\"/>##g" ./context/bootstrap/log4j2-config.xml
+RUN sed -i "s#<appender-ref ref=\"RunErrorFileAppender\"/>##g" ./context/bootstrap/log4j2-config.xml
+
 RUN sed -i "s#SOFTWARE_SERVER_NAME#${SOFTWARE_SERVER_NAME}#g" ./context/bootstrap.properties
 RUN sed -i "s#SOFTWARE_SERVER_IP#${SOFTWARE_SERVER_IP}#g" ./context/bootstrap.properties
 RUN sed -i "s#SOFTWARE_SERVER_PORT#${SOFTWARE_SERVER_PORT}#g" ./context/bootstrap.properties
 
-RUN sed -i "s/spring.cloud.consul.host/#spring.cloud.consul.host/g" ./context/bootstrap.properties
-RUN sed -i "s/spring.cloud.consul.port/#spring.cloud.consul.port/g" ./context/bootstrap.properties
+RUN sed -i "s/SOFTWARE_CONSUL_SERVER_ADDRESS/\${SOFTWARE_CONSUL_SERVER_ADDRESS}/g" ./context/bootstrap.properties
+RUN sed -i "s/SOFTWARE_CONSUL_PORT/\${SOFTWARE_CONSUL_PORT}/g" ./context/bootstrap.properties
 
 EXPOSE ${SOFTWARE_SERVER_PORT}/tcp
 VOLUME ${SOFTWARE_LOG_PATH}
