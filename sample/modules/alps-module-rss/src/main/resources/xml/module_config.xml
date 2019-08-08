@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model>
+  <base_package>com.projn.sample.alps.module.rss</base_package>
+  <services>
+    <service>
+      <uri>100</uri>
+      <name>AddUserRssInfoServiceImpl</name>
+      <method>post</method>
+      <type>ws</type>
+      <param_bean_class_name>com.projn.sample.alps.module.rss.msg.request.WsAddUserRssInfoRequestInfo</param_bean_class_name>
+    </service>
+  </services>
+</model>

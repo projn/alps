@@ -4,6 +4,7 @@
 mvnw
 mvnw.cmd
 *.iml
+*.jar
 alpsgenerator/src/main/resources/demo/api_2_demo.yaml
 alpsgenerator/src/main/resources/demo/api_3_demo.yaml
 alpsmicroservice/src/main/resources/

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>alps</artifactId>
+        <groupId>com.projn.sample</groupId>
+        <version>1.0</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.projn.sample.alps</groupId>
+    <artifactId>alps-module-console</artifactId>
+    <version>${alps-module-console.version}</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.projn.alps</groupId>
+            <artifactId>alps-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.projn.alps</groupId>
+            <artifactId>alps-bean</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.projn.alps</groupId>
+            <artifactId>alps-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.projn.alps</groupId>
+            <artifactId>alps-test</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>
+                                ../../install/alpsmicroservice-install/alpsmicroservice/module/${project.artifactId}
+                            </directory>
+                            <includes>
+                                <include>${project.artifactId}-${project.version}.jar</include>
+                                <include>module_config.xml</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="install-dir">
+                                    ../../install/alpsmicroservice-install/alpsmicroservice/module
+                                </property>
+
+                                <mkdir dir="${install-dir}"/>
+                                <mkdir dir="${install-dir}/${project.artifactId}"/>
+
+                                <copy file="${project.basedir}/src/main/resources/xml/module_config.xml"
+                                      todir="${install-dir}/${project.artifactId}"/>
+
+                                <copy file="${project.basedir}/target/${project.artifactId}-${project.version}.jar"
+                                      todir="${install-dir}/${project.artifactId}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <excludes></excludes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+
+</project>

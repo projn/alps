@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.projn.sample.alps.module.console.dao.IUserInfoDao">
+  <resultMap id="BaseResultMap" type="com.projn.sample.alps.module.console.domain.UserInfo">
+    <id column="account" jdbcType="VARCHAR" property="account" />
+    <result column="pwd_hash" jdbcType="VARCHAR" property="pwdHash" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+    <result column="register_time" jdbcType="BIGINT" property="registerTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    account, pwd_hash, user_id, name, head_image, register_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_info
+    where account = #{account,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_user_info
+    where account = #{account,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.projn.sample.alps.module.console.domain.UserInfo">
+    insert into t_user_info (account, pwd_hash, user_id, 
+      name, head_image, register_time
+      )
+    values (#{account,jdbcType=VARCHAR}, #{pwdHash,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{headImage,jdbcType=VARCHAR}, #{registerTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.projn.sample.alps.module.console.domain.UserInfo">
+    insert into t_user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        account,
+      </if>
+      <if test="pwdHash != null">
+        pwd_hash,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="headImage != null">
+        head_image,
+      </if>
+      <if test="registerTime != null">
+        register_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="pwdHash != null">
+        #{pwdHash,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null">
+        #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.projn.sample.alps.module.console.domain.UserInfo">
+    update t_user_info
+    <set>
+      <if test="pwdHash != null">
+        pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="headImage != null">
+        head_image = #{headImage,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        register_time = #{registerTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where account = #{account,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.projn.sample.alps.module.console.domain.UserInfo">
+    update t_user_info
+    set pwd_hash = #{pwdHash,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      head_image = #{headImage,jdbcType=VARCHAR},
+      register_time = #{registerTime,jdbcType=BIGINT}
+    where account = #{account,jdbcType=VARCHAR}
+  </update>
+</mapper>

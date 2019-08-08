@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model>
+    <base_package>com.projn.sample.alps.module.backend</base_package>
+    <properties>
+        <property>
+            <name>BackendModuleProperties</name>
+            <enable>true</enable>
+            <properties>
+                <property name="thirdInterfaceAlarmProgramPath">/opt/software</property>
+            </properties>
+        </property>
+    </properties>
+    <services>
+        <service>
+            <uri>normal_msg/200</uri>
+            <name>DealUserMsgInfoServiceImpl</name>
+            <method>normal</method>
+            <type>msg</type>
+            <param_bean_class_name>com.projn.sample.alps.module.backend.msg.request.MsgDealUserMsgInfoRequestInfo</param_bean_class_name>
+        </service>
+        <service>
+            <uri>order_msg/201</uri>
+            <name>DealUserOrderMsgInfoServiceImpl</name>
+            <method>order</method>
+            <type>msg</type>
+            <param_bean_class_name>com.projn.sample.alps.module.backend.msg.request.MsgDealUserOrderMsgInfoRequestInfo</param_bean_class_name>
+        </service>
+        <service>
+            <uri>broadcast_msg/202</uri>
+            <name>DealUserBroadcastMsgInfoServiceImpl</name>
+            <method>broadcast</method>
+            <type>msg</type>
+            <param_bean_class_name>com.projn.sample.alps.module.backend.msg.request.MsgDealUserBroadcastMsgInfoRequestInfo</param_bean_class_name>
+        </service>
+    </services>
+</model>
