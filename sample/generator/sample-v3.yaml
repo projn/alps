@@ -1,0 +1,247 @@
+openapi: 3.0.0
+info:
+  description: |
+    ALPS平台示例，主要展示平台特性，以及打包部署流程
+  version: "1.0.0"
+  title: ALPS平台示例 API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: console#http
+    description: REST API接口演示模块
+  - name: rss#ws
+    description: Websocket接口演示模块
+  - name: backend#msg
+    description: 消息处理演示模块
+paths:
+  /user/verification-code:
+    get:
+      tags:
+        - console#http
+      summary: 获取登录验证码
+      operationId: GetVerificationCodeInfo
+      responses:
+        '200':
+          description: 成功，返回二进制图片信息
+          content:
+            application/file:
+              schema:
+                type: string
+                format: binary
+
+  /user/login:
+    post:
+      tags:
+        - console#http
+      summary: 用户登录
+      operationId: Login
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponseInfo'
+            headers:
+              x-auth-token:
+                description: JWT
+                schema:
+                  type: string
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequestInfo'
+
+  /user/logout/{user_id}:
+    get:
+      tags:
+        - console#http
+      summary: 用户注销登录
+      operationId: Logout
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+
+  /user/headimage/{user_id}:
+    post:
+      tags:
+        - console#http
+      summary: 提交用户头像
+      operationId: UploadUserHeadImageInfo
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT
+          required: true
+          schema:
+            type: string
+        - name: user_id
+          in: path
+          description: 用户ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功
+      requestBody:
+        $ref: '#/components/requestBodies/UserHeadImageRequestInfo'
+
+  '100': #ws、msg类型url需要加引号
+    post:
+      tags:
+        - rss#ws
+      summary: 添加用户订阅
+      operationId: AddUserRssInfo
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddUserRssInfoResponseInfo'
+      requestBody:
+        $ref: '#/components/requestBodies/AddUserRssInfoRequestInfo'
+
+  'normal_msg/200':
+    get:
+      tags:
+        - backend#msg
+      summary: 处理一般消息
+      operationId: DealUserMsgInfo
+      requestBody:
+        $ref: '#/components/requestBodies/UserMsgInfoRequestInfo'
+  'order_msg/201':
+    post:
+      tags:
+        - backend#msg
+      summary: 处理顺序消息
+      operationId: DealUserOrderMsgInfo
+      requestBody:
+        $ref: '#/components/requestBodies/UserMsgInfoRequestInfo'
+  'broadcast_msg/202':
+    put:
+      tags:
+        - backend#msg
+      summary: 处理广播消息
+      operationId: DealUserBroadcastMsgInfo
+      requestBody:
+        $ref: '#/components/requestBodies/UserMsgInfoRequestInfo'
+
+components:
+  schemas:
+    LoginRequestInfo:
+      type: object
+      properties:
+        account:
+          type: string
+          description: 账户
+        key:
+          type: string
+          description: 密码md5
+        device_id:
+          type: string
+          description: 设备ID
+        verification_code:
+          type: string
+          description: 验证码
+
+    LoginResponseInfo:
+      type: object
+      properties:
+        account:
+          type: string
+          description: 账户
+        user_id:
+          type: string
+          description: 用户ID
+        name:
+          type: string
+          description: 昵称
+        head_image:
+          type: string
+          description: 头像ID
+        register_time:
+          type: integer
+          format: int64
+          description: 注册时间
+        extend_info:
+          $ref: '#/components/schemas/UserExtendInfoResponseInfo'
+    UserExtendInfoResponseInfo:
+      type: object
+      properties:
+        remark:
+          type: string
+
+    AddUserRssInfoRequestInfo:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: 用户ID
+        type:
+          type: string
+          description: 订阅类型
+        token:
+          type: string
+          description: 用户TOKEN
+
+    AddUserRssInfoResponseInfo:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 状态
+
+    UserMsgInfoRequestInfo:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: 用户ID
+
+  requestBodies:
+    LoginRequestInfo:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LoginRequestInfo'
+      description: 用户登录结构
+      required: true
+
+    UserHeadImageRequestInfo:
+      content:
+        application/file:
+          schema:
+            type: string
+            format: binary
+      description: 用户头像信息
+      required: true
+
+    AddUserRssInfoRequestInfo:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AddUserRssInfoRequestInfo'
+      description: 用户添加消息订阅
+      required: true
+
+    UserMsgInfoRequestInfo:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserMsgInfoRequestInfo'
+      description: 用户消息信息
+      required: true

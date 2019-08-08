@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+    <base_package>com.projn.sample.alps.module.console</base_package>
+    <services>
+        <service>
+            <uri>/user/verification-code</uri>
+            <name>GetVerificationCodeInfoServiceImpl</name>
+            <method>get</method>
+            <type>http</type>
+            <param_bean_class_name>com.projn.sample.alps.module.console.msg.request.HttpGetVerificationCodeInfoRequestInfo</param_bean_class_name>
+            <auth_filter_name></auth_filter_name> <!--该接口不使用人份认证-->
+            <properties>
+                <property name="verificationCodeCount">6</property> <!--设置接口服务所需参数-->
+            </properties>
+        </service>
+        <service>
+            <uri>/user/login</uri>
+            <name>LoginServiceImpl</name>
+            <method>post</method>
+            <type>http</type>
+            <param_bean_class_name>com.projn.sample.alps.module.console.msg.request.HttpLoginRequestInfo</param_bean_class_name>
+            <init_method>init</init_method> <!--设置接口服务初始化函数-->
+        </service>
+        <service>
+            <uri>/user/logout/{user_id}</uri>
+            <name>LogoutServiceImpl</name>
+            <method>get</method>
+            <type>http</type>
+            <param_bean_class_name>com.projn.sample.alps.module.console.msg.request.HttpLogoutRequestInfo</param_bean_class_name>
+            <auth_filter_name>JwtAuthenticationFilter</auth_filter_name> <!--使用JwtAuthenticationFilter认证验证-->
+            <user_role_name>admin</user_role_name> <!--访问接口需要的角色-->
+            <enable>false</enable> <!--禁用该接口服务-->
+        </service>
+        <service>
+            <uri>/user/headimage/{user_id}</uri>
+            <name>UploadUserHeadImageInfoServiceImpl</name>
+            <method>post</method>
+            <type>http</type>
+            <param_bean_class_name>com.projn.sample.alps.module.console.msg.request.HttpUploadUserHeadImageInfoRequestInfo</param_bean_class_name>
+        </service>
+    </services>
+    <jobs> <!--添加定时任务-->
+        <job>
+            <name>SendSamlpeMsgJob</name>
+            <enable>true</enable>
+            <class_name>com.projn.sample.alps.module.console.job.SendSamlpeMsgJob</class_name>
+            <cron_expression>0 0/1 * * * ?</cron_expression>
+            <properties>
+                <property name="scanTimeIntervalSeconds">1</property> <!--设置定时任务所需参数-->
+            </properties>
+        </job>
+    </jobs>
+</model>
