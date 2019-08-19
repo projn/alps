@@ -1,6 +1,7 @@
 package com.projn.alps.bean;
 
 import com.mongodb.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,10 @@ public class SpringMongoDbConfig {
     private String host;
     @Value("${mongo.port}")
     private int port;
+
+    @Value("${mongo.replicaSetAddress}")
+    private String replicaSetAddress;
+
     @Value("${mongo.dbName}")
     private String dbName;
     @Value("${mongo.username}")
@@ -33,29 +38,29 @@ public class SpringMongoDbConfig {
     @Value("${mongo.password}")
     private String password;
 
-    @Value("${mongo.description}")
-    private String description;
-    @Value("${mongo.applicationName}")
-    private String applicationName;
+//    @Value("${mongo.description}")
+//    private String description;
+//    @Value("${mongo.applicationName}")
+//    private String applicationName;
     @Value("${mongo.writeConcern}")
     private String writeConcern = "ACKNOWLEDGED";
-    @Value("${mongo.readConcern}")
-    private String readConcern = "DEFAULT";
+//    @Value("${mongo.readConcern}")
+//    private String readConcern = "DEFAULT";
 
-    @Value("${mongo.minConnectionsPerHost}")
-    private int minConnectionsPerHost;
+//    @Value("${mongo.minConnectionsPerHost}")
+//    private int minConnectionsPerHost;
     @Value("${mongo.maxConnectionsPerHost}")
     private int maxConnectionsPerHost = 100;
     @Value("${mongo.threadsAllowedToBlockForConnectionMultiplier}")
     private int threadsAllowedToBlockForConnectionMultiplier = 5;
-    @Value("${mongo.serverSelectionTimeout}")
-    private int serverSelectionTimeout = 1000 * 30;
+//    @Value("${mongo.serverSelectionTimeout}")
+//    private int serverSelectionTimeout = 1000 * 30;
     @Value("${mongo.maxWaitTime}")
     private int maxWaitTime;
-    @Value("${mongo.maxConnectionIdleTime}")
-    private int maxConnectionIdleTime;
-    @Value("${mongo.maxConnectionLifeTime}")
-    private int maxConnectionLifeTime;
+//    @Value("${mongo.maxConnectionIdleTime}")
+//    private int maxConnectionIdleTime;
+//    @Value("${mongo.maxConnectionLifeTime}")
+//    private int maxConnectionLifeTime;
 
     @Value("${mongo.connectTimeout}")
     private int connectTimeout = 1000 * 10;
@@ -64,21 +69,21 @@ public class SpringMongoDbConfig {
     @Value("${mongo.socketKeepAlive}")
     private boolean socketKeepAlive = false;
 
-    @Value("${mongo.alwaysUseMBeans}")
-    private boolean alwaysUseMBeans = false;
-    @Value("${mongo.heartbeatFrequency}")
-    private int heartbeatFrequency = 10000;
-    @Value("${mongo.minHeartbeatFrequency}")
-    private int minHeartbeatFrequency = 500;
-    @Value("${mongo.heartbeatConnectTimeout}")
-    private int heartbeatConnectTimeout = 20000;
-    @Value("${mongo.heartbeatSocketTimeout}")
-    private int heartbeatSocketTimeout = 20000;
-    @Value("${mongo.localThreshold}")
-    private int localThreshold = 15;
+//    @Value("${mongo.alwaysUseMBeans}")
+//    private boolean alwaysUseMBeans = false;
+//    @Value("${mongo.heartbeatFrequency}")
+//    private int heartbeatFrequency = 10000;
+//    @Value("${mongo.minHeartbeatFrequency}")
+//    private int minHeartbeatFrequency = 500;
+//    @Value("${mongo.heartbeatConnectTimeout}")
+//    private int heartbeatConnectTimeout = 20000;
+//    @Value("${mongo.heartbeatSocketTimeout}")
+//    private int heartbeatSocketTimeout = 20000;
+//    @Value("${mongo.localThreshold}")
+//    private int localThreshold = 15;
 
-    @Value("${mongo.requiredReplicaSetName}")
-    private String requiredReplicaSetName;
+//    @Value("${mongo.requiredReplicaSetName}")
+//    private String requiredReplicaSetName;
 
     /**
      * mongo client options
@@ -89,21 +94,22 @@ public class SpringMongoDbConfig {
     public MongoClientOptions mongoClientOptions() {
         return MongoClientOptions.builder()
                 .writeConcern(WriteConcern.valueOf(writeConcern))
-                .readConcern(new ReadConcern(ReadConcernLevel.fromString(readConcern)))
+//                .readConcern(new ReadConcern(ReadConcernLevel.fromString(readConcern)))
                 .connectionsPerHost(maxConnectionsPerHost)
                 .threadsAllowedToBlockForConnectionMultiplier(threadsAllowedToBlockForConnectionMultiplier)
-                .serverSelectionTimeout(serverSelectionTimeout)
+//                .serverSelectionTimeout(serverSelectionTimeout)
                 .maxWaitTime(maxWaitTime)
-                .maxConnectionIdleTime(maxConnectionIdleTime)
-                .maxConnectionLifeTime(maxConnectionLifeTime)
+//                .maxConnectionIdleTime(maxConnectionIdleTime)
+//                .maxConnectionLifeTime(maxConnectionLifeTime)
                 .connectTimeout(connectTimeout)
                 .socketTimeout(socketTimeout)
-                .alwaysUseMBeans(Boolean.valueOf(alwaysUseMBeans))
-                .heartbeatFrequency(heartbeatFrequency)
-                .heartbeatConnectTimeout(heartbeatConnectTimeout)
-                .heartbeatSocketTimeout(heartbeatSocketTimeout)
-                .localThreshold(localThreshold)
-                .requiredReplicaSetName(requiredReplicaSetName).build();
+//                .alwaysUseMBeans(Boolean.valueOf(alwaysUseMBeans))
+//                .heartbeatFrequency(heartbeatFrequency)
+//                .heartbeatConnectTimeout(heartbeatConnectTimeout)
+//                .heartbeatSocketTimeout(heartbeatSocketTimeout)
+//                .localThreshold(localThreshold)
+//                .requiredReplicaSetName(requiredReplicaSetName)
+                .build();
     }
 
     /**
@@ -113,9 +119,26 @@ public class SpringMongoDbConfig {
      */
     @Bean
     public MongoClient mongoClient() {
-        ServerAddress serverAddress = new ServerAddress(host, port);
         List<ServerAddress> serverAddressList = new ArrayList<ServerAddress>();
-        serverAddressList.add(serverAddress);
+
+        if(StringUtils.isEmpty(replicaSetAddress)) {
+            ServerAddress serverAddress = new ServerAddress(host, port);
+            serverAddressList.add(serverAddress);
+        } else {
+            String[] hostPorts = replicaSetAddress.split(",");
+            for(String addressStr : hostPorts) {
+                String[] hostPort = addressStr.split(":");
+                if(hostPort.length != 2) {
+                    continue;
+                }
+
+                String hostStr = hostPort[0];
+                String portStr = hostPort[1];
+
+                ServerAddress serverAddress = new ServerAddress(hostStr, Integer.valueOf(portStr));
+                serverAddressList.add(serverAddress);
+            }
+        }
 
         MongoCredential credential
                 = MongoCredential.createScramSha1Credential(username, dbName, password.toCharArray());

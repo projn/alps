@@ -252,6 +252,31 @@ function install_single()
     dst=${SOFTWARE_KAFKA_PRODUCER_SERVERS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/kafka-producer.properties
 
+    src=SOFTWARE_MONGODB_NAME
+    dst=${SOFTWARE_MONGODB_NAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_PWD
+    dst=${SOFTWARE_MONGODB_PWD}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_USERNAME
+    dst=${SOFTWARE_MONGODB_USERNAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_HOST
+    dst=${SOFTWARE_MONGODB_HOST}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_PORT
+    dst=${SOFTWARE_MONGODB_PORT}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_REPLICA_SET_ADDRESS
+    dst=${SOFTWARE_MONGODB_REPLICA_SET_ADDRESS}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+
     cp ${CURRENT_WORK_DIR}/${SOFTWARE_SERVICE_NAME}-single /etc/init.d/${SOFTWARE_SERVICE_NAME}
 
     src=SOFTWARE_INSTALL_PATH
@@ -493,6 +518,30 @@ function create_cloud_git_config()
     src=SOFTWARE_KAFKA_PRODUCER_SERVERS
     dst=${SOFTWARE_KAFKA_PRODUCER_SERVERS}
     sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/kafka-producer.properties
+
+    src=SOFTWARE_MONGODB_NAME
+    dst=${SOFTWARE_MONGODB_NAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_PWD
+    dst=${SOFTWARE_MONGODB_PWD}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_USERNAME
+    dst=${SOFTWARE_MONGODB_USERNAME}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_HOST
+    dst=${SOFTWARE_MONGODB_HOST}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_PORT
+    dst=${SOFTWARE_MONGODB_PORT}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
+
+    src=SOFTWARE_MONGODB_REPLICA_SET_ADDRESS
+    dst=${SOFTWARE_MONGODB_REPLICA_SET_ADDRESS}
+    sed -i "s#$src#$dst#g" ${SOFTWARE_INSTALL_PATH}/context/config/mongodb.properties
 
     echo "config success."
 

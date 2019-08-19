@@ -8,6 +8,7 @@ LABEL version="1.0"
 LABEL description="This is a demo for docker build."
 
 ENV LANG C.UTF-8
+ENV SOFTWARE_SERVER_NAME alpsmicroservice
 ENV SOFTWARE_INSTALL_PATH /opt/software/alpsmicroservice
 ENV SOFTWARE_LOG_PATH /var/log/alpsmicroservice
 
