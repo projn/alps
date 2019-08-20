@@ -42,6 +42,9 @@ metadata:
     k8s-app: alps-app
   name: alps-settings
   namespace: alps
+data:
+  SOFTWARE_CONSUL_SERVER_ADDRESS: 127.0.0.1
+  SOFTWARE_CONSUL_PORT: 5300
 
 ---
 
@@ -52,9 +55,6 @@ metadata:
     k8s-app: alps-app
   name: alps-user
   namespace: alps
-data:
-  SOFTWARE_CONSUL_SERVER_ADDRESS: 127.0.0.1
-  SOFTWARE_CONSUL_PORT: 5300
 
 ---
 
