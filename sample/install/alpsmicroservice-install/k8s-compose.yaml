@@ -52,6 +52,9 @@ metadata:
     k8s-app: alps-app
   name: alps-user
   namespace: alps
+data:
+  SOFTWARE_CONSUL_SERVER_ADDRESS: 127.0.0.1
+  SOFTWARE_CONSUL_PORT: 5300
 
 ---
 
@@ -116,6 +119,23 @@ spec:
         - name: alps-server
           image: tomcat:8.0.50-jre8-alpine
           imagePullPolicy: IfNotPresent
+          env:
+          - name: SOFTWARE_HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: SOFTWARE_CONSUL_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                name: alps-settings
+                key: SOFTWARE_CONSUL_SERVER_ADDRESS
+                optional: true
+          - name: SOFTWARE_CONSUL_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: alps-settings
+              key: SOFTWARE_CONSUL_PORT
+              optional: true
           ports:
             - containerPort: 8080
               protocol: TCP
