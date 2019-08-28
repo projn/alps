@@ -114,23 +114,27 @@ spec:
     metadata:
       labels:
         k8s-app: alps-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: alps-server
           image: tomcat:8.0.50-jre8-alpine
           imagePullPolicy: IfNotPresent
           env:
-          - name: SOFTWARE_HOST_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: SOFTWARE_CONSUL_SERVER_ADDRESS
-            valueFrom:
-              configMapKeyRef:
-                name: alps-settings
-                key: SOFTWARE_CONSUL_SERVER_ADDRESS
-                optional: true
-          - name: SOFTWARE_CONSUL_PORT
+            - name: SOFTWARE_HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: SOFTWARE_CONSUL_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: alps-settings
+                  key: SOFTWARE_CONSUL_SERVER_ADDRESS
+                  optional: true
+            - name: SOFTWARE_CONSUL_PORT
           valueFrom:
             configMapKeyRef:
               name: alps-settings
@@ -179,16 +183,48 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
-  - hosts:
-    - alps.projn.com
-    secretName: alps-certs
+    - hosts:
+        - alps.projn.com
+      secretName: alps-certs
   rules:
-  - host: alps.projn.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: alps-service
-          servicePort: 8080
+    - host: alps.projn.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: alps-service
+              servicePort: 8080
+
+---
+
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: alps-hpa
+  namespace: alps
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: alps-app
+  # autoscale between 1 and 10 replicas
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageValue: 50Mi
+    - type: Pods
+      pods:
+        # use the metric that you used above: pods/http_requests
+        metricName: http_requests
+        # target 500 milli-requests per second,
+        # which is 1 request every two seconds
+        targetAverageValue: 500m
 
 ---
