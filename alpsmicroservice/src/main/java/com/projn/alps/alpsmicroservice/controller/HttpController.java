@@ -41,7 +41,7 @@ public class HttpController {
      * @throws HttpException :
      */
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = {"/api/{service_name"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/api/{service_name}"}, method = {RequestMethod.POST})
     public @ResponseBody
     DeferredResult<Object>
     dealController(HttpServletRequest request, HttpServletResponse response,
