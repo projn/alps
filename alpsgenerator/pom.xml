@@ -168,8 +168,8 @@
                                         <include name="*.properties"/>
                                     </fileset>
                                 </copy>
-                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud/git">
-                                    <fileset dir="${alpsmicroservice-install-dir}/config/cloud/git">
+                                <copy todir="${des-dir}/template/install/alpsmicroservice-install/config/cloud/remote">
+                                    <fileset dir="${alpsmicroservice-install-dir}/config/cloud/remote">
                                         <include name="*.properties"/>
                                     </fileset>
                                 </copy>

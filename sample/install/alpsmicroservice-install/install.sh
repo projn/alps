@@ -412,7 +412,7 @@ function create_cloud_git_config()
 
     mkdir -p ${CURRENT_WORK_DIR}/git-repo
 
-    config_dir=${CURRENT_WORK_DIR}/config/cloud/git
+    config_dir=${CURRENT_WORK_DIR}/config/cloud/remote
     cp -rf ${config_dir}/* ${CURRENT_WORK_DIR}/git-repo/
 
     echo  "Start to config ..."
