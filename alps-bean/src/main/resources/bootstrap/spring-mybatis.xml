@@ -12,7 +12,7 @@
             location="classpath*:config/mybatis.properties, file:${config.dir}/config/mybatis.properties"
             ignore-resource-not-found="true"/>
 
-    <!--<bean id="propertyPlaceholderConfig" class="com.projn.alps.bean.EncryptablePropertyPlaceholderConfig">-->
+    <!--<bean id="propertyPlaceholderConfig" class="com.huawei.alps.bean.EncryptablePropertyPlaceholderConfig">-->
     <!--<property name="locations" >-->
     <!--<list>-->
     <!--<value>classpath*:config/*.properties</value>-->
