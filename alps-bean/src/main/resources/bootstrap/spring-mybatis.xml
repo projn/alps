@@ -9,17 +9,8 @@
             http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:property-placeholder
-            location="classpath*:config/mybatis.properties, file:${config.dir}/config/mybatis.properties"
+            location="classpath*:config/*.properties, file:${config.dir}/config/mybatis.properties"
             ignore-resource-not-found="true"/>
-
-    <!--<bean id="propertyPlaceholderConfig" class="com.huawei.alps.bean.EncryptablePropertyPlaceholderConfig">-->
-    <!--<property name="locations" >-->
-    <!--<list>-->
-    <!--<value>classpath*:config/*.properties</value>-->
-    <!--<value>file:${config.dir}/config/*.properties</value>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="druidDataSource"/>

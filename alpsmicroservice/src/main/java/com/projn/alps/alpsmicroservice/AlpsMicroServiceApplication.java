@@ -9,8 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import static com.projn.alps.bean.EncryptablePropertyPlaceholderConfig.SYSTEM_PROPERTY_SPRING_CONFIG_LOCATION_KEY;
-
 /**
  * alps micro service application
  *
@@ -37,8 +35,6 @@ public class AlpsMicroServiceApplication {
         if (args.length != RUN_PARAM_SIZE || !args[0].startsWith(RUN_PARAM_SPRING_CONTEXT_HEADER)) {
             throw new Exception("Invaild run param.");
         }
-        System.setProperty(SYSTEM_PROPERTY_SPRING_CONFIG_LOCATION_KEY,
-                args[0].substring(RUN_PARAM_SPRING_CONTEXT_HEADER.length() + 1));
         SpringApplication springApplication = new SpringApplication(AlpsMicroServiceApplication.class);
         springApplication.addListeners(new SystemInitializeContextListener(args[1]));
         springApplication.run(args);
