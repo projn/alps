@@ -1,5 +1,6 @@
 package com.projn.alps.tool;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.exception.HttpException;
 import com.projn.alps.i18n.LocaleContext;
@@ -63,7 +64,12 @@ public class HttpControllerTools {
                 MAX_HTTP_RESPONSE_WAIT_SECONDS * MILLI_SECOND_1000);
 
         String uri = request.getRequestURI();
-        LOGGER.info("Request uri({}).", uri);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Request uri({}), param({}), data({}).", uri,
+                    JSON.toJSONString(pathParamMap), JSON.toJSONString(requestObj));
+        } else {
+            LOGGER.info("Request uri({}).", uri);
+        }
 
         String method = request.getMethod().toLowerCase();
         RequestServiceInfo requestServiceInfo = getRequestServiceInfo(url, method);

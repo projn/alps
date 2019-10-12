@@ -50,7 +50,11 @@ public class MsgControllerTools {
         }
 
         String uri = msg.topic() + "/" + msg.key();
-        LOGGER.debug("Request uri({}).", uri);
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Request uri({}), data({}).", uri, msg.value());
+        } else {
+            LOGGER.info("Request uri({}).", uri);
+        }
 
         Map<String, List<RequestServiceInfo>> requestServiceInfoMap = ServiceData.getRequestServiceInfoMap().get(uri);
         if (requestServiceInfoMap == null || requestServiceInfoMap.isEmpty()) {

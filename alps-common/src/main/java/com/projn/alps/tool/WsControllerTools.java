@@ -60,6 +60,8 @@ public class WsControllerTools {
         }
 
         String textMsg = message.getPayload();
+        LOGGER.debug("Request data({}).", textMsg);
+
         try {
             WsRequestMsgInfo wsRequestMsgInfo =
                     JSONObject.parseObject(textMsg, WsRequestMsgInfo.class);

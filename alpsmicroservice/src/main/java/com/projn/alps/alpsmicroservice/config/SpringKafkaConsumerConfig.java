@@ -1,6 +1,9 @@
 package com.projn.alps.alpsmicroservice.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -57,7 +60,35 @@ public class SpringKafkaConsumerConfig {
     private Long requestTimeoutMs = 30000L;
 
     @Value("${kafka.consumer.concurrency.num}")
-    private int concurrencyNum = 0;
+    private int concurrencyNum = 0;@Value("${kafka.consumer.sasl}")
+    private boolean sasl = false;
+
+    @Value("${kafka.ssl.key-store-location}")
+    private String sslKeyStoreLocation = null;
+
+    @Value("${kafka.ssl.key-store-password}")
+    private String sslKeyStorePassword = null;
+
+    @Value("${kafka.ssl.key-password}")
+    private String sslKeyPassword = null;
+
+    @Value("${kafka.ssl.trust-store-location}")
+    private String sslTrustStoreLocation = null;
+
+    @Value("${kafka.ssl.trust-store-password}")
+    private String sslTrustStorePassword = null;
+
+    @Value("${kafka.ssl.key-store-type}")
+    private String sslKeyStoreType = null;
+
+    @Value("${kafka.consumer.security.protocol}")
+    private String securityProtocol = null;
+
+    @Value("${kafka.consumer.sasl.mechanism}")
+    private String saslMechanism = null;
+
+    @Value("${kafka.consumer.sasl.jaas.config}")
+    private String saslJaasConfig = null;
 
     public String getGroupId() {
         return groupId;
@@ -98,6 +129,18 @@ public class SpringKafkaConsumerConfig {
 
         notNullAdd(properties, ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         notNullAdd(properties, ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+
+        if (this.sasl) {
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, this.sslKeyStoreLocation);
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, this.sslKeyStorePassword);
+            notNullAdd(properties, SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, this.sslTrustStoreLocation);
+            notNullAdd(properties, SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, this.sslTrustStorePassword);
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, this.sslKeyStoreType);
+
+            notNullAdd(properties, CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, this.securityProtocol);
+            notNullAdd(properties, SaslConfigs.SASL_MECHANISM, this.saslMechanism);
+            notNullAdd(properties, SaslConfigs.SASL_JAAS_CONFIG, this.saslJaasConfig);
+        }
         return properties;
     }
 

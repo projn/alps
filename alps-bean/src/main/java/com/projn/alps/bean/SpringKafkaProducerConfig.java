@@ -1,6 +1,9 @@
 package com.projn.alps.bean;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,15 +44,6 @@ public class SpringKafkaProducerConfig {
     @Value("${kafka.producer.retries}")
     private Integer retries = 0;
 
-//    @Value("${kafka.producer.ssl.key.password}")
-//    private String sslKeyPassword = null;
-//
-//    @Value("${kafka.producer.ssl.keystore.location}")
-//    private String sslKeystoreLocation = null;
-//
-//    @Value("${kafka.producer.ssl.keystore.password}")
-//    private String sslKeystorePassword = null;
-
     @Value("${kafka.producer.batch.size}")
     private Long batchSize = 16384L;
 
@@ -80,6 +74,36 @@ public class SpringKafkaProducerConfig {
     @Value("${kafka.producer.topic.partition.size}")
     private int topicPartitionSize = 4;
 
+    @Value("${kafka.producer.sasl}")
+    private boolean sasl = false;
+
+    @Value("${kafka.ssl.key-store-location}")
+    private String sslKeyStoreLocation = null;
+
+    @Value("${kafka.ssl.key-store-password}")
+    private String sslKeyStorePassword = null;
+
+    @Value("${kafka.ssl.key-password}")
+    private String sslKeyPassword = null;
+
+    @Value("${kafka.ssl.trust-store-location}")
+    private String sslTrustStoreLocation = null;
+
+    @Value("${kafka.ssl.trust-store-password}")
+    private String sslTrustStorePassword = null;
+
+    @Value("${kafka.ssl.key-store-type}")
+    private String sslKeyStoreType = null;
+
+    @Value("${kafka.producer.security.protocol}")
+    private String securityProtocol = null;
+
+    @Value("${kafka.producer.sasl.mechanism}")
+    private String saslMechanism = null;
+
+    @Value("${kafka.producer.sasl.jaas.config}")
+    private String saslJaasConfig = null;
+
     public int getTopicPartitionSize() {
         return topicPartitionSize;
     }
@@ -106,6 +130,18 @@ public class SpringKafkaProducerConfig {
 
         notNullAdd(properties, ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         notNullAdd(properties, ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        if (this.sasl) {
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, this.sslKeyStoreLocation);
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, this.sslKeyStorePassword);
+            notNullAdd(properties, SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, this.sslTrustStoreLocation);
+            notNullAdd(properties, SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, this.sslTrustStorePassword);
+            notNullAdd(properties, SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, this.sslKeyStoreType);
+
+            notNullAdd(properties, CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, this.securityProtocol);
+            notNullAdd(properties, SaslConfigs.SASL_MECHANISM, this.saslMechanism);
+            notNullAdd(properties, SaslConfigs.SASL_JAAS_CONFIG, this.saslJaasConfig);
+        }
         return properties;
     }
 

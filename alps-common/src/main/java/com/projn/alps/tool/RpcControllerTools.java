@@ -53,7 +53,11 @@ public class RpcControllerTools {
         rpcRequestMsgInfo.setRequestBody(request.getRequestBody());
 
         String uri = rpcRequestMsgInfo.getServiceName();
-        LOGGER.info("Request uri({}).", uri);
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Request uri({}), data({}).", uri, request.getRequestBody());
+        } else {
+            LOGGER.info("Request uri({}).", uri);
+        }
 
         RequestServiceInfo requestServiceInfo = getRequestServiceInfo(uri, HTTP_METHOD_POST.toLowerCase());
         if (requestServiceInfo == null) {
