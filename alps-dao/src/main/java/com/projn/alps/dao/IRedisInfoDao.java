@@ -1,5 +1,6 @@
 package com.projn.alps.dao;
 
+import com.projn.alps.ValueScoreInfo;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 
 import java.util.List;
@@ -423,6 +424,21 @@ public interface IRedisInfoDao {
      */
     Set<String> getStrInfoListByScoreFromSortSet(String setName, double min, double max,
                                                  long beginIndex, long size, boolean desc);
+
+
+    /**
+     * get value score info list by score from sort set
+     *
+     * @param setName    :
+     * @param min        :
+     * @param max        :
+     * @param beginIndex :
+     * @param size       :
+     * @param desc       :
+     * @return Set<ValueScoreInfo> :
+     */
+    Set<ValueScoreInfo> getValueScoreInfoListByScoreFromSortSet(String setName, double min, double max,
+                                                                long beginIndex, long size, boolean desc);
 
     /**
      * delete str info from sort set

@@ -1,5 +1,6 @@
 package com.projn.alps.dao.impl;
 
+import com.projn.alps.ValueScoreInfo;
 import com.projn.alps.dao.IRedisInfoDao;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1218,6 +1219,56 @@ public class SpringDataRedisInfoDaoImpl implements IRedisInfoDao {
             return strInfoList;
         } catch (Exception e) {
             LOGGER.error("Get str info list from sort set error, error info(" + e.getMessage() + ").");
+        }
+        return null;
+    }
+
+    @Override
+    /**
+     * get value score info list by score from sort set
+     *
+     * @param setName    :
+     * @param min        :
+     * @param max        :
+     * @param beginIndex :
+     * @param size       :
+     * @param desc       :
+     * @return Set<ValueScoreInfo> :
+     */
+    public Set<ValueScoreInfo> getValueScoreInfoListByScoreFromSortSet(String setName, double min, double max,
+                                                                       long beginIndex, long size, boolean desc) {
+        if (StringUtils.isEmpty(setName) || beginIndex < 0) {
+            LOGGER.error("Invalid param.");
+            return null;
+        }
+
+        if (size == 0) {
+            return new HashSet<>();
+        }
+
+        try {
+            if (size == -1) {
+                long totalSize = redisTemplate.opsForZSet().size(setName);
+                size = totalSize - beginIndex;
+            }
+
+            Set<ZSetOperations.TypedTuple> typedTupleSet = null;
+            if (desc) {
+                typedTupleSet = redisTemplate.opsForZSet().rangeByScoreWithScores(setName, min, max, beginIndex, size);
+            } else {
+                typedTupleSet = redisTemplate.opsForZSet().reverseRangeByScoreWithScores(setName, min, max, beginIndex,
+                        size);
+            }
+
+            Set<ValueScoreInfo> valueScoreInfoSet = new HashSet<>();
+            for (ZSetOperations.TypedTuple typedTuple : typedTupleSet) {
+                valueScoreInfoSet.add(new ValueScoreInfo(typedTuple.getValue().toString(),
+                        typedTuple.getScore().longValue()));
+            }
+            return valueScoreInfoSet;
+
+        } catch (Exception e) {
+            LOGGER.error("Get value score info list from sort set error, error info(" + e.getMessage() + ").");
         }
         return null;
     }

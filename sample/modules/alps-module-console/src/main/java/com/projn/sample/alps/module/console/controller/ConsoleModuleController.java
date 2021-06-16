@@ -2,6 +2,10 @@ package com.projn.sample.alps.module.console.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.projn.alps.exception.HttpException;
+import com.projn.alps.msg.filter.ParamCheckType;
+import com.projn.alps.msg.filter.ParamLimit;
+import com.projn.alps.msg.filter.ParamLocation;
+import com.projn.alps.msg.filter.ParamLocationType;
 import com.projn.alps.tool.HttpControllerTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,13 +57,81 @@ public class ConsoleModuleController {
      * @see com.projn.sample.alps.module.console.msg.response.HttpLoginResponseInfo
      */
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = {"/user/login"}, method = {POST})
+    @RequestMapping(value = {"/user/info/{userId}"}, method = {POST})
     public @ResponseBody
-    DeferredResult<Object> login(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) JSONObject requestJson) throws HttpException {
+    DeferredResult<Object> updateUserInfo(HttpServletRequest request, HttpServletResponse response,
+                                          @PathVariable(name = "userId") String userId,
+                                          @RequestBody(required = false) JSONObject requestJson)
+            throws HttpException {
         Map<String, String> pathParamMap = new HashMap<>(COLLECTION_INIT_SIZE);
-        String url = "/user/login";
+        pathParamMap.put("userId", userId);
+        String url = "/user/userId";
         return httpControllerTools.deal(url, request, response, pathParamMap, (Object) requestJson);
     }
+
+
+    final static String HTTP_USER_TOKEN = "";
+
+    final static String USER_ID_REGEX = "";
+
+    final static String REQUEST_USER_ROLE = "";
+
+    final static String HTTP_USER_TAG = "";
+
+    final static int MANUAL_TYPE = 1;
+
+    final static int AUTO_TYPE = 0;
+
+
+    public class UpdateUserRequestInfo {
+
+        @ParamLocation(location = ParamLocationType.PATH)
+        @ParamLimit(nullable = false, type = ParamCheckType.REGEX, regex = USER_ID_REGEX)
+        private String userId;
+
+        @ParamLocation(location = ParamLocationType.QUERY)
+        @ParamLimit(nullable = false, maxValue = "1", minValue = "0")
+        private Integer type;
+
+        @ParamLocation(location = ParamLocationType.HEADER)
+        private String userToken;
+
+        @ParamLocation(location = ParamLocationType.HEADER)
+        private UserRequestInfo userRequestInfo;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public void setType(Integer type) {
+            this.type = type;
+        }
+
+        public String getUserToken() {
+            return userToken;
+        }
+
+        public void setUserToken(String userToken) {
+            this.userToken = userToken;
+        }
+
+        public UserRequestInfo getUserRequestInfo() {
+            return userRequestInfo;
+        }
+
+        public void setUserRequestInfo(UserRequestInfo userRequestInfo) {
+            this.userRequestInfo = userRequestInfo;
+        }
+    }
+
 
     /**
      * service bean :
